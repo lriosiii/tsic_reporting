@@ -1,3 +1,6 @@
+OPEN SYMMETRIC KEY SymmetricKey1
+DECRYPTION BY CERTIFICATE Certificate1;
+
 SELECT M.MentorID,
  		M.MentorStatusID,
  		SS.MentorStatusName,

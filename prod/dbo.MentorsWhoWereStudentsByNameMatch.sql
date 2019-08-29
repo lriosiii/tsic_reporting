@@ -1,3 +1,6 @@
+OPEN SYMMETRIC KEY SymmetricKey1
+DECRYPTION BY CERTIFICATE Certificate1;
+
 SELECT     s.LastName AS StudentLastName, s.FirstName AS StudentFirsttName, m.LastName AS MentorLastName, m.FirstName AS MentiorFirstName, m.BirthDate
 FROM         Students.Students AS s LEFT OUTER JOIN
                       Mentors.Mentors AS m ON m.LastName = s.LastName AND m.FirstName = s.FirstName

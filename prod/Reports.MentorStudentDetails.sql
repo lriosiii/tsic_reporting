@@ -1,3 +1,6 @@
+OPEN SYMMETRIC KEY SymmetricKey1
+DECRYPTION BY CERTIFICATE Certificate1;
+
 SELECT  Sal.SalutationName As MentorSalutation
 	  , M.FirstName As MentorFirstName
 	  , M.MiddleName As MentorMiddleName
@@ -93,3 +96,5 @@ WHERE
 	And S.IsDeleted = 0
  --And M.OfficeID = 35
 -- ORDER BY M.LastName, M.FirstName    -- For Testing
+
+CLOSE SYMMETRIC KEY SymmetricKey1;

@@ -1,3 +1,6 @@
+OPEN SYMMETRIC KEY SymmetricKey1
+DECRYPTION BY CERTIFICATE Certificate1;
+
 SELECT   Sal.SalutationName
 		,M.FirstName as MentorFirstNane
 		, M.LastName as MentorLastName
@@ -57,3 +60,6 @@ FROM Mentors.Mentors M
 	LEFT OUTER JOIN Lookups.Races R on m.RaceID = r.RaceID
 WHERE M.IsDeleted = 0
 AND S.IsDeleted = 0 and ses.IsDeleted = 0
+
+
+CLOSE SYMMETRIC KEY SymmetricKey1;

@@ -1,3 +1,6 @@
+OPEN SYMMETRIC KEY SymmetricKey1
+DECRYPTION BY CERTIFICATE Certificate1;
+
 SELECT    sal.SalutationName, m.LastName + ', ' + m.FirstName AS MentorName, a.Address1, a.City, a.StateID, a.ZipCode, m.BirthDate, m.Gender, m.HomePhoneNumber, m.EmailAddress,
                       ms.MentorStatusName, m.OfficeID, m.MobilePhoneNumber, m.WorkPhoneNumber, o.OfficeName,
 					  m.CountyID, m.RaceID, m.JoinReasonID, mapp.BackgroundCheckReceivedDate,  m.TrainingCompletedDate, m.FingerPrintDate
@@ -27,3 +30,6 @@ WHERE     ((a.Address1 IS NULL) AND (m.MentorStatusID = 1) OR
 					  (m.MentorStatusID = 1) AND (m.TrainingCompletedDate IS NULL) OR
 					  (m.MentorStatusID = 1) AND (m.FingerPrintDate IS NULL))
 					  And m.IsDeleted = 0
+
+
+CLOSE SYMMETRIC KEY SymmetricKey1;

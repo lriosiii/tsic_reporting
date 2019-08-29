@@ -1,3 +1,6 @@
+OPEN SYMMETRIC KEY SymmetricKey1
+DECRYPTION BY CERTIFICATE Certificate1;
+
 SELECT      Mentors.Mentors.SSN, Mentors.Mentors.FirstName, Mentors.Mentors.MiddleName, Mentors.Mentors.LastName, Mentors.Mentors.BirthDate,
                       Mentors.Mentors.HomePhoneNumber, Mentors.Mentors.MobilePhoneNumber, Mentors.Mentors.WorkPhoneNumber, Mentors.Mentors.PagerPhoneNumber,
                       Mentors.Mentors.EmailAddress, Mentors.Mentors.AdditionalEmailAddress, Mentors.Mentors.EmailPreferred, Mentors.Mentors.Gender,
@@ -26,3 +29,5 @@ WHERE     (Students.StudentMentors.MentorID IS NULL Or (Students.StudentMentors.
 			AND Mentors.Mentors.IsDeleted = 0
 			--AND Students.Students.IsDeleted = 0
 --ORDER BY Mentors.Mentors.LastName, Mentors.Mentors.FirstName
+
+CLOSE SYMMETRIC KEY SymmetricKey1;
