@@ -1,7 +1,7 @@
 OPEN SYMMETRIC KEY SymmetricKey1
 DECRYPTION BY CERTIFICATE Certificate1;
 
-SELECT    sal.SalutationName, m.LastName + ', ' + m.FirstName AS MentorName, a.Address1, a.City, a.StateID, a.ZipCode, m.BirthDate, m.Gender, m.HomePhoneNumber, m.EmailAddress,
+SELECT    sal.SalutationName, m.LastName + ', ' + m.FirstName AS MentorName, a.Address1, a.City, a.StateID, a.ZipCode, CONVERT(varchar, DecryptByKey(M.EncryptedBirthDate)) AS BirthDate, m.Gender, m.HomePhoneNumber, m.EmailAddress,
                       ms.MentorStatusName, m.OfficeID, m.MentorID, m.MobilePhoneNumber, m.WorkPhoneNumber, o.OfficeName,
 					  m.CountyID, m.RaceID, m.JoinReasonID, case when mapp.BackgroundCheckPassed = 1 then 'Yes' else 'No' end as BackgroundCheckPassed
 					  , mapp.BackgroundCheckReceivedDate, case when mapp.TrainingCompleted = 1 then 'Yes' else 'No' end as TrainingCompleted, m.TrainingCompletedDate, m.FingerPrintDate
@@ -15,7 +15,7 @@ WHERE     ((a.Address1 IS NULL AND m.MentorStatusID in (1)) OR
                       (m.MentorStatusID in (1) AND a.City IS NULL) OR
                       (m.MentorStatusID in (1) AND a.StateID IS NULL) OR
                       (m.MentorStatusID in (1) AND a.ZipCode IS NULL) OR
-                      (m.MentorStatusID in (1) AND m.BirthDate IS NULL) OR
+                      (m.MentorStatusID in (1) AND M.EncryptedBirthDate IS NULL) OR
                       (m.MentorStatusID in (1) AND m.HomePhoneNumber IS NULL AND m.MobilePhoneNumber IS NULL AND m.WorkPhoneNumber IS NULL) OR
                       (m.MentorStatusID in (1) AND m.EmailAddress IS NULL) OR
 					  (m.MentorStatusID in (1) AND m.firstname IS NULL) OR
@@ -36,5 +36,3 @@ WHERE     ((a.Address1 IS NULL AND m.MentorStatusID in (1)) OR
 
 
 CLOSE SYMMETRIC KEY SymmetricKey1;
-
-
