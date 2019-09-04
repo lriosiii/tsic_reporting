@@ -5,9 +5,9 @@ SELECT   Sal.SalutationName
 		,M.FirstName as MentorFirstNane
 		, M.LastName as MentorLastName
 		, M.FirstName + ' ' + M.LastName as MentorFullName
-		, M.SSN
+		, CONVERT(varchar, DecryptByKey(M.EncryptedSSN)) AS SSN
 		, MS.MentorStatusName
-		, M.BirthDate as MentorDOB
+		, CONVERT(varchar, DecryptByKey(M.EncryptedBirthDate)) as MentorDOB
 		, M.HomePhoneNumber
 		, M.MobilePhoneNumber
 		, M.WorkPhoneNumber
