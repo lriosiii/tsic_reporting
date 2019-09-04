@@ -6,8 +6,8 @@ SELECT  Sal.SalutationName
 	  , M.MiddleName
       , M.LastName
       , M.LastName+ ', '+ M.FirstName as MentorFullName
-      , '***-**-' + RIGHT(M.SSN, 4) As SSNumber
-      , M.BirthDate
+      , '***-**-' + RIGHT(CONVERT(varchar, DecryptByKey(M.EncryptedSSN)), 4) As SSNumber
+      , CONVERT(varchar, DecryptByKey(M.EncryptedBirthDate))
       , M.Gender
 	  , MC.NoteDate As CommunicationDate
 	  , CM.CommunicationMethodName
@@ -23,7 +23,7 @@ SELECT  Sal.SalutationName
       , M.MobilePhoneNumber
       , M.WorkPhoneNumber
       , M.EmailAddress
-      , M.DriversLicense
+      , CONVERT(varchar, DecryptByKey(M.EncryptedDriversLicense))
       , M.EmployerName
       , M.CompanyName
       , M.IsHispanic

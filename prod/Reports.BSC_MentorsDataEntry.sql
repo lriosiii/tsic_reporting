@@ -1,7 +1,7 @@
 OPEN SYMMETRIC KEY SymmetricKey1
 DECRYPTION BY CERTIFICATE Certificate1;
 
-SELECT    sal.SalutationName, m.LastName + ', ' + m.FirstName AS MentorName, a.Address1, a.City, a.StateID, a.ZipCode, m.BirthDate, m.Gender, m.HomePhoneNumber, m.EmailAddress,
+SELECT    sal.SalutationName, m.LastName + ', ' + m.FirstName AS MentorName, a.Address1, a.City, a.StateID, a.ZipCode, CONVERT(varchar, DecryptByKey(EncryptedBirthDate)) AS 'BirthDate', m.Gender, m.HomePhoneNumber, m.EmailAddress,
                       ms.MentorStatusName, m.OfficeID, m.MobilePhoneNumber, m.WorkPhoneNumber, o.OfficeName,
 					  m.CountyID, m.RaceID, m.JoinReasonID, mapp.BackgroundCheckReceivedDate,  m.TrainingCompletedDate, m.FingerPrintDate
 FROM         Mentors.Mentors AS m LEFT OUTER JOIN
@@ -14,7 +14,7 @@ WHERE     ((a.Address1 IS NULL) AND (m.MentorStatusID = 1) OR
                       (m.MentorStatusID = 1) AND (a.City IS NULL) OR
                       (m.MentorStatusID = 1) AND (a.StateID IS NULL) OR
                       (m.MentorStatusID = 1) AND (a.ZipCode IS NULL) OR
-                      (m.MentorStatusID = 1) AND (m.BirthDate IS NULL) OR
+                      (m.MentorStatusID = 1) AND (DecryptByKey(EncryptedBirthDate) IS NULL) OR
                       (m.MentorStatusID = 1) AND (m.HomePhoneNumber IS NULL AND m.MobilePhoneNumber IS NULL AND m.WorkPhoneNumber IS NULL) OR
                       (m.MentorStatusID = 1) AND (m.EmailAddress IS NULL) OR
 					  (m.MentorStatusID = 1) AND (m.firstname IS NULL) OR

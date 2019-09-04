@@ -7,14 +7,14 @@ SELECT M.MentorID,
  		SG.StatusGroupID,
  		SG.StatusGroupName,
  		SG.FilterMask,
-		M.SSN,
+		CONVERT(varchar, DecryptByKey(EncryptedSSN)) AS 'SSN',
 		M.FirstName,
 		M.MiddleName,
 		M.LastName,
 		M.FirstName + ' ' + M.LastName AS FullName,
 		M.AddressID,
-		M.BirthDate,
-		DATEDIFF(yy,M.BirthDate,GETDATE()) as Age,
+		CONVERT(varchar, DecryptByKey(EncryptedBirthDate)) AS 'BirthDate',
+		DATEDIFF(yy,CONVERT(varchar, DecryptByKey(EncryptedBirthDate)),GETDATE()) as Age,
 		CASE WHEN M.Gender = 'M' THEN 'Male' ELSE 'Female' END as Gender,
 		M.OfficeID
 		,(SELECT TOP 1 S.FirstName +' ' + S.LastName as StudentName
@@ -57,3 +57,5 @@ SELECT M.MentorID,
 	FROM Mentors.Mentors M
 		INNER JOIN Lookups.MentorStatuses SS ON M.MentorStatusID = SS.MentorStatusID
 			INNER JOIN Lookups.StatusGroups SG ON SS.StatusGroupID = SG.StatusGroupID
+
+CLOSE SYMMETRIC KEY SymmetricKey1;
