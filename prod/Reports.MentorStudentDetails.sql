@@ -14,8 +14,8 @@ SELECT  Sal.SalutationName As MentorSalutation
 	  , SM.AssignedDate As StudentMatchDate
 	  , SM.UnassignedDate
 	  , SCH.SchoolName As StudentSchoolName
-      , M.SSN
-      , M.BirthDate
+      , CONVERT(varchar, DecryptByKey(M.EncryptedSSN)) AS SSN
+      , CONVERT(varchar, DecryptByKey(M.EncryptedBirthDate)) AS BirthDate
       , M.Gender
       , A.Address1 as MentorAddress1
       , A.Address2 as MentorAddress2
@@ -26,7 +26,7 @@ SELECT  Sal.SalutationName As MentorSalutation
       , M.MobilePhoneNumber
       , M.WorkPhoneNumber
       , M.EmailAddress
-      , M.DriversLicense
+      , CONVERT(varchar, DecryptByKey(M.EncryptedDriversLicense)) AS DriversLicense
       , M.EmployerName
       , M.CompanyName
       , M.IsHispanic
