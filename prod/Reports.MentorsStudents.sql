@@ -1,7 +1,7 @@
 OPEN SYMMETRIC KEY SymmetricKey1
 DECRYPTION BY CERTIFICATE Certificate1;
 
-SELECT      Sal.SalutationName, Mentors.Mentors.LastName, Mentors.Mentors.FirstName, Mentors.Mentors.MiddleName, Mentors.mentors.Gender as MentorGender, Lookups.MentorStatuses.MentorStatusName, Students.StudentMentors.IsPrimary as IsPrimary, Mentors.Mentors.BirthDate,
+SELECT      Sal.SalutationName, Mentors.Mentors.LastName, Mentors.Mentors.FirstName, Mentors.Mentors.MiddleName, Mentors.mentors.Gender as MentorGender, Lookups.MentorStatuses.MentorStatusName, Students.StudentMentors.IsPrimary as IsPrimary, CONVERT(varchar, DecryptByKey(Mentors.Mentors.EncryptedBirthDate)) AS BirthDate,
                       Mentors.Mentors.EmailAddress, Common.Addresses.Address1, Common.Addresses.Address2, Common.Addresses.City, Lookups.States.StateName, Common.Addresses.ZipCode,
                       Mentors.Mentors.HomePhoneNumber, Mentors.Mentors.MobilePhoneNumber, Mentors.Mentors.WorkPhoneNumber, Mentors.Mentors.PagerPhoneNumber,
                       Students.Students.LastName AS StudentLastName, Students.Students.FirstName AS StudentFirstName, Students.Students.MiddleName AS StudentMiddleNane,
