@@ -7,8 +7,8 @@ SELECT  Sal.SalutationName
       , M.LastName
       , M.LastName+ ', '+ M.FirstName as MentorFullName
 	  ,m.MentorID
-      , 'XXX-XX-'+ Right(m.SSN,4) as SSN
-      , M.BirthDate
+      , 'XXX-XX-'+ Right(CONVERT(varchar, DecryptByKey(M.EncryptedSSN)),4) as SSN
+      , CONVERT(varchar, DecryptByKey(M.EncryptedBirthDate)) AS BirthDate
       , M.Gender
       , A.Address1 as MentorAddress1
       , A.Address2 as MentorAddress2
@@ -20,7 +20,7 @@ SELECT  Sal.SalutationName
       , M.WorkPhoneNumber
       , M.EmailAddress
 	  , M.AdditionalEmailAddress
-      , M.DriversLicense
+      , CONVERT(varchar, DecryptByKey(M.EncryptedDriversLicense)) AS DriversLicense
       , M.EmployerName
       , M.CompanyName
       , M.IsHispanic
