@@ -1,5 +1,5 @@
 
-SELECT    sal.SalutationName, m.LastName + ', ' + m.FirstName AS MentorName, a.Address1, a.City, a.StateID, a.ZipCode, CONVERT(varchar, DecryptByKey(M.EncryptedBirthDate)) AS BirthDate, m.Gender, m.HomePhoneNumber, m.EmailAddress,
+SELECT    sal.SalutationName, m.LastName + ', ' + m.FirstName AS MentorName, a.Address1, a.City, a.StateID, a.ZipCode, CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedBirthDate)) AS BirthDate, m.Gender, m.HomePhoneNumber, m.EmailAddress,
                       ms.MentorStatusName, m.OfficeID, m.MentorID, m.MobilePhoneNumber, m.WorkPhoneNumber, o.OfficeName,
 					  m.CountyID, m.RaceID, m.JoinReasonID, case when mapp.BackgroundCheckPassed = 1 then 'Yes' else 'No' end as BackgroundCheckPassed
 					  , mapp.BackgroundCheckReceivedDate, case when mapp.TrainingCompleted = 1 then 'Yes' else 'No' end as TrainingCompleted, m.TrainingCompletedDate, m.FingerPrintDate

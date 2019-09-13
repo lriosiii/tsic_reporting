@@ -4,8 +4,8 @@ SELECT  Sal.SalutationName
 	  , M.MiddleName
       , M.LastName
       , M.LastName+ ', '+ M.FirstName as MentorFullName
-      , '***-**-' + RIGHT(CONVERT(varchar, DecryptByKey(M.EncryptedSSN)), 4) As SSNumber
-      , CONVERT(varchar, DecryptByKey(M.EncryptedBirthDate))
+      , '***-**-' + RIGHT(CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedSSN)), 4) As SSNumber
+      , CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedBirthDate)) AS BirthDate
       , M.Gender
 	  , MC.NoteDate As CommunicationDate
 	  , CM.CommunicationMethodName
@@ -21,7 +21,7 @@ SELECT  Sal.SalutationName
       , M.MobilePhoneNumber
       , M.WorkPhoneNumber
       , M.EmailAddress
-      , CONVERT(varchar, DecryptByKey(M.EncryptedDriversLicense))
+      , CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedDriversLicense)) AS DriversLicense
       , M.EmployerName
       , M.CompanyName
       , M.IsHispanic
