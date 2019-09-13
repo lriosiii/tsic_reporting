@@ -1,5 +1,3 @@
-OPEN SYMMETRIC KEY SymmetricKey1
-DECRYPTION BY CERTIFICATE Certificate1;
 
 SELECT  Sal.SalutationName
 	  , M.FirstName
@@ -49,6 +47,3 @@ FROM Mentors.Mentors M
 WHERE M.IsDeleted = 0
 	AND	MS.IsDeleted = 0
 	And MC.IsDeleted = 0
-
-
-CLOSE SYMMETRIC KEY SymmetricKey1;

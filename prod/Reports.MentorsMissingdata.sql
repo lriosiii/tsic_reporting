@@ -1,5 +1,3 @@
-OPEN SYMMETRIC KEY SymmetricKey1
-DECRYPTION BY CERTIFICATE Certificate1;
 
 SELECT    sal.SalutationName, m.LastName + ', ' + m.FirstName AS MentorName, a.Address1, a.City, a.StateID, a.ZipCode, CONVERT(varchar, DecryptByKey(M.EncryptedBirthDate)) AS BirthDate, m.Gender, m.HomePhoneNumber, m.EmailAddress,
                       ms.MentorStatusName, m.OfficeID, m.MentorID, m.MobilePhoneNumber, m.WorkPhoneNumber, o.OfficeName,
@@ -33,6 +31,3 @@ WHERE     ((a.Address1 IS NULL AND m.MentorStatusID in (1)) OR
 					  And m.IsDeleted = 0 and mapp.ApplicationStartDate > '2013-12-31'
 --AND m.OfficeID = 52
 
-
-
-CLOSE SYMMETRIC KEY SymmetricKey1;

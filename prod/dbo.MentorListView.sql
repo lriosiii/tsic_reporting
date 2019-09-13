@@ -1,5 +1,3 @@
-OPEN SYMMETRIC KEY SymmetricKey1
-DECRYPTION BY CERTIFICATE Certificate1;
 
 SELECT M.MentorID,
  		M.MentorStatusID,
@@ -57,5 +55,3 @@ SELECT M.MentorID,
 	FROM Mentors.Mentors M
 		INNER JOIN Lookups.MentorStatuses SS ON M.MentorStatusID = SS.MentorStatusID
 			INNER JOIN Lookups.StatusGroups SG ON SS.StatusGroupID = SG.StatusGroupID
-
-CLOSE SYMMETRIC KEY SymmetricKey1;

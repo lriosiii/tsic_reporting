@@ -1,5 +1,3 @@
-OPEN SYMMETRIC KEY SymmetricKey1
-DECRYPTION BY CERTIFICATE Certificate1;
 
 SELECT      Sal.SalutationName, Mentors.Mentors.LastName, Mentors.Mentors.FirstName, Mentors.Mentors.MiddleName, Mentors.mentors.Gender as MentorGender, Lookups.MentorStatuses.MentorStatusName, Students.StudentMentors.IsPrimary as IsPrimary, CONVERT(varchar, DecryptByKey(Mentors.Mentors.EncryptedBirthDate)) AS BirthDate,
                       Mentors.Mentors.EmailAddress, Common.Addresses.Address1, Common.Addresses.Address2, Common.Addresses.City, Lookups.States.StateName, Common.Addresses.ZipCode,
@@ -34,5 +32,3 @@ WHERE     (Mentors.Mentors.MentorStatusID = 1) --AND (Students.Students.StudentS
 --					  and Mentors.Mentors.OfficeID = 14
 --ORDER BY Lookups.Counties.CountyName, Mentors.Mentors.LastName, FirstName
 
-
-CLOSE SYMMETRIC KEY SymmetricKey1;

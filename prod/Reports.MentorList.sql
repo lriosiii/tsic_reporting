@@ -1,5 +1,3 @@
-OPEN SYMMETRIC KEY SymmetricKey1
-DECRYPTION BY CERTIFICATE Certificate1;
 
 SELECT  Sal.SalutationName
 	  , M.FirstName
@@ -82,4 +80,3 @@ WHERE
  --And M.OfficeID = 40
 
 
-CLOSE SYMMETRIC KEY SymmetricKey1;
