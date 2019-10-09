@@ -154,23 +154,22 @@ From(Select distinct ST2.StudentID,
 
 			and ss.IsDeleted = 0
 			group by OfficeName, ss.StudentID,tmcte.TotalMonths, TotalMentorSessions, ss.OfficeID
-)
+    )
 	,
 
 	TMonths (OfficeId, TotalMts, OfficeName) as
 
-(Select Officeid, count(TotalMonths)as Totalmts, OfficeName
-from Final
-where TotalMonths is not null
-group by Officeid, OfficeName
-)
+    (Select Officeid, count(TotalMonths)as Totalmts, OfficeName
+    from Final
+    where TotalMonths is not null
+    group by Officeid, OfficeName)
 
-,taverage (OfficeId, Totalav, OfficeName) as
+    ,taverage (OfficeId, Totalav, OfficeName) as
 
-(Select Officeid, count(Average)as Totalaverage, OfficeName
-from Final
-where Average >=2
-group by Officeid, OfficeName)
+    (Select Officeid, count(Average)as Totalaverage, OfficeName
+    from Final
+    where Average >=2
+    group by Officeid, OfficeName)
 
 
 Select
