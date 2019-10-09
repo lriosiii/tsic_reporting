@@ -181,10 +181,11 @@ Select
 		IsNull(sum(tav.Totalav), 0)  As KPI, --ValueMatch
 		IsNull(sum(Tmon.TotalMts), 0)  As Total, -- Total
 		Convert(Int, Ceiling((IsNull(sum(tav.Totalav), 0) / Cast(Tmon.TotalMts As Decimal)) * 100)) As Result, -- percent
-		CASE when Convert(Int, Ceiling((IsNull(sum(tav.Totalav), 0) / Cast(Tmon.TotalMts As Decimal)) * 100)) between 85 and 100 then 25
-		when Convert(Int, Ceiling((IsNull(sum(tav.Totalav), 0) / Cast(Tmon.TotalMts As Decimal)) * 100)) between 70 and 84 then 18
-		when Convert(Int, Ceiling((IsNull(sum(tav.Totalav), 0) / Cast(Tmon.TotalMts As Decimal)) * 100)) < 70 then 0
-		else ''
+            CASE
+            when Convert(Int, Ceiling((IsNull(sum(tav.Totalav), 0) / Cast(Tmon.TotalMts As Decimal)) * 100)) between 85 and 100 then 20
+            when Convert(Int, Ceiling((IsNull(sum(tav.Totalav), 0) / Cast(Tmon.TotalMts As Decimal)) * 100)) between 70 and 84 then 9
+            when Convert(Int, Ceiling((IsNull(sum(tav.Totalav), 0) / Cast(Tmon.TotalMts As Decimal)) * 100)) < 70 then 0
+            else ''
 		end as Score,
 		'' as Comments,
 		Tmon.OfficeID
