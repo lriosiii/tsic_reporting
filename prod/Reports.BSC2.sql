@@ -10,25 +10,25 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 	),
 
 	-- CTE for last mentor/student session date
-	LastMentorSessionDate (LastSessionDate, StudentID) As
-	(
-		select t.Lastsession
-			,s.studentid
-			from students.students s
-			left join Reports.BSC_Dates t on t.Studentid = s.StudentID
-			where s.StudentStatusID in (1,3,4,5)
-	),
+--	LastMentorSessionDate (LastSessionDate, StudentID) As
+--	(
+--		select t.Lastsession
+--			,s.studentid
+--			from students.students s
+--			left join Reports.BSC_Dates t on t.Studentid = s.StudentID
+--			where s.StudentStatusID in (1,3,4,5)
+--	),
 
 	---- CTE for last mentor/student session date
-	FirstMentorSessionDate (FirstSessionDate, StudentID) As
-	(
-		Select t.Firstsession
-			,s.studentid
-			from students.students s
-			left join Reports.BSC_Dates t on t.Studentid = s.StudentID
-			where s.StudentStatusID in (1,3,4,5)
-
-	),
+--	FirstMentorSessionDate (FirstSessionDate, StudentID) As
+--	(
+--		Select t.Firstsession
+--			,s.studentid
+--			from students.students s
+--			left join Reports.BSC_Dates t on t.Studentid = s.StudentID
+--			where s.StudentStatusID in (1,3,4,5)
+--
+--	),
 
 	Dates (StartDate, EndDate, StudentID) as
 	(
@@ -81,51 +81,50 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 	),
 
 	-- CTE for mentor/student assigned date
-	MentorAssignedDate (AssignedDate, DTU, StudentID, OfficeID) As
-	(
-		Select MIN(sms.AssignedDate) As AssignedDate,
-			Case when Convert (date, GETDATE()) > '2019-06-01'
-		Then '2019-06-01'
-		Else
-		CONVERT(date, GetDate())
-		End As DateTU
-			,ss.StudentID,
-			ss.OfficeID
-		From Students.StudentMentors sms
-			Join Students.Students ss
-				On ss.StudentID = sms.StudentID
-		Where ss.StudentStatusID
-				In (1, 3, 4, 5) -- All active except "On Hold"
-			--And ss.ContractSignedDate
-			--	< '2014-06-30'
-			--And (sms.UnassignedDate > '2013-08-01' OR SMS.UnassignedDate IS NULL)
-			And (SMS.UnassignedDate IS NULL)
-			AND SMS.MentorAssignmentTypeID = 1
-			--AND SMS.IsPrimary = 1
-						And SMS.IsDeleted = 0
-		Group By ss.StudentID, ss.OfficeID
-		--Order By ss.StudentID --for testing
-	),
+--	MentorAssignedDate (AssignedDate, DTU, StudentID, OfficeID) As
+--	(
+--		Select MIN(sms.AssignedDate) As AssignedDate,
+--			Case when Convert (date, GETDATE()) > '2019-06-01'
+--		Then '2019-06-01'
+--		Else
+--		CONVERT(date, GetDate())
+--		End As DateTU
+--			,ss.StudentID,
+--			ss.OfficeID
+--		From Students.StudentMentors sms
+--			Join Students.Students ss
+--				On ss.StudentID = sms.StudentID
+--		Where ss.StudentStatusID
+--				In (1, 3, 4, 5) -- All active except "On Hold"
+--			--And ss.ContractSignedDate
+--			--	< '2014-06-30'
+--			--And (sms.UnassignedDate > '2013-08-01' OR SMS.UnassignedDate IS NULL)
+--			And (SMS.UnassignedDate IS NULL)
+--			AND SMS.MentorAssignmentTypeID = 1
+--			--AND SMS.IsPrimary = 1
+--						And SMS.IsDeleted = 0
+--		Group By ss.StudentID, ss.OfficeID
+--		--Order By ss.StudentID --for testing
+--	),
 
 	-- CTE for mentor names
-	MentorNamesCte (StudentID, Mentors) As
-	(
-		Select Main.StudentID,
-       Left(Main.Mentors,Len(Main.Mentors)-1) As "Mentors"
-From(Select distinct ST2.StudentID,
-           (Select ST1.FirstName + ' ' + ST1.LastName + ', ' AS [text()]
-            From Mentors.Mentors ST1
-				Left Outer Join Students.StudentMentors SMS ON ST1.MentorID = SMS.MentorID
-            Where SMS.StudentID = ST2.StudentID
-				--AND (SMS.UnassignedDate > '2013-08-01' OR SMS.UnassignedDate IS NULL)
-				AND SMS.AssignedDate <= CONVERT (date, GETDATE())
-				AND (SMS.UnassignedDate IS NULL)
-				AND (SMS.MentorAssignmentTypeID = 1)
-            For XML PATH ('')) [Mentors]
-     From Students.Students ST2) [Main]
-	 --ORDER BY Main.StudentID
-	)
-	,
+--	MentorNamesCte (StudentID, Mentors) As
+--	(
+--		Select Main.StudentID,
+--       Left(Main.Mentors,Len(Main.Mentors)-1) As "Mentors"
+--From(Select distinct ST2.StudentID,
+--           (Select ST1.FirstName + ' ' + ST1.LastName + ', ' AS [text()]
+--            From Mentors.Mentors ST1
+--				Left Outer Join Students.StudentMentors SMS ON ST1.MentorID = SMS.MentorID
+--            Where SMS.StudentID = ST2.StudentID
+--				--AND (SMS.UnassignedDate > '2013-08-01' OR SMS.UnassignedDate IS NULL)
+--				AND SMS.AssignedDate <= CONVERT (date, GETDATE())
+--				AND (SMS.UnassignedDate IS NULL)
+--				AND (SMS.MentorAssignmentTypeID = 1)
+--            For XML PATH ('')) [Mentors]
+--     From Students.Students ST2) [Main]
+--	 --ORDER BY Main.StudentID
+--	),
 	Final (StudentId, TotalMonths, Average, Officeid, OfficeName) as
 
 
