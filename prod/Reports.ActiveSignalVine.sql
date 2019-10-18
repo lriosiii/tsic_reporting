@@ -40,6 +40,7 @@ SELECT
 					ci.lastenrolleddate
 				FROM students.collegeinformation ci
 				INNER JOIN Lookups.Colleges col ON ci.CollegeID = col.CollegeID
+				WHERE ci.entrydate IS NOT NULL
 			) lastCollege ON s.StudentID=lastCollege.StudentID AND lastCollege.RowNbr = 1
   left join lookups.StudentStatuses ss on s.StudentStatusID = ss.StudentStatusID
   left join schools.Schools sc on sc.SchoolID = s.SchoolID
