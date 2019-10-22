@@ -13,6 +13,7 @@ SELECT
     sch.SchoolName,
     c.CountyName,
     sms.SessionDate,
+    mentorsessiontypename,
     sms.SessionNote,
     sms.SessionDuration,
     s.Affiliation,
@@ -28,15 +29,12 @@ INNER JOIN Lookups.StudentStatuses AS ss ON s.StudentStatusID = ss.StudentStatus
 INNER JOIN Schools.Schools AS sch ON s.SchoolID = sch.SchoolID
 INNER JOIN Lookups.Counties AS c ON s.CountyID = c.CountyID
 LEFT OUTER JOIN offices.Staff ST on s.AdvocateID =  st.StaffID
---Left outer Join Offices.Scholarships os ON s.StudentID = os.StudentID
-INNER JOIN Lookups.MentorStatuses ms ON m.MentorStatusID = ms.MentorStatusID
+--Left outer Join-- Offices.Scholarships os ON s.StudentID = os.StudentID
+LEFT OUTER JOIN Students.StudentMentors AS sm ON s.StudentID = sm.StudentID --AND (sm.UnassignedDate < '2017-08-01' OR sm.UnassignedDate IS NULL) --AND sm.MentorAssignmentTypeID = 1
 INNER JOIN Mentors.Mentors AS m ON sm.MentorID = m.MentorID
-LEFT OUTER JOIN Students.MentoringSessions AS sms ON s.StudentID = sms.StudentID
-                                                    --And sms.SessionDuration > 0
-                                                    AND m.MentorID = sms.MentorID
-LEFT OUTER JOIN Students.StudentMentors AS sm ON s.StudentID = sm.StudentID
-    --AND (sm.UnassignedDate < '2017-08-01' OR sm.UnassignedDate IS NULL)
-    --AND sm.MentorAssignmentTypeID = 1
+LEFT OUTER JOIN Students.MentoringSessions AS sms ON s.StudentID = sms.StudentID AND m.MentorID = sms.MentorID --And sms.SessionDuration > 0
+LEFT JOIN lookups.mentorsessiontypes ON sms.sessiontypeid=mentorsessiontypes.mentorsessiontypeid
+INNER JOIN Lookups.MentorStatuses ms ON m.MentorStatusID = ms.MentorStatusID
 WHERE 1=1
     AND s.StudentStatusID IN (1,3,4,5)
     AND s.IsDeleted = 0
