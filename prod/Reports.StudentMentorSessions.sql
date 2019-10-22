@@ -13,7 +13,7 @@ SELECT
     sch.SchoolName,
     c.CountyName,
     sms.SessionDate,
-    mentorsessiontypename,
+    mentorsessiontypename AS SessionType,
     sms.SessionNote,
     sms.SessionDuration,
     s.Affiliation,
