@@ -10,6 +10,19 @@ WITH mentor_languages (mentorid, languagename) AS
 		SELECT mentorid,  languagename = STUFF((SELECT ',' + languagename  FROM mentor_languages t1 WHERE t1.mentorid = t2.mentorid FOR XML PATH ('')), 1, 1, '')
 		from mentor_languages t2
 		group by mentorid
+	 ),
+	 school_preference (mentorid, school_with_pref) AS
+	(
+	 SELECT mentorid, CONCAT(preferencerank, ':', sch.schoolname) AS school_with_pref
+	 FROM   [Mentors].[SchoolPreferences] prefs
+	 INNER JOIN  schools.schools sch ON sch.schoolid=prefs.schoolid
+	 WHERE  prefs.IsDeleted = 0
+	 ),
+	formatted_schoolprefs (mentorid, schoolpref) AS
+	 (
+		SELECT mentorid,  schoolpref = STUFF((SELECT ';' + school_with_pref  FROM school_preference t1 WHERE t1.mentorid = t2.mentorid FOR XML PATH ('')), 1, 1, '')
+		from school_preference t2
+		group by mentorid
 	 )
 
 SELECT  Sal.SalutationName
@@ -34,6 +47,7 @@ SELECT  Sal.SalutationName
       , CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedDriversLicense)) AS DriversLicense
       , M.EmployerName
       , M.CompanyName
+	  , M.JobTitle
       , M.IsHispanic
 	  , languagename AS Languages
 	  , M.MentorStatusID
@@ -46,6 +60,7 @@ SELECT  Sal.SalutationName
       , M.FormerStudent
       , M.SchoolEmployee
       , SA.SchoolAreaName as PreferredSchoolArea
+	  , formatted_schoolprefs.schoolpref AS SchoolPreferences
       , M.RecruitedBy
       , M.ReferredBy
       , M.IsVIP
@@ -88,8 +103,10 @@ FROM Mentors.Mentors M
 	LEFT OUTER JOIN Lookups.MentorStatuses MS ON M.MentorStatusID = MS.MentorStatusID
 	LEFT OUTER JOIN Offices.Staff St On M.PrimaryAdvocateID = St.StaffID And St.IsDeleted = 0
 	LEFT JOIN formatted_languages ON m.mentorid=formatted_languages.mentorid
+	LEFT JOIN formatted_schoolprefs ON m.mentorid=formatted_schoolprefs.mentorid
 WHERE
 	M.IsDeleted = 0
 	--And O.IsDeleted = 0
 	--And St.IsDeleted = 0
  --And M.OfficeID = 40
+
