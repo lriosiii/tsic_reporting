@@ -33,6 +33,7 @@ SELECT  Sal.SalutationName
 	  ,m.MentorID
       , '***-**-' + RIGHT(CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedSSN)), 4) As SSN
       , CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedBirthDate)) AS BirthDate
+      , DATEDIFF(yy,CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedBirthDate)),GETDATE()) as Age
       , M.Gender
       , A.Address1 as MentorAddress1
       , A.Address2 as MentorAddress2
