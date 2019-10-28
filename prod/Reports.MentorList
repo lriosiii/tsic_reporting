@@ -1,3 +1,17 @@
+WITH mentor_languages (mentorid, languagename) AS
+	(
+	 SELECT      ML.MentorID,  L.[LangaugeName]
+	 FROM   [Mentors].[Languages] ML
+	 INNER JOIN [Lookups].[Languages] L ON ML.LanguageID = L.LangaugeID
+	 WHERE  ML.IsDeleted = 0
+	 ),
+	 formatted_languages (mentorid, languagename) AS
+	 (
+		SELECT mentorid,  languagename = STUFF((SELECT ',' + languagename  FROM mentor_languages t1 WHERE t1.mentorid = t2.mentorid FOR XML PATH ('')), 1, 1, '')
+		from mentor_languages t2
+		group by mentorid
+	 )
+
 SELECT  Sal.SalutationName
 	  , M.FirstName
 	  , M.MiddleName
@@ -21,6 +35,7 @@ SELECT  Sal.SalutationName
       , M.EmployerName
       , M.CompanyName
       , M.IsHispanic
+	  , languagename AS Languages
 	  , M.MentorStatusID
 	  , M.Predator
 	  , M.BackgroundCheckExpirationDate
@@ -72,6 +87,7 @@ FROM Mentors.Mentors M
 	LEft OUTER Join lookups.Counties co on co.CountyID = m.CountyID
 	LEFT OUTER JOIN Lookups.MentorStatuses MS ON M.MentorStatusID = MS.MentorStatusID
 	LEFT OUTER JOIN Offices.Staff St On M.PrimaryAdvocateID = St.StaffID And St.IsDeleted = 0
+	LEFT JOIN formatted_languages ON m.mentorid=formatted_languages.mentorid
 WHERE
 	M.IsDeleted = 0
 	--And O.IsDeleted = 0
