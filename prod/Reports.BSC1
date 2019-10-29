@@ -207,8 +207,8 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 			(Select cast(count(csce.StudentID) as int)
 				from CollegeSuccessCoachVisits csce
 				left join reports.BSC_Dates bdi on bdi.studentid = csce.StudentID
-				 where ((csce.Grade between 11 and 12 and csce.TotalVisit >=4 and bdi.MMCSCDate <'2019-11-01')
-					or	(csce.Grade between 5 and 10 and csce.TotalVisit >=2 and bdi.mmcscdate <= '2019-11-01')
+				 where ((csce.Grade between 11 and 12 and csce.TotalVisit >=2 and bdi.MMCSCDate <'2019-11-01')
+					or	(csce.Grade between 5 and 10 and csce.TotalVisit >=1 and bdi.mmcscdate <= '2019-11-01')
 					or	(csce.grade between 11 and 12 and csce.TotalVisit >=2 and bdi.MMCSCDate between '2019-11-01' and '2020-03-31')
 					or	(csce.Grade between 5 and 10 and csce.TotalVisit >=1 and bdi.mmcscdate between '2019-11-01' and '2020-03-31'))
 				 and csce.OfficeID = ss.OfficeID
