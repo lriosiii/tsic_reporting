@@ -10,25 +10,26 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 	),
 
 	-- CTE for last mentor/student session date
---	LastMentorSessionDate (LastSessionDate, StudentID) As
---	(
---		select t.Lastsession
---			,s.studentid
---			from students.students s
---			left join Reports.BSC_Dates t on t.Studentid = s.StudentID
---			where s.StudentStatusID in (1,3,4,5)
---	),
+	--LastMentorSessionDate (LastSessionDate, StudentID) As
+	--(
+	--	select t.Lastsession
+	--		,s.studentid
+	--		from students.students s
+	--		left join Reports.BSC_Dates t on t.Studentid = s.StudentID
+	--		where s.StudentStatusID in (1,3,4,5)
+	--),
 
 	---- CTE for last mentor/student session date
---	FirstMentorSessionDate (FirstSessionDate, StudentID) As
---	(
---		Select t.Firstsession
---			,s.studentid
---			from students.students s
---			left join Reports.BSC_Dates t on t.Studentid = s.StudentID
---			where s.StudentStatusID in (1,3,4,5)
---
---	),
+	--FirstMentorSessionDate (FirstSessionDate, StudentID) As
+	--(
+	--	Select t.Firstsession
+	--		,s.studentid
+	--		from students.students s
+	--		left join Reports.BSC_Dates t on t.Studentid = s.StudentID
+	--		where s.StudentStatusID in (1,3,4,5)
+
+	--),
+
 
 	Dates (StartDate, EndDate, StudentID) as
 	(
@@ -39,16 +40,16 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 					when d.IsTransfer = 1 and d.Firstsession is null and d.TstartDates < d.EndDate then d.TstartDates
 					when d.IsTransfer = 1 and d.Firstsession > d.TstartDates then d.TstartDates
 					when d.IsTransfer = 1 and d.Firstsession <= d.TstartDates then d.Firstsession
-					when d.IsTransfer = 0 and d.ContractSignedDate < '2018-09-16' then d.TstartDates
+					when d.IsTransfer = 0 and d.ContractSignedDate < '2019-09-16' then d.TstartDates
 
 
 				--when ss.ContractSignedDate < '2017-09-16' then Convert (date, '2017-10-15')
-					when d.IsTransfer = 0 and d.ContractSignedDate >= '2018-09-16' and d.FirstSession is null and Convert (date, DATEADD(Day,30,d.ContractSignedDate)) >= d.EndDate then null
-					when d.IsTransfer = 0 and d.ContractSignedDate >= '2018-09-16' and d.FirstSession is null and Convert (date, DATEADD(Day,30,d.ContractSignedDate)) < d.EndDate then Convert (date, DATEADD(Day,30,d.ContractSignedDate))
-					when d.IsTransfer = 0 and d.ContractSignedDate >= '2018-09-16' and d.FirstSession < '2018-10-15' then Convert (date,'2018-10-15')
+					when d.IsTransfer = 0 and d.ContractSignedDate >= '2019-09-16' and d.FirstSession is null and Convert (date, DATEADD(Day,30,d.ContractSignedDate)) >= d.EndDate then null
+					when d.IsTransfer = 0 and d.ContractSignedDate >= '2019-09-16' and d.FirstSession is null and Convert (date, DATEADD(Day,30,d.ContractSignedDate)) < d.EndDate then Convert (date, DATEADD(Day,30,d.ContractSignedDate))
+					when d.IsTransfer = 0 and d.ContractSignedDate >= '2019-09-16' and d.FirstSession < '2019-10-15' then Convert (date,'2019-10-15')
 					--when ss.ContractSignedDate >= '2017-09-16' and fmsd.FirstSessionDate > '2017-10-15' then Convert (date,fmsd.FirstSessionDate) took out and split into 2 categories below -DR
-					when d.IsTransfer = 0 and d.ContractSignedDate >= '2018-09-16' and d.FirstSession > Convert (date, DATEADD(Day,30,d.ContractSignedDate)) then Convert (date, DATEADD(Day,30,d.ContractSignedDate))
-					when d.IsTransfer = 0 and d.ContractSignedDate >= '2018-09-16' and d.FirstSession <= Convert (date, DATEADD(Day,30,d.ContractSignedDate)) then Convert (date,d.FirstSession)
+					when d.IsTransfer = 0 and d.ContractSignedDate >= '2019-09-16' and d.FirstSession > Convert (date, DATEADD(Day,30,d.ContractSignedDate)) then Convert (date, DATEADD(Day,30,d.ContractSignedDate))
+					when d.IsTransfer = 0 and d.ContractSignedDate >= '2019-09-16' and d.FirstSession <= Convert (date, DATEADD(Day,30,d.ContractSignedDate)) then Convert (date,d.FirstSession)
 
 
 					else ''
@@ -81,57 +82,58 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 	),
 
 	-- CTE for mentor/student assigned date
---	MentorAssignedDate (AssignedDate, DTU, StudentID, OfficeID) As
---	(
---		Select MIN(sms.AssignedDate) As AssignedDate,
---			Case when Convert (date, GETDATE()) > '2019-06-01'
---		Then '2019-06-01'
---		Else
---		CONVERT(date, GetDate())
---		End As DateTU
---			,ss.StudentID,
---			ss.OfficeID
---		From Students.StudentMentors sms
---			Join Students.Students ss
---				On ss.StudentID = sms.StudentID
---		Where ss.StudentStatusID
---				In (1, 3, 4, 5) -- All active except "On Hold"
---			--And ss.ContractSignedDate
---			--	< '2014-06-30'
---			--And (sms.UnassignedDate > '2013-08-01' OR SMS.UnassignedDate IS NULL)
---			And (SMS.UnassignedDate IS NULL)
---			AND SMS.MentorAssignmentTypeID = 1
---			--AND SMS.IsPrimary = 1
---						And SMS.IsDeleted = 0
---		Group By ss.StudentID, ss.OfficeID
---		--Order By ss.StudentID --for testing
---	),
+	MentorAssignedDate (AssignedDate, DTU, StudentID, OfficeID) As
+	(
+		Select MIN(sms.AssignedDate) As AssignedDate,
+			Case when Convert (date, GETDATE()) > '2020-06-01'
+		Then '2020-06-01'
+		Else
+		CONVERT(date, GetDate())
+		End As DateTU
+			,ss.StudentID,
+			ss.OfficeID
+		From Students.StudentMentors sms
+			Join Students.Students ss
+				On ss.StudentID = sms.StudentID
+		Where ss.StudentStatusID
+				In (1, 3, 4, 5) -- All active except "On Hold"
+			--And ss.ContractSignedDate
+			--	< '2014-06-30'
+			--And (sms.UnassignedDate > '2013-08-01' OR SMS.UnassignedDate IS NULL)
+			And (SMS.UnassignedDate IS NULL)
+			AND SMS.MentorAssignmentTypeID = 1
+			--AND SMS.IsPrimary = 1
+						And SMS.IsDeleted = 0
+		Group By ss.StudentID, ss.OfficeID
+		--Order By ss.StudentID --for testing
+	),
 
 	-- CTE for mentor names
---	MentorNamesCte (StudentID, Mentors) As
---	(
---		Select Main.StudentID,
---       Left(Main.Mentors,Len(Main.Mentors)-1) As "Mentors"
---From(Select distinct ST2.StudentID,
---           (Select ST1.FirstName + ' ' + ST1.LastName + ', ' AS [text()]
---            From Mentors.Mentors ST1
---				Left Outer Join Students.StudentMentors SMS ON ST1.MentorID = SMS.MentorID
---            Where SMS.StudentID = ST2.StudentID
---				--AND (SMS.UnassignedDate > '2013-08-01' OR SMS.UnassignedDate IS NULL)
---				AND SMS.AssignedDate <= CONVERT (date, GETDATE())
---				AND (SMS.UnassignedDate IS NULL)
---				AND (SMS.MentorAssignmentTypeID = 1)
---            For XML PATH ('')) [Mentors]
---     From Students.Students ST2) [Main]
---	 --ORDER BY Main.StudentID
---	),
+	--MentorNamesCte (StudentID, Mentors) As
+	--(
+	--   Select Main.StudentID,
+ --      Left(Main.Mentors,Len(Main.Mentors)-1) As "Mentors"
+	--   From(Select distinct ST2.StudentID,
+ --          (Select ST1.FirstName + ' ' + ST1.LastName + ', ' AS [text()]
+ --           From Mentors.Mentors ST1
+	--			Left Outer Join Students.StudentMentors SMS ON ST1.MentorID = SMS.MentorID
+ --           Where SMS.StudentID = ST2.StudentID
+	--			--AND (SMS.UnassignedDate > '2013-08-01' OR SMS.UnassignedDate IS NULL)
+	--			AND SMS.AssignedDate <= CONVERT (date, GETDATE())
+	--			AND (SMS.UnassignedDate IS NULL)
+	--			AND (SMS.MentorAssignmentTypeID = 1)
+ --           For XML PATH ('')) [Mentors]
+ --    From Students.Students ST2) [Main]
+	-- --ORDER BY Main.StudentID
+	--),
+
 	Final (StudentId, TotalMonths, Average, Officeid, OfficeName) as
 
 
 	(Select	ss.StudentID
 
 			,tmcte.TotalMonths
-			,case when convert(date, getdate()) < '2018-10-16' then null
+			,case when convert(date, getdate()) < '2019-10-16' then null
 					else round(convert(decimal,(tmscte.TotalMentorSessions/tmcte.TotalMonths)),3)
 					end as 'AvgSession/Month'
 
@@ -153,23 +155,36 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 
 			and ss.IsDeleted = 0
 			group by OfficeName, ss.StudentID,tmcte.TotalMonths, TotalMentorSessions, ss.OfficeID
-    )
+)
 	,
 
 	TMonths (OfficeId, TotalMts, OfficeName) as
 
-    (Select Officeid, count(TotalMonths)as Totalmts, OfficeName
-    from Final
-    where TotalMonths is not null
-    group by Officeid, OfficeName)
+(Select Officeid, count(TotalMonths)as Totalmts, OfficeName
+from Final
+where TotalMonths is not null
+group by Officeid, OfficeName
+)
 
-    ,taverage (OfficeId, Totalav, OfficeName) as
+,taverage (OfficeId, Totalav, OfficeName) as
 
-    (Select Officeid, count(Average)as Totalaverage, OfficeName
-    from Final
-    where Average >=2
-    group by Officeid, OfficeName)
+(Select Officeid, count(Average)as Totalaverage, OfficeName
+from Final
+where Average >=2
+group by Officeid, OfficeName)
 
+, timelymatchesCTE (officeid, officename, true_total, false_total, null_total, all_total) as
+	(SELECT
+		bsc_tmm.officeid,
+		offic.officename,
+		sum(case when timelymatch = 'True' then 1 else 0 end) AS trueCount,
+		sum(case when timelymatch = 'False' then 1 else 0 end) AS falseCount,
+		sum(case when timelymatch IS NULL then 1 else 0 end) AS nullCount,
+		count(*) AS total
+	FROM Reports.BSC__nTimelyMentorMatch bsc_tmm
+	LEFT JOIN offices.offices offic ON bsc_tmm.officeid=offic.officeid
+	GROUP BY bsc_tmm.officeid, offic.officename
+	)
 
 Select
 		8 As DataPointNumber,
@@ -179,14 +194,54 @@ Select
 		IsNull(sum(tav.Totalav), 0)  As KPI, --ValueMatch
 		IsNull(sum(Tmon.TotalMts), 0)  As Total, -- Total
 		Convert(Int, Ceiling((IsNull(sum(tav.Totalav), 0) / Cast(Tmon.TotalMts As Decimal)) * 100)) As Result, -- percent
-            CASE
-            when Convert(Int, Ceiling((IsNull(sum(tav.Totalav), 0) / Cast(Tmon.TotalMts As Decimal)) * 100)) between 85 and 100 then 20
-            when Convert(Int, Ceiling((IsNull(sum(tav.Totalav), 0) / Cast(Tmon.TotalMts As Decimal)) * 100)) between 70 and 84 then 9
-            when Convert(Int, Ceiling((IsNull(sum(tav.Totalav), 0) / Cast(Tmon.TotalMts As Decimal)) * 100)) < 70 then 0
-            else ''
+		CASE when Convert(Int, Ceiling((IsNull(sum(tav.Totalav), 0) / Cast(Tmon.TotalMts As Decimal)) * 100)) between 85 and 100 then 25
+		when Convert(Int, Ceiling((IsNull(sum(tav.Totalav), 0) / Cast(Tmon.TotalMts As Decimal)) * 100)) between 70 and 84 then 18
+		when Convert(Int, Ceiling((IsNull(sum(tav.Totalav), 0) / Cast(Tmon.TotalMts As Decimal)) * 100)) < 70 then 0
+		else ''
 		end as Score,
 		'' as Comments,
 		Tmon.OfficeID
 	From TMonths Tmon
 		left join taverage tav  on Tmon.OfficeID = tav.OfficeID
 	group by Tmon.OfficeName, tmon.OfficeID, Tmon.TotalMts
+
+				UNION
+
+
+--Midyear Datapoint 9
+
+SELECT
+		9 AS DataPointNumber,
+		'New student timely matches' AS 'Metric',
+		officeName,
+		true_total	AS KPI,
+		all_total-null_total	AS TotalNew,
+		true_total * 100/(all_total-null_total) AS Result,
+		CASE
+			WHEN true_total * 100/(all_total-null_total) BETWEEN 98 AND 100 THEN 5
+			WHEN true_total * 100/(all_total-null_total) BETWEEN 95 AND 97 THEN 3
+			WHEN true_total * 100/(all_total-null_total) < 95 THEN 0
+			ELSE ''
+			END AS Score,
+		'' AS Comments,
+		officeid
+	From timelymatchesCTE
+
+--Full year Datapoint 9
+
+--SELECT
+--		9 AS DataPointNumber,
+--		'New student timely matches' AS 'Metric',
+--		officeName,
+--		true_total  AS KPI,
+--		all_total	AS TotalNew,
+--		true_total * 100/all_total AS Result,
+--		CASE
+--			WHEN true_total * 100/all_total BETWEEN 98 AND 100 THEN 5
+--			WHEN true_total * 100/all_total BETWEEN 95 AND 97 THEN 3
+--			WHEN true_total * 100/all_total < 95 THEN 0
+--			ELSE ''
+--			END AS Score,
+--		'' AS Comments,
+--		officeid
+--	From timelymatchesCTE
