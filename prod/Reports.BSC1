@@ -201,10 +201,12 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 			(Select cast(count(csce.StudentID) as int)
 				from CollegeSuccessCoachVisits csce
 				left join reports.BSC_Dates bdi on bdi.studentid = csce.StudentID
-				 where ((csce.Grade between 11 and 12 and csce.TotalVisit >=4 and bdi.MMCSCDate <'2019-11-01')
-					or	(csce.Grade between 5 and 10 and csce.TotalVisit >=2 and bdi.mmcscdate <= '2019-11-01')
-					or	(csce.grade between 11 and 12 and csce.TotalVisit >=2 and bdi.MMCSCDate between '2019-11-01' and '2020-03-31')
-					or	(csce.Grade between 5 and 10 and csce.TotalVisit >=1 and bdi.mmcscdate between '2019-11-01' and '2020-03-31'))
+				 where (
+                     (csce.Grade between 11 and 12 and csce.TotalVisit >=2 and bdi.MMCSCDate <'2019-11-01')
+                        or	(csce.Grade between 5 and 10 and csce.TotalVisit >=1 and bdi.mmcscdate <= '2019-11-01')
+--                        or	(csce.grade between 11 and 12 and csce.TotalVisit >=2 and bdi.MMCSCDate between '2019-11-01' and '2020-03-31')
+--                        or	(csce.Grade between 5 and 10 and csce.TotalVisit >=1 and bdi.mmcscdate between '2019-11-01' and '2020-03-31')
+					)
 				 and csce.OfficeID = ss.OfficeID
 				 )as KPI
 			,o.OfficeName
@@ -731,7 +733,7 @@ Union
 		--actt.CountyID,
 		actt.OfficeName,
 		SUM(actt.TotalActiveStudents)  As KPI, --ValueMatch, -- Count of students that match
-		tr.TotalRecruitedStudents As Total, -- Total recruited students for same period
+		tr.TotalRecruitedStudents As Total, -- Total recruitedCollegeSuccessCoachVisits students for same period
 		Convert(Int, Ceiling((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) As Result, -- percent
 		CASE when Convert(Int, Ceiling((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) between 75 and 85 then 10
 		when Convert(Int, Ceiling((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) between 86 and 100 then 8
