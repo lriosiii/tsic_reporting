@@ -202,8 +202,8 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 				from CollegeSuccessCoachVisits csce
 				left join reports.BSC_Dates bdi on bdi.studentid = csce.StudentID
 				 where (
-                     (csce.Grade between 11 and 12 and csce.TotalVisit >=2 and bdi.MMCSCDate <'2019-11-01')
-                        or	(csce.Grade between 5 and 10 and csce.TotalVisit >=1 and bdi.mmcscdate <= '2019-11-01')
+                     (csce.Grade between 11 and 12 and csce.TotalVisit >=2 and bdi.MMCSCDate <= '2019-10-31')
+                        or	(csce.Grade between 5 and 10 and csce.TotalVisit >=1 and bdi.mmcscdate <= '2019-10-31')
 --                        or	(csce.grade between 11 and 12 and csce.TotalVisit >=2 and bdi.MMCSCDate between '2019-11-01' and '2020-03-31')
 --                        or	(csce.Grade between 5 and 10 and csce.TotalVisit >=1 and bdi.mmcscdate between '2019-11-01' and '2020-03-31')
 					)
@@ -213,7 +213,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 			,(Select Cast(count(csc.StudentID) as int)
 				from Students.Students csc
 				left join reports.BSC_Dates bdi on bdi.StudentID = csc.StudentID
-			where csc.OfficeID = ss.OfficeID and  bdi.MMCSCDate <= '2019-11-01' and csc.StudentStatusID in (1,3,4,5) and csc.IsDeleted = 0
+			where csc.OfficeID = ss.OfficeID and  bdi.MMCSCDate <= '2019-10-31' and csc.StudentStatusID in (1,3,4,5) and csc.IsDeleted = 0
 			) TotalVisit
 			,ss.OfficeID
 
