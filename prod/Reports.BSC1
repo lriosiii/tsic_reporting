@@ -224,483 +224,78 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 	group by  o.OfficeName, ss.OfficeID
 	)
 
-	, DataReq (OfficeName, SSN, Fname, LName, Birthdate, County, Gender, Address1, city, state1, zipcode, phone, emailaddress, school,grade,
-entrygrade, incomesubmitted, finalreportcard, interviewsconducted, checktranscripts, financiallyqualified, referenceform, entrygpa, semestergpa,
-riskfactors, studenttype, contracttype, scholarshipnumber, timelymentor, race, ishispanic, advocate, contractsigndate, familysituation, guardianname,
-guardianaddress, guardiancity, guardianstate, guardianzip, guardianphone, guardianemail, brightfutures, duallenrollment, APcredits,
-Mentorfname, mentorlname, mentorDOB, mentorgender, mentorsal, mentorcounty, mentorrace, mentorjoin, mentorphone, mentoraddress, mentorcity, mentorstate, mentorzip, mentoremail,
-mentorbckgrd, mentortraining, mentorfingerprint, officeid) as
-
-(Select
-		o.Officename
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		where ss.SSN is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as snn
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		where ss.FirstName is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as fname
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		where ss.LastName is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as lname
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		where ss.BirthDate is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as Birthdate
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		where ss.CountyID is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as County
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		where ss.Gender is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as gender
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join Common.Addresses ca on ca.AddressID = ss.AddressID
-		where ca.Address1 is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as 'address1'
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join Common.Addresses ca on ca.AddressID = ss.AddressID
-		where ca.City is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as 'city'
-
-			,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join Common.Addresses ca on ca.AddressID = ss.AddressID
-		where ca.StateID is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as 'state1'
-
-			,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join Common.Addresses ca on ca.AddressID = ss.AddressID
-		where ca.ZipCode is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as 'ZipCode'
-
-			,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		where (ss.MobilePhoneNumber is null and ss.HomePhoneNumber is null) and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as Phone
-
-			,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		where ss.EmailAddress is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as EmailAddress
-
-			,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		where ss.SchoolID is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as School
-
-			,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		where ss.CurrentGradeLevelID is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as Grade
-
-			,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		where ss.EntryGradeLevelID is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as EntryGrade
-
-			,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join students.Applications sa on sa.StudentID = ss.StudentID
-		where sa.IncomeEligibilityDocumentsSubmited = 0 and sa.ApplicationCompletionDate is not null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as IncomeEligible
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join students.Applications sa on sa.StudentID = ss.StudentID
-		where sa.FinalReportCardSubmited = 0 and sa.ApplicationCompletionDate is not null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as FinalReportCard
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join students.Applications sa on sa.StudentID = ss.StudentID
-		where sa.InterviewsConducted = 0 and sa.ApplicationCompletionDate is not null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as interviewsConducted
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join students.Applications sa on sa.StudentID = ss.StudentID
-		where sa.CheckTranscripts = 0 and sa.ApplicationCompletionDate is not null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as CheckTranscripts
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join students.Applications sa on sa.StudentID = ss.StudentID
-		where sa.FinanciallyQualified = 0 and sa.ApplicationCompletionDate is not null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as FinanciallyQualified
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join students.Applications sa on sa.StudentID = ss.StudentID
-		where sa.ReferenceFormSubmitted = 0 and sa.ApplicationCompletionDate is not null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as ReferenceSubmitted
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join students.Applications sa on sa.StudentID = ss.StudentID
-		where ((ss.EntryGPA is null and sa.GPA is null) or (ss.EntryGPA = 0 and sa.GPA = 0)) and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as EntryGPA
-
-		--TODO: Possible duplication of studentIDs through joins
-		,(select case when GETDATE() < '2020-03-31' then 0
-		else
-		(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join students.GPA g on g.StudentID = ss.StudentID
-		where ss.StudentStatusID in (1,3,4,5)
-		and ss.ContractSignedDate < '2019-11-01'
-		and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		and ss.StudentID not in
-		(select sg.StudentID
-		from students.GPA sg
-		where sg.SemesterEndDate between '2019-12-01' and '2020-03-31' and sg.SchoolTermTypeID in (17,30,0) and sg.IsDeleted = 0
-		))
-		end as SemesterGPA) as SemesterGPA
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join students.Applications sa on sa.StudentID = ss.StudentID
-		where sa.RiskFactorScore is null and sa.ApplicationCompletionDate is not null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and oo.OfficeID = ss.OfficeID
-		) RiskFactor
-
-			,(select count(distinct ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join students.Applications sa on sa.StudentID = ss.StudentID
-		where sa.PriorityType is null and ss.PriorityType is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as StudentType
-
-		,(select count(distinct ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join students.Applications sa on sa.StudentID = ss.StudentID
-		where ss.ContractTypeID is null  and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as ContractType
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join Offices.Scholarships os on ss.StudentID = os.StudentID
-		left join Reports.BSC_dates bd on bd.StudentID = ss.StudentID
-		where (os.ContractNumber is null or os.HoursAvail = 0 ) and ss.WfiEligible = 0
-		and ss.StudentStatusID in (1,3,4,5) and bd.xIsTransfer = 0 and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as ScholarshipNumber
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join reports.BSC__nTimelyMentorMatch bsm on bsm.StudentID = ss.StudentID
-		where bsm.TimelyMatch = 'False' and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as TimelyMentor
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		where ss.RaceID is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as Race
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		where ss.IsHispanic is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as IsHispanic
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		where ss.AdvocateID is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as Advocate
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		where ss.ContractSignedDate is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as ContractSignedDate
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		where ss.FamilySituationID is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as Familysituation
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		where ss.FirstGenerationCollegeStudent is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as FirstGeneration
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join students.Contacts sc on sc.StudentID = ss.StudentID
-		where sc.ContactName is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as GuardianName
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join students.Contacts sc on sc.StudentID = ss.StudentID
-		left join common.Addresses ca on ca.AddressID = sc.AddressID
-		where ca.Address1 is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as Guardianaddress
-
-			,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join students.Contacts sc on sc.StudentID = ss.StudentID
-		left join common.Addresses ca on ca.AddressID = sc.AddressID
-		where ca.City is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as GuardianCity
-
-			,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join students.Contacts sc on sc.StudentID = ss.StudentID
-		left join common.Addresses ca on ca.AddressID = sc.AddressID
-		where ca.StateID is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as Guardianstate
-
-			,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join students.Contacts sc on sc.StudentID = ss.StudentID
-		left join common.Addresses ca on ca.AddressID = sc.AddressID
-		where ca.ZipCode is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as GuardianZip
-
-			,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join students.Contacts sc on sc.StudentID = ss.StudentID
-		where (sc.ContactCellPhone is null  and sc.ContactHomePhone is null and sc.ContactWorkPhone is null) and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as GuardianPhone
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		left join students.Contacts sc on sc.StudentID = ss.StudentID
-		where sc.EmailAddress is null and ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as GuardianEmail
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID
-		--left join students.Contacts sc on sc.StudentID = ss.StudentID								--DON'T MISS THIS UPDATE
-		where ss.BrightFutureID is null and ss.StudentStatusID in (11,12,13,14,15) and ss.GraduationYear = 2019 and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as BrightFutures
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID											--DON'T MISS THIS UPDATE
-		where ss.DualEnrollmentCredits is null and ss.StudentStatusID in (11,12,13,14,15) and ss.GraduationYear = 2019 and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as DualEnrollment
-
-		,(select count(ss.StudentID)
-		from students.students ss
-		left join offices.offices oo on oo.OfficeID = ss.OfficeID									--DON'T MISS THIS UPDATE
-		where ss.APCredits is null and ss.StudentStatusID in (11,12,13,14,15) and ss.GraduationYear = 2019 and ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID
-		) as APCredits
-
-		,(select count(mm.MentorID)
-		from mentors.mentors mm
-		left join offices.offices oo on oo.OfficeID = mm.OfficeID
-		left join mentors.Applications map on map.MentorID = mm.MentorID
-		where mm.FirstName is null and mm.MentorStatusID = 1  and map.ApplicationStartDate > '2013-12-31' and mm.IsDeleted = 0 and o.OfficeID = mm.OfficeID
-		) as MentorFirst
-
-		,(select count(mm.MentorID)
-		from mentors.mentors mm
-		left join offices.offices oo on oo.OfficeID = mm.OfficeID
-		left join mentors.Applications map on map.MentorID = mm.MentorID
-		where mm.LastName is null and mm.MentorStatusID = 1  and map.ApplicationStartDate > '2013-12-31' and mm.IsDeleted = 0 and o.OfficeID = mm.OfficeID
-		) as Mentorlast
-
-		,(select count(mm.MentorID)
-		from mentors.mentors mm
-		left join offices.offices oo on oo.OfficeID = mm.OfficeID
-		left join mentors.Applications map on map.MentorID = mm.MentorID
-		where mm.BirthDate is null and mm.MentorStatusID = 1  and map.ApplicationStartDate > '2013-12-31' and mm.IsDeleted = 0 and o.OfficeID = mm.OfficeID
-		) as MentorDOB
-
-		,(select count(mm.MentorID)
-		from mentors.mentors mm
-		left join offices.offices oo on oo.OfficeID = mm.OfficeID
-		left join mentors.Applications map on map.MentorID = mm.MentorID
-		where mm.Gender is null and mm.MentorStatusID = 1  and map.ApplicationStartDate > '2013-12-31' and mm.IsDeleted = 0 and o.OfficeID = mm.OfficeID
-		) as MentorGender
-
-		,(select count(mm.MentorID)
-		from mentors.mentors mm
-		left join offices.offices oo on oo.OfficeID = mm.OfficeID
-		left join mentors.Applications map on map.MentorID = mm.MentorID
-		where mm.SalutationID is null and mm.MentorStatusID = 1  and map.ApplicationStartDate > '2013-12-31' and mm.IsDeleted = 0 and o.OfficeID = mm.OfficeID
-		) as MentorSalutation
-
-		,(select count(mm.MentorID)
-		from mentors.mentors mm
-		left join offices.offices oo on oo.OfficeID = mm.OfficeID
-		left join mentors.Applications map on map.MentorID = mm.MentorID
-		where mm.CountyID is null and mm.MentorStatusID = 1  and map.ApplicationStartDate > '2013-12-31' and mm.IsDeleted = 0 and o.OfficeID = mm.OfficeID
-		) as MentorCounty
-
-		,(select count(mm.MentorID)
-		from mentors.mentors mm
-		left join offices.offices oo on oo.OfficeID = mm.OfficeID
-		left join mentors.Applications map on map.MentorID = mm.MentorID
-		where mm.RaceID is null and mm.MentorStatusID = 1  and map.ApplicationStartDate > '2013-12-31' and mm.IsDeleted = 0 and o.OfficeID = mm.OfficeID
-		) as MentorRace
-
-		,(select count(mm.MentorID)
-		from mentors.mentors mm
-		left join offices.offices oo on oo.OfficeID = mm.OfficeID
-		left join mentors.Applications map on map.MentorID = mm.MentorID
-		where mm.JoinReasonID is null and mm.MentorStatusID = 1  and map.ApplicationStartDate > '2013-12-31' and mm.IsDeleted = 0 and o.OfficeID = mm.OfficeID
-		) as MentorJoinReason
-
-		,(select count(mm.MentorID)
-		from mentors.mentors mm
-		left join offices.offices oo on oo.OfficeID = mm.OfficeID
-		left join mentors.Applications map on map.MentorID = mm.MentorID
-		where (mm.HomePhoneNumber is null and mm.WorkPhoneNumber is null and mm.MobilePhoneNumber is null) and  mm.MentorStatusID = 1  and map.ApplicationStartDate > '2013-12-31' and mm.IsDeleted = 0 and o.OfficeID = mm.OfficeID
-		) as MentorPhone
-
-		,(select count(mm.MentorID)
-		from mentors.mentors mm
-		left join offices.offices oo on oo.OfficeID = mm.OfficeID
-		left join mentors.Applications map on map.MentorID = mm.MentorID
-		left join Common.Addresses ca on ca.AddressID = mm.AddressID
-		where ca.Address1 is null and  mm.MentorStatusID = 1  and map.ApplicationStartDate > '2013-12-31' and mm.IsDeleted = 0 and o.OfficeID = mm.OfficeID
-		) as MentorAddress
-
-		,(select count(mm.MentorID)
-		from mentors.mentors mm
-		left join offices.offices oo on oo.OfficeID = mm.OfficeID
-		left join mentors.Applications map on map.MentorID = mm.MentorID
-		left join Common.Addresses ca on ca.AddressID = mm.AddressID
-		where ca.City is null and  mm.MentorStatusID = 1  and map.ApplicationStartDate > '2013-12-31' and mm.IsDeleted = 0 and o.OfficeID = mm.OfficeID
-		) as MentorCity
-
-		,(select count(mm.MentorID)
-		from mentors.mentors mm
-		left join offices.offices oo on oo.OfficeID = mm.OfficeID
-		left join mentors.Applications map on map.MentorID = mm.MentorID
-		left join Common.Addresses ca on ca.AddressID = mm.AddressID
-		where ca.StateID is null and  mm.MentorStatusID = 1  and map.ApplicationStartDate > '2013-12-31' and mm.IsDeleted = 0 and o.OfficeID = mm.OfficeID
-		) as MentorState
-
-		,(select count(mm.MentorID)
-		from mentors.mentors mm
-		left join offices.offices oo on oo.OfficeID = mm.OfficeID
-		left join mentors.Applications map on map.MentorID = mm.MentorID
-		left join Common.Addresses ca on ca.AddressID = mm.AddressID
-		where ca.ZipCode is null and  mm.MentorStatusID = 1  and map.ApplicationStartDate > '2013-12-31' and mm.IsDeleted = 0 and o.OfficeID = mm.OfficeID
-		) as MentorZip
-
-		,(select count(mm.MentorID)
-		from mentors.mentors mm
-		left join offices.offices oo on oo.OfficeID = mm.OfficeID
-		left join mentors.Applications map on map.MentorID = mm.MentorID
-		where map.BackgroundCheckReceivedDate is null and mm.MentorStatusID = 1  and map.ApplicationStartDate > '2013-12-31' and mm.IsDeleted = 0 and o.OfficeID = mm.OfficeID
-		) as MentorBGDDate
-
-		,(select count(mm.MentorID)
-		from mentors.mentors mm
-		left join offices.offices oo on oo.OfficeID = mm.OfficeID
-		left join mentors.Applications map on map.MentorID = mm.MentorID
-		where mm.TrainingCompletedDate is null and mm.MentorStatusID = 1  and map.ApplicationStartDate > '2013-12-31' and mm.IsDeleted = 0 and o.OfficeID = mm.OfficeID
-		) as MentorTrainingDate
-
-		,(select count(mm.MentorID)
-		from mentors.mentors mm
-		left join offices.offices oo on oo.OfficeID = mm.OfficeID
-		left join mentors.Applications map on map.MentorID = mm.MentorID
-		where mm.FingerPrintDate is null and mm.MentorStatusID = 1  and map.ApplicationStartDate > '2013-12-31' and mm.IsDeleted = 0 and o.OfficeID = mm.OfficeID
-		) as MentorFingerPrint
-		,o.OfficeID
-
-		From Offices.offices o
-		where o.IsDeleted = 0 and o.OfficeID not in (18,19,20))
-
-, MissingDataPt (OfficeName, MissingDataPt, OfficeID) as
-
-(
-	select OfficeName,
-	 (SSN + Fname +  LName + Birthdate + County + Gender +  Address1 + city +  state1 +  zipcode +  phone +  emailaddress +  school + grade +
-	entrygrade + incomesubmitted +  finalreportcard +  interviewsconducted +  checktranscripts +  financiallyqualified +  referenceform + entrygpa +  semestergpa +
-	riskfactors +  studenttype +  contracttype +  scholarshipnumber + timelymentor + race + ishispanic + advocate + contractsigndate + familysituation + guardianname +
-	guardianaddress + guardiancity + guardianstate + guardianzip + guardianphone + guardianemail + brightfutures + duallenrollment + APcredits +
-	Mentorfname + mentorlname + mentorDOB + mentorgender + mentorsal + mentorcounty + mentorrace + mentorjoin + mentorphone + mentoraddress + mentorcity + mentorstate + mentorzip + mentoremail +
-	mentorbckgrd + mentortraining + mentorfingerprint) as MissingDatapt
-	, officeid
-	from DataReq
-)
-
-,DataDenom (OfficeName, TotalDatapoints, OfficeID) as
-	(Select
-		o.OfficeName,
-		Cast((
-				(
-				select count(ss.StudentID)
-				from students.students ss
-				left join offices.offices oo on oo.OfficeID = ss.OfficeID
-				where ss.StudentStatusID in (1,3,4,5) and ss.IsDeleted = 0 and ss.CurrentGradeLevelID between 5 and 12 and o.OfficeID = ss.OfficeID
-				)
-					+
-				(
-				select count(mm.MentorID)
-				from Mentors.Mentors mm
-				left join offices.offices oo on oo.OfficeID = mm.OfficeID
-				where mm.MentorStatusID = 1  and mm.IsDeleted = 0 and o.OfficeID = mm.OfficeID
-				)
-					+
-				(
-				select count(ss.StudentID)
-				from students.students ss
-				left join offices.offices oo on oo.OfficeID = ss.OfficeID							--DON'T MISS THIS UPDATE
-				where ss.StudentStatusID in (11,12,13,14,15) and ss.IsDeleted = 0 and ss.GraduationYear = 2019 and o.OfficeID = ss.OfficeID
-				)
-			) as int)as TotalDataPoints
-		,o.OfficeID
-	From Offices.offices o
-	where o.IsDeleted = 0 and o.OfficeID not in (18,19,20)
+	, K12StudentsMissingData (studentid, officeid) AS (
+	SELECT DISTINCT studentid, officeid
+	FROM Reports.BSC__nStudentsMissingData bsc_stud
 	)
+
+	, MentorsMissingData (mentorid, officeid) AS (
+	SELECT DISTINCT mentorid, officeid
+	FROM Reports.BSC_MentorsMissingdata
+	)
+
+	, K12StudentsMissingScholarshipData (studentid, officeid) AS (
+	SELECT DISTINCT studentid, officeid
+	FROM Reports.BSC__nScholarshipAssignment bsc_studschol
+	)
+
+	, GradsMissingData (studentid, officeid) AS (
+	SELECT DISTINCT studid, officeid
+	FROM Reports.BSC_GradInfo
+	WHERE Dualenrollmentcredits IS NULL OR BrightFutureName IS NULL OR APCredits IS NULL
+	)
+
+	, AllStudentsMissingData (stotal, officeid) AS (
+		select distinct COUNT(studentid), officeid
+		from (
+			select studentid, officeid from K12StudentsMissingData
+			union
+			select studentid, officeid from K12StudentsMissingScholarshipData
+			union
+			select studentid, officeid from GradsMissingData
+		) a
+		GROUP BY officeid
+	)
+
+	, AllMentorsMissingData (mtotal, officeid) AS (
+		SELECT DISTINCT COUNT(mentorid), officeid
+		FROM (
+			SELECT mentorid, officeid FROM MentorsMissingData
+		)b
+		GROUP BY officeid
+	)
+
+	,EveryoneMissingData (total, officeid) AS (
+		SELECT ISNULL(stotal,0) + ISNULL(mtotal,0), offic.officeid
+		FROM offices.offices offic
+		LEFT JOIN allstudentsmissingdata studmiss ON studmiss.officeid=offic.officeid
+		LEFT JOIN allmentorsmissingdata mentormiss ON offic.officeid=mentormiss.officeid
+	)
+
+	,DataDenom (OfficeName, TotalDatapoints, OfficeID) as
+		(Select
+			o.OfficeName,
+			Cast((
+					(
+					select DISTINCT count(ss.StudentID)
+					from students.students ss
+					left join offices.offices oo on oo.OfficeID = ss.OfficeID
+					where  ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID and
+								((ss.StudentStatusID in (1,3,4,5) and ss.CurrentGradeLevelID between 5 and 12) OR (ss.StudentStatusID in (11,12,13,14,15) and ss.GraduationYear = 2019))
+					)
+						+
+					(
+					select DISTINCT count(mm.MentorID)
+					from Mentors.Mentors mm
+					left join offices.offices oo on oo.OfficeID = mm.OfficeID
+					where mm.MentorStatusID = 1  and mm.IsDeleted = 0 and o.OfficeID = mm.OfficeID
+					)
+
+				) AS INT)AS TotalDataPoints
+			,o.OfficeID
+		From Offices.offices o
+		where o.IsDeleted = 0 and o.OfficeID not in (18,19,20)
+		)
 
 
 	Select
@@ -862,17 +457,19 @@ Select
 		7 As DataPointNumber,
 		'Required Data' as 'Metric', -- DataPointDescription
 		--CVKPI.CountyID,
-		dd.OfficeName,
-		(dd.TotalDatapoints - md.MissingDataPt) As KPI, --ValueMatch
+		offic.OfficeName,
+		(dd.TotalDatapoints - e.total) As KPI, --ValueMatch
 		dd.TotalDatapoints As Total -- Total
-		,Convert(Int, floor((((dd.TotalDatapoints - md.MissingDataPt)) / Cast(dd.TotalDatapoints As Decimal)) * 100)) As Result, -- percent
-		CASE when Convert(Int, floor((((dd.TotalDatapoints - md.MissingDataPt)) / Cast(dd.TotalDatapoints As Decimal)) * 100)) between 90 and 100 then 12.5
-		when Convert(Int, floor((((dd.TotalDatapoints - md.MissingDataPt)) / Cast(dd.TotalDatapoints As Decimal)) * 100))  < 90 then 0
+		,Convert(Int, floor((((dd.TotalDatapoints - e.total)) / Cast(dd.TotalDatapoints As Decimal)) * 100)) As Result, -- percent
+		CASE when Convert(Int, floor((((dd.TotalDatapoints - e.total)) / Cast(dd.TotalDatapoints As Decimal)) * 100)) >=95 then 12.5
+		when Convert(Int, floor((((dd.TotalDatapoints - e.total)) / Cast(dd.TotalDatapoints As Decimal)) * 100)) between 90 and 94 then 7
+		when Convert(Int, floor((((dd.TotalDatapoints - e.total)) / Cast(dd.TotalDatapoints As Decimal)) * 100))  < 90 then 0
 		else ''
 		end as Points,
 		'' as Comments
-		,dd.OfficeID
-	From DataDenom dd
-			left join MissingDataPt md on md.OfficeID = dd.OfficeID
-	group by  dd.OfficeName,  dd.OfficeID, dd.TotalDatapoints, md.MissingDataPt
+		,offic.OfficeID
+	From offices.offices offic
+	LEFT JOIN DataDenom dd ON offic.officeid=dd.OfficeID
+	LEFT JOIN everyonemissingdata e ON offic.officeid=e.officeid
+	WHERE offic.officeid NOT IN (18,19,20,7,26,29,51)
 
