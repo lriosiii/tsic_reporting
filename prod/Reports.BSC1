@@ -245,6 +245,13 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 	WHERE Dualenrollmentcredits IS NULL OR BrightFutureName IS NULL OR APCredits IS NULL
 	)
 
+	, K12StudentsMissingTimelyMatch (studentid, officeid ) AS (
+	SELECT DISTINCT studentid, officeid
+	FROM Reports.BSC__nTimelyMentorMatch
+	WHERE timelymatch = 'False'
+	-- OR timelymatch IS NULL     --comment for midyear, uncomment for endofyear
+	)
+
 	, AllStudentsMissingData (stotal, officeid) AS (
 		select distinct COUNT(studentid), officeid
 		from (
@@ -253,6 +260,8 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 			select studentid, officeid from K12StudentsMissingScholarshipData
 			union
 			select studentid, officeid from GradsMissingData
+			union
+			select studentid, officeid from K12StudentsMissingTimelyMatch
 		) a
 		GROUP BY officeid
 	)
