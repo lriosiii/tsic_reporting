@@ -113,7 +113,7 @@ WHERE
 		Or s.ContractSignedDate Is Null
 		or s.FamilySituationID is null
 		or s.FirstGenerationCollegeStudent is null
-		OR (s.currentgradelevelid = 12 AND coll.collegename IS NULL)
+		--OR (s.currentgradelevelid = 12 AND coll.collegename IS NULL)     --comment for midyear, uncomment for end of year
 		OR (initialmentor.studentid IS NULL AND datediff(day,s.contractsigneddate, getdate()) > 30 )
 		or  Not Exists (
 			Select Top 1
