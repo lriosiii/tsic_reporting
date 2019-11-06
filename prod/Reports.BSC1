@@ -253,15 +253,15 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 	)
 
 	, AllStudentsMissingData (stotal, officeid) AS (
-		select distinct COUNT(studentid), officeid
-		from (
-			select studentid, officeid from K12StudentsMissingData
-			union
-			select studentid, officeid from K12StudentsMissingScholarshipData
-			union
-			select studentid, officeid from GradsMissingData
-			union
-			select studentid, officeid from K12StudentsMissingTimelyMatch
+		SELECT DISTINCT COUNT(studentid), officeid
+		FROM (
+			SELECT studentid, officeid FROM K12StudentsMissingData
+			UNION
+			SELECT studentid, officeid FROM K12StudentsMissingScholarshipData
+			UNION
+			SELECT studentid, officeid FROM GradsMissingData
+			UNION
+			SELECT studentid, officeid FROM K12StudentsMissingTimelyMatch
 		) a
 		GROUP BY officeid
 	)
