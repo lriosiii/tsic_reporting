@@ -103,7 +103,7 @@ WHERE
 		or (sa.CheckTranscripts = 0 and sa.ApplicationCompletionDate is not null)
 		or (sa.FinanciallyQualified = 0 and sa.ApplicationCompletionDate is not null)
 		or (sa.ReferenceFormSubmitted = 0 and sa.ApplicationCompletionDate is not null)
-		or ((s.EntryGPA is null and sa.GPA is null) or (s.EntryGPA = 0 and sa.GPA = 0))
+		or ((s.EntryGPA is null and sa.GPA is null) or (s.EntryGPA = 0 and sa.GPA = 0) or (s.EntryGPA IS NULL and sa.GPA = 0) or (s.EntryGPA = 0 and sa.GPA IS NULL))
 		or (sa.RiskFactorScore is null and sa.ApplicationCompletionDate is not null)
 		or (s.PriorityType is null and sa.PriorityType is null)
 		or s.ContractTypeID is null
