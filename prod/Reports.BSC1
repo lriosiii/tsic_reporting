@@ -397,6 +397,7 @@ Select
 	case when te.FAFSA = 0 and te.NSO = 0 and te.SeniorCollegePrep = 0 and te.CRE < 2 then 'Missing FAFSA, New Student Orientation, College Readiness Workshops, and Senior College Prep Workshops'
 	when te.FAFSA = 0 and te.NSO = 0 and te.CRE < 2 then 'Missing FAFSA, College Readiness Events, and New Student Orientation Workshops'
 	when te.FAFSA = 0 and te.SeniorCollegePrep = 0 and te.CRE < 2 then 'Missing FAFSA, College Readiness Events, and Senior College Prep Workshops'
+	when te.FAFSA = 0 and te.SeniorCollegePrep = 0 and te.NSO = 0 then 'Missing FAFSA, Senior College Prep Workshops, and New Student Orientation'
 	when te.NSO = 0 and te.SeniorCollegePrep = 0 and te.CRE < 2 then 'Missing New Student Orientation, College Readiness Events, and Senior College Prep Workshops'
 	when te.FAFSA = 0 and te.CRE < 2 then 'Missing FAFSA and College Readiness Events'
 	when te.NSO = 0 and te.CRE < 2 then 'Missing New Student Orientation and College Readiness Events'
