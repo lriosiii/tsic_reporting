@@ -35,4 +35,4 @@ SELECT
   left join lookups.ContractTypes cnt on cnt.ContractTypeID = s.ContractTypeID
   left join lookups.Counties ct on ct.CountyID = s.CountyID
   left join reports.BSC_Dates rbd on rbd.StudentID = s.StudentID
-  where  s.IsDeleted = 0 and s.StudentStatusID in (1,3,4,5) and (ss.ContractNumber is null or ss.HoursAvail = 0) AND s.wfieligible = 0 AND affiliation NOT LIKE '%RSS%' AND rbd.xIsTransfer = 0
+  where  s.IsDeleted = 0 and s.StudentStatusID in (1,3,4,5) and (ss.ContractNumber is null or ss.HoursAvail = 0) AND s.wfieligible = 0 AND ISNULL(s.affiliation, '') NOT LIKE '%RSS%' AND rbd.xIsTransfer = 0
