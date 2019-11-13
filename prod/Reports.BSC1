@@ -447,10 +447,11 @@ Select
 		CVKPI.OfficeName,
 		CVKPI.KPI As KPI, --ValueMatch
 		CVKPI.TotalSVisit As Total -- Total
-		,Convert(Int, Ceiling((IsNull((cvkpi.kpi), 0) / Cast(cvkpi.totalSvisit As Decimal)) * 100)) As Result, -- percent
-		CASE when Convert(Int, Ceiling((IsNull((cvkpi.kpi), 0) / Cast(cvkpi.totalSvisit As Decimal)) * 100)) between 95 and 100 then 15
-		when Convert(Int, Ceiling((IsNull((cvkpi.kpi), 0) / Cast(cvkpi.totalSvisit As Decimal)) * 100)) between 85 and 94 then 12
-		when Convert(Int, Ceiling((IsNull((cvkpi.kpi), 0) / Cast(cvkpi.totalSvisit As Decimal)) * 100)) < 85 then 0
+		,CONVERT(INT, ROUND(ROUND((IsNull((cvkpi.kpi), 0) / CAST(cvkpi.totalSvisit As Decimal)) * 100, 1),0)) As Result, -- percent
+		CASE
+			WHEN CONVERT(INT, ROUND(ROUND((IsNull((cvkpi.kpi), 0) / CAST(cvkpi.totalSvisit As Decimal)) * 100, 1),0)) BETWEEN 95 AND 100 THEN 15
+			WHEN CONVERT(INT, ROUND(ROUND((IsNull((cvkpi.kpi), 0) / CAST(cvkpi.totalSvisit As Decimal)) * 100, 1),0)) between 85 and 94 then 12
+			WHEN CONVERT(INT, ROUND(ROUND((IsNull((cvkpi.kpi), 0) / CAST(cvkpi.totalSvisit As Decimal)) * 100, 1),0)) < 85 then 0
 		else ''
 		end as Points,
 		'' as Comments
