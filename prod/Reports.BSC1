@@ -307,26 +307,26 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 		)
 
 
-	Select
-		1 As DataPointNumber,
-		'Percent of students recruited in grades 6-9' as 'Metric', -- DataPointDescription
-		--acte.CountyID,
-		acte.OfficeName,
-		SUM(acte.TotalActiveStudents)  As KPI, --ValueMatch, -- Count of students that match
-		isnull(tr.TotalRecruitedStudents,0) As Total, -- Total recruited students for same period
-		Convert(Int, Ceiling((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) As Result, -- percent
-		CASE when Convert(Int, Ceiling((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) between 95 and 100 then 10
-		when Convert(Int, Ceiling((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) between 85 and 94 then 8
-		when Convert(Int, Ceiling((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) < 85 then 0
-		else ''
-		end as Points,
-		'' as Comments,
-		tr.OfficeID
-	From
-		totalActiveStudentsByEntryGradeCte acte
-	Left Outer Join
-	Data1totalRecruitedStudentsCTE tr on acte.OfficeID = tr.OfficeID
-	group by acte.OfficeName, tr.TotalRecruitedStudents, tr.OfficeID
+Select
+    1 As DataPointNumber,
+    'Percent of students recruited in grades 6-9' as 'Metric', -- DataPointDescription
+    --acte.CountyID,
+    acte.OfficeName,
+    SUM(acte.TotalActiveStudents)  As KPI, --ValueMatch, -- Count of students that match
+    isnull(tr.TotalRecruitedStudents,0) As Total, -- Total recruited students for same period
+    Convert(Int, Ceiling((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) As Result, -- percent
+    CASE when Convert(Int, Ceiling((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) between 95 and 100 then 10
+    when Convert(Int, Ceiling((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) between 85 and 94 then 8
+    when Convert(Int, Ceiling((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) < 85 then 0
+    else ''
+    end as Points,
+    '' as Comments,
+    tr.OfficeID
+From
+    totalActiveStudentsByEntryGradeCte acte
+Left Outer Join
+Data1totalRecruitedStudentsCTE tr on acte.OfficeID = tr.OfficeID
+group by acte.OfficeName, tr.TotalRecruitedStudents, tr.OfficeID
 
 
 Union
@@ -338,11 +338,12 @@ Union
 		actt.OfficeName,
 		SUM(actt.TotalActiveStudents)  As KPI, --ValueMatch, -- Count of students that match
 		tr.TotalRecruitedStudents As Total, -- Total recruitedCollegeSuccessCoachVisits students for same period
-		Convert(Int, Ceiling((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) As Result, -- percent
-		CASE when Convert(Int, Ceiling((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) between 75 and 85 then 10
-		when Convert(Int, Ceiling((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) between 86 and 100 then 8
-		when Convert(Int, Ceiling((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) between 65 and 74 then 8
-		when Convert(Int, Ceiling((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) < 64 then 0
+		Convert(Int, ROUND((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) As Result, -- percent
+		CASE
+			when Convert(Int, ROUND((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) between 75 and 85 then 10
+			when Convert(Int, ROUND((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) between 86 and 100 then 8
+			when Convert(Int, ROUND((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) between 65 and 74 then 8
+			when Convert(Int, ROUND((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) < 64 then 0
 		else ''
 		end as Points,
 		'' as Comments,
