@@ -193,10 +193,11 @@ Select
 		Tmon.OfficeName,
 		IsNull(sum(tav.Totalav), 0)  As KPI, --ValueMatch
 		IsNull(sum(Tmon.TotalMts), 0)  As Total, -- Total
-		Convert(Int, Ceiling((IsNull(sum(tav.Totalav), 0) / Cast(Tmon.TotalMts As Decimal)) * 100)) As Result, -- percent
-		CASE when Convert(Int, Ceiling((IsNull(sum(tav.Totalav), 0) / Cast(Tmon.TotalMts As Decimal)) * 100)) between 85 and 100 then 20
-		when Convert(Int, Ceiling((IsNull(sum(tav.Totalav), 0) / Cast(Tmon.TotalMts As Decimal)) * 100)) between 70 and 84 then 9
-		when Convert(Int, Ceiling((IsNull(sum(tav.Totalav), 0) / Cast(Tmon.TotalMts As Decimal)) * 100)) < 70 then 0
+		CONVERT(INT,ROUND((IsNull(SUM(tav.totalav), 0) / CAST(Tmon.TotalMts As Decimal)) * 100,0)) As Result, -- percent
+		CASE
+			when CONVERT(INT,ROUND((IsNull(SUM(tav.totalav), 0) / CAST(Tmon.TotalMts As Decimal)) * 100,0)) between 85 and 100 then 20
+			when CONVERT(INT,ROUND((IsNull(SUM(tav.totalav), 0) / CAST(Tmon.TotalMts As Decimal)) * 100,0)) between 70 and 84 then 9
+			when CONVERT(INT,ROUND((IsNull(SUM(tav.totalav), 0) / CAST(Tmon.TotalMts As Decimal)) * 100,0)) < 70 then 0
 		else ''
 		end as Score,
 		'' as Comments,
@@ -216,11 +217,11 @@ SELECT
 		officeName,
 		true_total	AS KPI,
 		all_total-null_total	AS TotalNew,
-		true_total * 100/(all_total-null_total) AS Result,
+		CONVERT(INT,ROUND(true_total * 100/CAST(all_total-null_total AS DECIMAL),0)) AS Result,
 		CASE
-			WHEN true_total * 100/(all_total-null_total) BETWEEN 98 AND 100 THEN 5
-			WHEN true_total * 100/(all_total-null_total) BETWEEN 95 AND 97 THEN 3
-			WHEN true_total * 100/(all_total-null_total) < 95 THEN 0
+			WHEN CONVERT(INT,ROUND(true_total * 100/CAST(all_total-null_total AS DECIMAL),0)) BETWEEN 98 AND 100 THEN 5
+			WHEN CONVERT(INT,ROUND(true_total * 100/CAST(all_total-null_total AS DECIMAL),0)) BETWEEN 95 AND 97 THEN 3
+			WHEN CONVERT(INT,ROUND(true_total * 100/CAST(all_total-null_total AS DECIMAL),0)) < 95 THEN 0
 			ELSE ''
 			END AS Score,
 		'' AS Comments,
