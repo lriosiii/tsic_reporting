@@ -106,6 +106,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 				Between '2019-06-06' And '2020-06-03'
 				and COALESCE(ss.EntryGPA,sap.GPA) >= 2.0
 				and o.OfficeID not in (18,19,20)
+				AND sap.isdeleted = 0
 		Group By sap.GPA, ss.EntryGPA, o.OfficeName, ss.OfficeID
 
 ),
