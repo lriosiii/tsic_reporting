@@ -386,10 +386,11 @@ Select
 		te.OfficeName,
 		SUM(te.AllEvents)  As KPI, --ValueMatch
 		5 As Total, -- Total
-		case when te.FAFSA = 0 or te.NSO = 0 or te.SeniorCollegePrep = 0 or te.CRE = 0 then Convert(Int, Ceiling((IsNull(sum(te.Totalevents), 0) / Cast(5 As Decimal)) * 100))
-		 when te.FAFSA > 0 and te.NSO > = 0 and te.SeniorCollegePrep > 0 and te.CRE > 0 then Convert(Int, Ceiling((IsNull(sum(te.AllEvents), 0) / Cast(5 As Decimal)) * 100))
-		 else''
-		 end As Result, -- percent
+        case
+            when te.FAFSA = 0 or te.NSO = 0 or te.SeniorCollegePrep = 0 or te.CRE = 0 then Convert(Int, ROUND((IsNull(sum(te.Totalevents), 0) / Cast(5 As Decimal)) * 100,0))
+		    when te.FAFSA > 0 and te.NSO > = 0 and te.SeniorCollegePrep > 0 and te.CRE > 0 then Convert(Int, ROUND((IsNull(sum(te.AllEvents), 0) / Cast(5 As Decimal)) * 100,0))
+		    else''
+		    end As Result, -- percent
 		CASE when sum(te.Totalevents) >=6 then 5
 			when sum(te.Totalevents) =5 then 3
 			when sum(te.Totalevents) <5 then 0
