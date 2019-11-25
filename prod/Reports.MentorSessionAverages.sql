@@ -11,7 +11,7 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 				In (1, 3, 4, 5) -- All active except "On Hold"
 			--And ss.ContractSignedDate
 			--	< '2014-06-30'
-			And sms.SessionDate Between '2018-07-01' AND '2019-06-30'
+			And sms.SessionDate Between '2019-07-01' AND '2020-06-30'
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
 		Group By ss.StudentID, ss.OfficeID
@@ -33,7 +33,7 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 			--	< '2014-06-30'
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
-			And sms.SessionDate Between '2018-07-01' AND '2019-06-30'
+			And sms.SessionDate Between '2019-07-01' AND '2020-06-30'
 		Group By ss.StudentID, ss.OfficeID
 		--Order By ss.StudentID --for testing
 	),
@@ -53,7 +53,7 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 			--	< '2014-06-30'
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
-			And sms.SessionDate Between '2018-07-01' AND '2019-06-30'
+			And sms.SessionDate Between '2019-07-01' AND '2020-06-30'
 		Group By ss.StudentID, ss.OfficeID
 		--Order By ss.StudentID --for testing
 	),
