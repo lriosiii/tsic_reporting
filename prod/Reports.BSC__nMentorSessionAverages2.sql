@@ -142,7 +142,7 @@ From(Select distinct ST2.StudentID,
 			,lmsdcte.LastSessionDate
 			,tmcte.TotalMonths
 			,case when convert(date, getdate()) < '2019-10-16' then null
-					else round(convert(decimal(2),(tmscte.TotalMentorSessions/tmcte.TotalMonths)),3)
+					else floor(tmscte.TotalMentorSessions/tmcte.TotalMonths)
 					end as 'AvgSession/Month'
 		,case when tmscte.IsTransfer = 1 then 'Yes' else 'No' end as IsTransfer
 			,ss.OfficeID
