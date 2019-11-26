@@ -134,7 +134,7 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 
 			,tmcte.TotalMonths
 			,case when convert(date, getdate()) < '2019-10-16' then null
-					else round(convert(decimal,(tmscte.TotalMentorSessions/tmcte.TotalMonths)),3)
+					else floor(tmscte.TotalMentorSessions/tmcte.TotalMonths)
 					end as 'AvgSession/Month'
 
 			,ss.OfficeID
@@ -191,15 +191,15 @@ Select
 		'No. of Students averaging 2 sessions/month' as 'Metric', -- DataPointDescription
 		--tss.CountyID,
 		Tmon.OfficeName,
-		IsNull(sum(tav.Totalav), 0)  As KPI, --ValueMatch
-		IsNull(sum(Tmon.TotalMts), 0)  As Total, -- Total
+		IsNull(SUM(tav.Totalav), 0)  As KPI, --ValueMatch
+		IsNull(SUM(Tmon.TotalMts), 0)  As Total, -- Total
 		CONVERT(INT,ROUND((IsNull(SUM(tav.totalav), 0) / CAST(Tmon.TotalMts As Decimal)) * 100,0)) As Result, -- percent
 		CASE
 			when CONVERT(INT,ROUND((IsNull(SUM(tav.totalav), 0) / CAST(Tmon.TotalMts As Decimal)) * 100,0)) between 85 and 100 then 20
 			when CONVERT(INT,ROUND((IsNull(SUM(tav.totalav), 0) / CAST(Tmon.TotalMts As Decimal)) * 100,0)) between 70 and 84 then 9
 			when CONVERT(INT,ROUND((IsNull(SUM(tav.totalav), 0) / CAST(Tmon.TotalMts As Decimal)) * 100,0)) < 70 then 0
-		else ''
-		end as Score,
+			else ''
+			end as Score,
 		'' as Comments,
 		Tmon.OfficeID
 	From TMonths Tmon
