@@ -217,11 +217,11 @@ SELECT
 		officeName,
 		true_total	AS KPI,
 		all_total-null_total	AS TotalNew,
-		CONVERT(INT,ROUND(true_total * 100/CAST(all_total-null_total AS DECIMAL),0)) AS Result,
+		CONVERT(INT,ROUND(true_total * 100/CAST(NULLIF(all_total-null_total,0) AS DECIMAL),0)) AS Result,
 		CASE
-			WHEN CONVERT(INT,ROUND(true_total * 100/CAST(all_total-null_total AS DECIMAL),0)) BETWEEN 98 AND 100 THEN 5
-			WHEN CONVERT(INT,ROUND(true_total * 100/CAST(all_total-null_total AS DECIMAL),0)) BETWEEN 95 AND 97 THEN 3
-			WHEN CONVERT(INT,ROUND(true_total * 100/CAST(all_total-null_total AS DECIMAL),0)) < 95 THEN 0
+			WHEN CONVERT(INT,ROUND(true_total * 100/CAST(NULLIF(all_total-null_total,0) AS DECIMAL),0)) BETWEEN 98 AND 100 THEN 5
+			WHEN CONVERT(INT,ROUND(true_total * 100/CAST(NULLIF(all_total-null_total,0) AS DECIMAL),0)) BETWEEN 95 AND 97 THEN 3
+			WHEN CONVERT(INT,ROUND(true_total * 100/CAST(NULLIF(all_total-null_total,0) AS DECIMAL),0)) < 95 THEN 0
 			ELSE ''
 			END AS Score,
 		'' AS Comments,
