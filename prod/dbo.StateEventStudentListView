@@ -1,8 +1,9 @@
 WITH AllEvents AS
 	(
 		SELECT S.StudentID,
-		E.StateEventID
+		E.StateEventID, eventname
 		FROM Students.Students S, State.Events E
+		WHERE E.isdeleted = 0
 	)
 	
 	-- Create subset with only requested students
@@ -28,6 +29,7 @@ WITH AllEvents AS
 		COALESCE(SM1.MentorName, 'Unassigned') as MentorName,
 		S.IsDeleted,
 		AE.StateEventID,
+		AE.eventname,
 		SE.Attended,
 		SE.InvitationSent AS Invited
 	FROM Students.Students S
