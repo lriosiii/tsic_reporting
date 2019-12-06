@@ -29,8 +29,8 @@ WITH AllEvents AS
 		COALESCE(SM1.MentorName, 'Unassigned') as MentorName,
 		AE.StateEventID,
 		AE.eventname,
-		SE.Attended,
-		SE.InvitationSent AS Invited
+        CASE WHEN SE.Attended IS NULL THEN 0 ELSE SE.Attended END AS Attended,
+		CASE WHEN SE.InvitationSent IS NULL THEN 0 ELSE SE.InvitationSent END AS Invited
 	FROM Students.Students S
 		INNER JOIN Lookups.StudentStatuses SS ON S.StudentStatusID = SS.StudentStatusID		
 		INNER JOIN Lookups.StatusGroups SG ON SS.StatusGroupID = SG.StatusGroupID
