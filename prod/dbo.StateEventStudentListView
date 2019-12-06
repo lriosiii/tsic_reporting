@@ -27,7 +27,6 @@ WITH AllEvents AS
 		S.OfficeID,		
 		COALESCE(A.FirstName + ' ' + A.LastName, 'Unassigned') as AdvocateName,		
 		COALESCE(SM1.MentorName, 'Unassigned') as MentorName,
-		S.IsDeleted,
 		AE.StateEventID,
 		AE.eventname,
 		SE.Attended,
