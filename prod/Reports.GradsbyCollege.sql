@@ -234,7 +234,7 @@ SELECT  o.OfficeName
 			FROM  Coll_CTE
 			where Coll_CTE.StudentID = s.StudentID
 		group by StudentID,DegreeAttained) as DegreeAttained
-
+	 ,os.contractnumber
 
   FROM [Students].[Students] s
   LEFT OUTER JOIN Common.Addresses ca On s.AddressID = ca.addressID
