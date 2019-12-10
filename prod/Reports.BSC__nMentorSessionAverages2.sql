@@ -37,12 +37,12 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 
 		Select case when d.IsTransfer = 1 and d.Firstsession is null and d.TstartDates > d.EndDate then Null
 					when d.IsTransfer = 1 and d.Firstsession is null and d.TstartDates < d.EndDate then d.TstartDates
-					when d.IsTransfer = 1 and d.Firstsession > d.TstartDates then d.TstartDates
-					when d.IsTransfer = 1 and d.Firstsession <= d.TstartDates then d.Firstsession
-					when d.IsTransfer = 0 and d.ContractSignedDate < '2019-09-16' then d.TstartDates
+					WHEN d.istransfer = 1 and d.tdate < '2019-09-16' THEN '2019-10-15'
+					WHEN d.istransfer = 1 and d.tdate > '2019-09-15' AND Convert(date,DATEADD(Day,30,d.tdate)) < d.firstsession THEN Convert(date,DATEADD(Day,30,d.tdate))
+					WHEN d.istransfer = 1 and d.tdate > '2019-09-15' AND Convert(date,DATEADD(Day,30,d.tdate)) > d.firstsession THEN d.firstsession
 
-
-				--when ss.ContractSignedDate < '2017-09-16' then Convert (date, '2017-10-15')
+				    --when ss.ContractSignedDate < '2017-09-16' then Convert (date, '2017-10-15')
+				    when d.IsTransfer = 0 and d.ContractSignedDate < '2019-09-16' then d.TstartDates
 					when d.IsTransfer = 0 and d.ContractSignedDate >= '2019-09-16' and d.FirstSession is null and Convert (date, DATEADD(Day,30,d.ContractSignedDate)) >= d.EndDate then null
 					when d.IsTransfer = 0 and d.ContractSignedDate >= '2019-09-16' and d.FirstSession is null and Convert (date, DATEADD(Day,30,d.ContractSignedDate)) < d.EndDate then Convert (date, DATEADD(Day,30,d.ContractSignedDate))
 					when d.IsTransfer = 0 and d.ContractSignedDate >= '2019-09-16' and d.FirstSession < '2019-10-15' then Convert (date,'2019-10-15')
