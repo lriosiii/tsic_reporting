@@ -317,11 +317,11 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 		tr.TotalRecruitedStudents As Total, -- Total recruited students for same period
 		CONVERT(Int, ROUND(ROUND((IsNull(SUM(acte.totalactivestudents), 0) / CAST(tr.TotalRecruitedStudents As Decimal)) * 100,1),0)) As Result, -- percent
 		CASE
-			when Convert(Int, ROUND(ROUND((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,1),0)) between 95 and 100 then 10
-			when Convert(Int, ROUND(ROUND((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,1),0)) between 85 and 94 then 8
-			when Convert(Int, ROUND(ROUND((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,1),0)) < 85 then 0
-			else ''
-			end as Points,
+            when ROUND(ROUND((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,1),0) between 95 and 100 then 10
+            when ROUND(ROUND((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,1),0) between 85 and 94 then 8
+            when ROUND(ROUND((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,1),0) < 85 then 0
+            else ''
+            end as Points,
 		'' as Comments,
 		offic.OfficeID
 	From offices.offices offic
