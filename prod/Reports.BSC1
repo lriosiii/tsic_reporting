@@ -315,7 +315,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 		offic.OfficeName,
 		SUM(acte.TotalActiveStudents)  As KPI, --ValueMatch, -- Count of students that match
 		tr.TotalRecruitedStudents As Total, -- Total recruited students for same period
-		ROUND(ROUND((IsNull(SUM(acte.totalactivestudents), 0) / CAST(tr.TotalRecruitedStudents As Decimal)) * 100,1),0) As Result, -- percent
+		CONVERT(Int, ROUND(ROUND((IsNull(SUM(acte.totalactivestudents), 0) / CAST(tr.TotalRecruitedStudents As Decimal)) * 100,1),0)) As Result, -- percent
 		CASE
             when ROUND(ROUND((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,1),0) between 95 and 100 then 10
             when ROUND(ROUND((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,1),0) between 85 and 94 then 8
