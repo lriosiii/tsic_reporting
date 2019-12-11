@@ -362,21 +362,22 @@ Select
 		3 As DataPointNumber,
 		'Percent of students recruited with >2.0 GPA' as 'Metric', -- DataPointDescription
 		--actg.CountyID,
-		actg.OfficeName,
+		offic.OfficeName,
 		SUM(actg.TotalActiveStudents)  As KPI, --ValueMatch, -- Count of students that match
 		tr.TotalRecruitedStudents As Total, -- Total recruited students for same period
-		Convert(Int, Ceiling((IsNull(sum(actg.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) As Result, -- percent
-		CASE when Convert(Int, Ceiling((IsNull(sum(actg.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) = 100 then 5
-		when Convert(Int, Ceiling((IsNull(sum(actg.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100)) < 100 then 0
+		Convert(Int, ROUND((IsNull(sum(actg.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) As Result, -- percent
+		CASE
+		when Convert(Int, ROUND((IsNull(sum(actg.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) = 100 then 5
+		when Convert(Int, ROUND((IsNull(sum(actg.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) < 100 then 0
 		else ''
 		end as Points,
 		'' as Comments,
-		tr.OfficeID
-	From
-		totalActiveStudentsByGPACte actg
-	Left Outer Join
-	totalRecruitedStudentsCte tr on actg.OfficeID = tr.OfficeID
-	group by  actg.OfficeName, tr.TotalRecruitedStudents, tr.OfficeID
+		offic.OfficeID
+	From offices.offices offic
+	LEFT JOIN totalActiveStudentsByGPACte actg ON offic.officeid=actg.officeid
+	Left Outer Join totalRecruitedStudentsCte tr on actg.OfficeID = tr.OfficeID
+	WHERE offic.officeid NOT IN (18,19,20,7,26,29,51)
+	group by  offic.OfficeName, tr.TotalRecruitedStudents, offic.OfficeID
 
 union
 
