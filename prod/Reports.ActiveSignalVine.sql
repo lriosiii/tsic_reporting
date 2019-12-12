@@ -92,4 +92,4 @@ SELECT
 			 'University of Florida',
 			 'University of North Florida',
 			 'University of South Florida',
-			 'University of West Florida') OR s.graduationyear = 2019)
+			 'University of West Florida') OR s.graduationyear = 2020)
