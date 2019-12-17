@@ -115,5 +115,4 @@ FROM         Students.Students AS s
 	LEFT OUTER JOIN Lookups.CollegeMajors cm ON ci.CollegeMajorID = cm.CollegeMajorID
 	LEFT OUTER JOIN  Lookups.CollegeLevels cl ON ci.CollegeLevelID = cl.CollegeLevelID
 	LEFT OUTER JOIN Lookups.DegreeTypes dg ON ci.CollegeDegreeTypeID = dg.DegreeTypeID
-WHERE s.CurrentGradeLevelID=12
-AND s.StudentStatusID IN (1,3,4,5)
+WHERE  s.StudentStatusID IN (1,3,4,5)
