@@ -1,5 +1,5 @@
 SELECT     o.OfficeID, o.OfficeName, sch.SchoolName, ss.StudentStatusName, s.StudentReferenceID AS StudentID, s.LastName + ', ' + s.FirstName AS StudentFullName,
-                      s.MiddleName, s.CurrentGradeLevelID AS CurrentGrade, s.CommunityServiceHours, s.DualEnrollmentCredits, s.APCredits, s.EmailAddress,
+                      s.MiddleName, s.GraduationYear AS HSGraduationYear, s.CurrentGradeLevelID AS CurrentGrade, s.CommunityServiceHours, s.DualEnrollmentCredits, s.APCredits, s.EmailAddress,
                       sf.DateCompleted AS FAFSACompletionDate,
 					  --cols.CollegeName,
 					  SelCol.CollegeName AS SelectedCollege,
