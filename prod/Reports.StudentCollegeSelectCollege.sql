@@ -116,4 +116,4 @@ FROM         Students.Students AS s
 	LEFT OUTER JOIN  Lookups.CollegeLevels cl ON ci.CollegeLevelID = cl.CollegeLevelID
 	LEFT OUTER JOIN Lookups.DegreeTypes dg ON ci.CollegeDegreeTypeID = dg.DegreeTypeID
 	INNER JOIN lookups.counties counties ON s.countyid=counties.countyid
-WHERE  s.StudentStatusID IN (1,3,4,5)
+WHERE  s.StudentStatusID IN (1,3,4,5,11,12,13,14,15,25)
