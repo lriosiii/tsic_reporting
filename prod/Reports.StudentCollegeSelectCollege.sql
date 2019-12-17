@@ -1,4 +1,4 @@
-SELECT     o.OfficeID, o.OfficeName, sch.SchoolName, ss.StudentStatusName, s.StudentReferenceID AS StudentID, s.LastName + ', ' + s.FirstName AS StudentFullName,
+SELECT     o.OfficeID, counties.countyname ,o.OfficeName, sch.SchoolName, ss.StudentStatusName, s.StudentReferenceID AS StudentID, s.LastName + ', ' + s.FirstName AS StudentFullName,
                       s.MiddleName, s.GraduationYear AS HSGraduationYear, s.CurrentGradeLevelID AS CurrentGrade, s.CommunityServiceHours, s.DualEnrollmentCredits, s.APCredits, s.EmailAddress,
                       sf.DateCompleted AS FAFSACompletionDate,
 					  --cols.CollegeName,
@@ -115,4 +115,5 @@ FROM         Students.Students AS s
 	LEFT OUTER JOIN Lookups.CollegeMajors cm ON ci.CollegeMajorID = cm.CollegeMajorID
 	LEFT OUTER JOIN  Lookups.CollegeLevels cl ON ci.CollegeLevelID = cl.CollegeLevelID
 	LEFT OUTER JOIN Lookups.DegreeTypes dg ON ci.CollegeDegreeTypeID = dg.DegreeTypeID
+	INNER JOIN lookups.counties counties ON s.countyid=counties.countyid
 WHERE  s.StudentStatusID IN (1,3,4,5)
