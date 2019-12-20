@@ -5,7 +5,7 @@ AS
 			  Case 
 				When (ci.ActualGraduationDate is not null) 
 				or (CollegeDegreeTypeID > 0)
-				or (s.StudentStatusID = 12)
+				or (s.StudentStatusID IN (11,12))
 				or (ci.EntryDate is not null) then 1
 				Else  0
 				End as AttendedCollege
@@ -13,8 +13,8 @@ AS
 				,ci.EntryDate
 				,Case
 					when (ci.ActualGraduationDate is not null)
-					or (s.StudentStatusID = 12)
-					or (sh.StudentStatusID = 12)
+					or (s.StudentStatusID IN (11,12))
+					or (sh.StudentStatusID IN (11,12))
 					or (CollegeDegreeTypeID > 0) then 1
 					else 0
 					End as DegreeAttained
@@ -233,7 +233,7 @@ SELECT  o.OfficeName
   LEFT OUTER JOIN Lookups.Races r ON s.RaceID = r.RaceID
 
 
-  Where s.StudentStatusID IN (11,12,13,14,15,25)
+  Where s.StudentStatusID IN (11,12,13,14,15,25,28)
   AND s.IsDeleted = 0
    
 
