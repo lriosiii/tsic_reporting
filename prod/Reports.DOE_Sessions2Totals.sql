@@ -33,7 +33,7 @@ WHERE s.StudentStatusID IN (1,3,4,5)
 	And sm.IsDeleted = 0
 	And sms.IsDeleted = 0
 	-- For Testing Building a way to get dups out.
-	And SessionDate Between '2019-07-01' AND '2019-09-30'
+	And SessionDate Between '2019-10-01' AND '2019-12-31'
 	And (sms.SessionNote IS NOT NULL OR sms.SessionNote <> '')
 	--And s.OfficeID = 33
 	--ORDER BY SessionNote DESC
