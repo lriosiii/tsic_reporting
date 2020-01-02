@@ -22,4 +22,4 @@ WHERE
 S.graduationyear IN (2014,2015,2016,2017,2018)
 and s.OfficeID not in (18,19,20)
 and s.isdeleted = 0
-AND s.studentstatusid IN (12,13,14,15)
+AND s.studentstatusid IN (12,13,14,15,28)
