@@ -224,7 +224,7 @@ SELECT  o.OfficeName
   left outer join schools.Schools ssc on s.SchoolID = ssc.SchoolID
  -- LEFT OUTER JOIN Offices.Scholarships os ON s.StudentID = os.StudentID
 
-  Where s.StudentStatusID IN (11,12,13,14,15,25)
+  Where s.StudentStatusID IN (11,12,13,14,15,25,28)
   AND s.IsDeleted = 0
   --And s.OfficeID = 13
   --And CollegeName = 'university of north florida'
