@@ -116,7 +116,7 @@ WHERE       S.IsDeleted = 0
 AND			S.WfiEligible = 0
 AND			(S.StudentStatusID IN (1,3,4,5)
 				OR (S.HighSchoolDiplomaDate Between '2019-01-01' AND '2019-06-30'
-						AND S.StudentStatusID IN (11,12,13,14,15,25)
+						AND S.StudentStatusID IN (11,12,13,14,15,25,28)
 				)
 			)
 AND			S.ContractSignedDate Between '2018-07-01' AND '2019-06-30'
