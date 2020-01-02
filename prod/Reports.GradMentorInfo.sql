@@ -45,7 +45,7 @@ SELECT  o.OfficeName
   LEFT OUTER JOIN Common.Addresses ma on sm.AddressID = ma.AddressID
 
 
-  Where s.StudentStatusID IN (11,12,13,14,15,25)
+  Where s.StudentStatusID IN (11,12,13,14,15,25,28)
   AND s.IsDeleted = 0
 
   --Order By  ContractNumber  --OfficeName, LastName, FirstName
