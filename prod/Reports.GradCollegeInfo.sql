@@ -97,7 +97,7 @@ SELECT  o.OfficeName
   LEFT OUTER JOIN Offices.Scholarships os ON s.StudentID = os.StudentID
   LEFT OUTER JOIN Schools.Schools sch On s.SchoolID = sch.SchoolID
 
-  Where s.StudentStatusID IN (11,12,13,14,15,25)
+  Where s.StudentStatusID IN (11,12,13,14,15,25,28)
   AND s.IsDeleted = 0
   AND ci.IsDeleted = 0
   --And s.OfficeID = 13
