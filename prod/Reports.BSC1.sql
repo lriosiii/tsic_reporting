@@ -291,7 +291,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 					from students.students ss
 					left join offices.offices oo on oo.OfficeID = ss.OfficeID
 					where  ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID and
-								((ss.StudentStatusID in (1,3,4,5) and ss.CurrentGradeLevelID between 5 and 12) OR (ss.StudentStatusID in (11,12,13,14,15) and ss.GraduationYear = 2019))
+								((ss.StudentStatusID in (1,3,4,5) and ss.CurrentGradeLevelID between 5 and 12) OR (ss.StudentStatusID in (11,12,13,14,15,28) and ss.GraduationYear = 2019))
 					)
 						+
 					(

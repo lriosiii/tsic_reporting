@@ -48,7 +48,7 @@ SELECT
   left join offices.Offices o on o.OfficeID = s.OfficeID
 
   where s.IsDeleted = 0
-  and s.StudentStatusID in (1,3,4,5,11,12,13,14,15)
+  and s.StudentStatusID in (1,3,4,5,11,12,13,14,15,28)
 	--TODO dyanmic gradyear 'last 5 years'
   and s.graduationyear BETWEEN 2015 AND 2019
   AND (
