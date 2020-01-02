@@ -25,7 +25,7 @@ WHERE     (Mentors.Mentors.MentorStatusID = 1) --AND (Students.Students.StudentS
                     --  Students.Students.StudentStatusID = 3 OR
                      -- Students.Students.StudentStatusID = 4 OR
                      -- Students.Students.StudentStatusID = 5)
-					  AND (Students.Students.StudentStatusID in (1,3,4,5,11,12,13,15,19,20,21,22,23,24,25,26,27))
+					  AND (Students.Students.StudentStatusID in (1,3,4,5,11,12,13,15,19,20,21,22,23,24,25,26,27,28))
 					  AND (Students.StudentMentors.UnassignedDate IS NULL)
 					  AND Students.Students.IsDeleted = 0
 					  AND Mentors.Mentors.IsDeleted = 0
