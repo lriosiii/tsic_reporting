@@ -20,7 +20,7 @@ FROM         Students.Students AS s INNER JOIN
 							AND m.MentorID = sms.MentorID INNER JOIN
 					  Lookups.MentorStatuses ms ON m.MentorStatusID = ms.MentorStatusID
 
-			Where s.StudentStatusID IN (11,12,13,14,15,25,27)
+			Where s.StudentStatusID IN (11,12,13,14,15,25,27,28)
 			And s.IsDeleted = 0
 			And m.IsDeleted = 0
 			And sm.IsDeleted = 0
