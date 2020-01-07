@@ -230,6 +230,7 @@ SELECT
 		office.officeid
 	From offices.offices office
 	LEFT JOIN timelymatchesCTE ON office.officeid=timelymatchesCTE.officeid
+	WHERE office.officeid NOT IN (7,18,19,20,26,29,51)
 
 --Full year Datapoint 9
 
@@ -250,3 +251,4 @@ SELECT
 --		office.officeid
 --	From offices.offices office
 --  LEFT JOIN timelymatchesCTE ON office.officeid=timelymatchesCTE.officeid
+--  WHERE office.officeid NOT IN (7,18,19,20,26,29,51)
