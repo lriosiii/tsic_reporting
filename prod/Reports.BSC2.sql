@@ -33,7 +33,7 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 
 	Dates (StartDate, EndDate, StudentID) as
 	(
-	/*Started with Tranfsers First and then regualr students */
+	/*Started with Tranfsers First and then regular students */
 
 
 		Select case
@@ -216,7 +216,7 @@ Select
 SELECT
 		9 AS DataPointNumber,
 		'New student timely matches' AS 'Metric',
-		officeName,
+		office.officeName,
 		true_total	AS KPI,
 		all_total-null_total	AS TotalNew,
 		CONVERT(INT,ROUND(true_total * 100/CAST(NULLIF(all_total-null_total,0) AS DECIMAL),0)) AS Result,
@@ -227,15 +227,16 @@ SELECT
 			ELSE ''
 			END AS Score,
 		'' AS Comments,
-		officeid
-	From timelymatchesCTE
+		office.officeid
+	From offices.offices office
+	LEFT JOIN timelymatchesCTE ON office.officeid=timelymatchesCTE.officeid
 
 --Full year Datapoint 9
 
 --SELECT
 --		9 AS DataPointNumber,
 --		'New student timely matches' AS 'Metric',
---		officeName,
+--		office.officeName,
 --		true_total  AS KPI,
 --		all_total	AS TotalNew,
 --		true_total * 100/all_total AS Result,
@@ -246,5 +247,6 @@ SELECT
 --			ELSE ''
 --			END AS Score,
 --		'' AS Comments,
---		officeid
---	From timelymatchesCTE
+--		office.officeid
+--	From offices.offices office
+--  LEFT JOIN timelymatchesCTE ON office.officeid=timelymatchesCTE.officeid

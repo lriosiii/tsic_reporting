@@ -336,7 +336,7 @@ Union
 		2 As DataPointNumber,
 		'Percent of students recruited as Type 2' as 'Metric', -- DataPointDescription
 		--actt.CountyID,
-		actt.OfficeName,
+		office.OfficeName,
 		SUM(actt.TotalActiveStudents)  As KPI, --ValueMatch, -- Count of students that match
 		tr.TotalRecruitedStudents As Total, -- Total recruitedCollegeSuccessCoachVisits students for same period
 		Convert(Int, ROUND((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) As Result, -- percent
@@ -349,11 +349,10 @@ Union
 		end as Points,
 		'' as Comments,
 		tr.OfficeID
-	From
-		totalActiveStudentsBytypeCte actt
-	Left Outer Join
-	totalRecruitedStudentsCte tr on actt.OfficeID = tr.OfficeID
-	group by  actt.OfficeName, tr.TotalRecruitedStudents, tr.OfficeID
+	From offices.offices office
+	LEFT JOIN totalActiveStudentsBytypeCte actt ON office.officeid=actt.officeid
+	Left Outer Join totalRecruitedStudentsCte tr on actt.OfficeID = tr.OfficeID
+	group by  office.OfficeName, tr.TotalRecruitedStudents, tr.OfficeID
 
 
 union
