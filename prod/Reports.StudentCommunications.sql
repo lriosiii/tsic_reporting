@@ -15,6 +15,7 @@ SELECT
         WHEN SC.EnteredByID <> 0 THEN (SELECT COALESCE(FirstName + ' '+ LastName, 'Unknown') FROM Offices.Staff WHERE StaffID = sC.EnteredByID)
         ELSE 'State User'
     END AS EnteredByName,
+    Common.GetUserActualName(SC.RecordedByID) AS RecordedByName,
     SC.Note,
     S.OfficeID,
     C.CountyName,
