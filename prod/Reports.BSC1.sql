@@ -352,8 +352,8 @@ Union
 	From offices.offices office
 	LEFT JOIN totalActiveStudentsBytypeCte actt ON office.officeid=actt.officeid
 	Left Outer Join totalRecruitedStudentsCte tr on actt.OfficeID = tr.OfficeID
-	group by  office.OfficeName, tr.TotalRecruitedStudents, tr.OfficeID
 	WHERE office.officeid NOT IN (7,18,19,20,26,29,51)
+	group by  office.OfficeName, tr.TotalRecruitedStudents, tr.OfficeID
 
 
 union
