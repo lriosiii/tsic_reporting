@@ -11,6 +11,10 @@ SELECT
     Lcm.CommunicationMethodName,
     S.ContractSignedDate,
     S.StudentReferenceID As StudentID,
+    CASE
+        WHEN SC.EnteredByID <> 0 THEN (SELECT COALESCE(FirstName + ' '+ LastName, 'Unknown') FROM Offices.Staff WHERE StaffID = sC.EnteredByID)
+        ELSE 'State User'
+    END AS EnteredByName,
     SC.Note,
     S.OfficeID,
     C.CountyName,
