@@ -11,7 +11,7 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 				In (1, 3, 4, 5) -- All active except "On Hold" 
 			--And ss.ContractSignedDate  
 			--	< '2014-06-30'
-			And sms.SessionDate Between '2017-07-01' AND '2018-06-30'
+			And sms.SessionDate Between '2018-07-01' AND '2019-06-30'
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
 			And sms.MentorID IN
@@ -39,7 +39,7 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 			--	< '2014-06-30'
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
-			And sms.SessionDate Between '2017-07-01' AND '2018-06-30'
+			And sms.SessionDate Between '2018-07-01' AND '2019-06-30'
 			And sms.MentorID IN
 			(Select MentorID
 			 FROM Students.StudentMentors
@@ -65,7 +65,7 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 			--	< '2014-06-30'
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
-			And sms.SessionDate Between '2017-07-01' AND '2018-06-30'
+			And sms.SessionDate Between '2018-07-01' AND '2019-06-30'
 			And sms.MentorID IN
 			(Select MentorID
 			 FROM Students.StudentMentors
@@ -108,14 +108,15 @@ From(Select distinct ST2.StudentID,
 				Left Outer Join Students.StudentMentors SMS ON ST1.MentorID = SMS.MentorID
             Where SMS.StudentID = ST2.StudentID 
 				--AND (SMS.UnassignedDate > '2013-08-01' OR SMS.UnassignedDate IS NULL)
-				AND SMS.AssignedDate > '2017-06-30'
+				AND SMS.AssignedDate Between '2018-07-01' And '2019-06-30'
 				AND (SMS.UnassignedDate IS NULL)
 				AND (SMS.MentorAssignmentTypeID = 1)
             For XML PATH ('')) [Mentors]
      From Students.Students ST2) [Main]
 	 --ORDER BY Main.StudentID
 	)
-SELECT	  S.FirstName as StudentFirstName
+SELECT	O.OfficeName 
+		, S.FirstName as StudentFirstName
 		, S.LastName as StudentLastName
 		, S.LastName + ', ' + S.FirstName as StudentFullName
 		--,	M.FirstName as MentorFirstNane
@@ -151,6 +152,7 @@ FROM Students.Students S
 	--INNER JOIN Lookups.MentorStatuses MS ON M.MentorStatusID = MS.MentorStatusID 
 	--INNER JOIN Students.StudentMentors SSM ON S.StudentID = SSM.MentorID
 	--INNER JOIN Students.Students S ON SSM.StudentID = S.StudentID
+	INNER JOIN Offices.Offices O ON S.OfficeID = O.OfficeID
 	INNER JOIN Lookups.Counties C ON C.CountyID = S.CountyID
 	INNER JOIN Schools.Schools SCH ON SCH.SchoolID = S.SchoolID
 	INNER JOIN MentorNamesCte mncte ON mncte.StudentID = S.StudentID
@@ -162,7 +164,7 @@ FROM Students.Students S
 Where S.StudentStatusID IN (1, 3, 4, 5) --AND (SSM.UnassignedDate > '2013-08-01' OR SSM.UnassignedDate IS NULL)
 --ORDER BY S.CountyID
 --And S.OfficeID = 1
-And AssignedDate > '2017-06-30'
+And AssignedDate Between '2018-07-01' And '2019-06-30'
 AND S.IsDeleted = 0
 --And lmsdcte.LastSessionDate > fmsdcte.FirstSessionDate
 --Order By AvgSessionsMonth, StudentLastName, StudentFirstName
