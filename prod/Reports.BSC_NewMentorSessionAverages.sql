@@ -11,7 +11,7 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 				In (1, 3, 4, 5) -- All active except "On Hold" 
 			--And ss.ContractSignedDate  
 			--	< '2014-06-30'
-			And sms.SessionDate Between dbo.July1() AND '2020-06-30'
+			And sms.SessionDate Between dbo.July1() AND dbo.Jun30()
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
 			And sms.MentorID IN
@@ -39,7 +39,7 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 			--	< '2014-06-30'
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
-			And sms.SessionDate Between dbo.July1() AND '2020-06-30'
+			And sms.SessionDate Between dbo.July1() AND dbo.Jun30()
 			And sms.MentorID IN
 			(Select MentorID
 			 FROM Students.StudentMentors
@@ -65,7 +65,7 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 			--	< '2014-06-30'
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
-			And sms.SessionDate Between dbo.July1() AND '2020-06-30'
+			And sms.SessionDate Between dbo.July1() AND dbo.Jun30()
 			And sms.MentorID IN
 			(Select MentorID
 			 FROM Students.StudentMentors
@@ -108,7 +108,7 @@ From(Select distinct ST2.StudentID,
 				Left Outer Join Students.StudentMentors SMS ON ST1.MentorID = SMS.MentorID
             Where SMS.StudentID = ST2.StudentID 
 				--AND (SMS.UnassignedDate > '2013-08-01' OR SMS.UnassignedDate IS NULL)
-				AND SMS.AssignedDate Between dbo.July1() And '2020-06-30'
+				AND SMS.AssignedDate Between dbo.July1() And dbo.Jun30()
 				AND (SMS.UnassignedDate IS NULL)
 				AND (SMS.MentorAssignmentTypeID = 1)
             For XML PATH ('')) [Mentors]
@@ -164,7 +164,7 @@ FROM Students.Students S
 Where S.StudentStatusID IN (1, 3, 4, 5) --AND (SSM.UnassignedDate > '2013-08-01' OR SSM.UnassignedDate IS NULL)
 --ORDER BY S.CountyID
 --And S.OfficeID = 1
-And AssignedDate Between dbo.July1() And '2020-06-30'
+And AssignedDate Between dbo.July1() And dbo.Jun30()
 AND S.IsDeleted = 0
 --And lmsdcte.LastSessionDate > fmsdcte.FirstSessionDate
 --Order By AvgSessionsMonth, StudentLastName, StudentFirstName
