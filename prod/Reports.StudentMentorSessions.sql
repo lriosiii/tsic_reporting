@@ -19,7 +19,8 @@ SELECT
     s.Affiliation,
     s.i3ControlGroup,
     i3StudyGroupMember,
-    MentorStatusName
+    MentorStatusName,
+    sm.assigneddate
       --, os.Donor
       --( Select Top (1) Donor
       --  From Offices.Scholarships
