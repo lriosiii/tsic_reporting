@@ -81,7 +81,8 @@ WHERE
 	s.StudentStatusID In (1, 3, 4, 5) -- All active except "On Hold"
 	AND s.IsDeleted = 0
 	And (
-		s.SSN Is Null
+		s.CurrentGradeLevelID = 12 AND coll.CollegeName IS NULL
+		OR s.SSN Is Null
 		or s.FirstName is null
 		or s.LastName is null
 		Or s.BirthDate Is Null
