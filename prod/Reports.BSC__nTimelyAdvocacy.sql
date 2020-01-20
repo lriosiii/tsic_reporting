@@ -13,7 +13,7 @@
 					and ss.IsDeleted = 0
 			And sc.StudentCommunicationTypeID = 1
 			And sc.IsDeleted = 0
-			And b.MMCSCDate <= '2019-10-31'     --- web Change back to 10-31 for mid year JL 1/27/2016, Change to 03-31 for end of year; -DR
+			And b.MMCSCDate <= '2020-03-31'     --- web Change back to 10-31 for mid year JL 1/27/2016, Change to 03-31 for end of year; -DR
 		Group By ss.StudentID,  ss.OfficeID
 		--Order By ss.StudentID --for testing
 	)
@@ -39,7 +39,7 @@ Left Outer Join reports.BSC_Dates bscd on bscd.StudentID = ss.StudentID
 WHERE		ss.StudentStatusID IN (1, 3, 4, 5)
 			and SS.IsDeleted = 0
 			--AND ss.CurrentGradeLevelID IS NOT NULL   -- This line creates a problem with execution time  JL 5/5/2015
-			AND bscd.MMCSCDate <= '2019-10-31'  --- Change back to 10-31 for mid year JL 1/27/2016, Change to 03-31 for end of year; -DR
+			AND bscd.MMCSCDate <= '2020-03-31'  --- Change back to 10-31 for mid year JL 1/27/2016, Change to 03-31 for end of year; -DR
 			AND (
 				 (tcrcte.TotalCRContacts IS NULL) 
 
@@ -47,11 +47,11 @@ WHERE		ss.StudentStatusID IN (1, 3, 4, 5)
 		--------------------------------------------------------------------------------------------------------------------------
 				 -- For full year, scenario 1 and 2 should be 4 and 2
 				 -- UnCommented out 2 lines above this per Ele 1/27/2011 - to be commented for mid-year BSC     JL
-				 OR (tcrcte.TotalCRContacts < 2 AND CurrentGradeLevelID Between 11 AND 12 And bscd.MMCSCDate <= '2019-10-31') --Scenario 1
-				 OR (tcrcte.TotalCRContacts < 1 AND CurrentGradeLevelID Between 5 AND 10 And bscd.MMCSCDate <= '2019-10-31') --Scenario 2
+				 OR (tcrcte.TotalCRContacts < 4 AND CurrentGradeLevelID Between 11 AND 12 And bscd.MMCSCDate <= '2019-10-31') --Scenario 1
+				 OR (tcrcte.TotalCRContacts < 2 AND CurrentGradeLevelID Between 5 AND 10 And bscd.MMCSCDate <= '2019-10-31') --Scenario 2
 
-				 --OR (tcrcte.TotalCRContacts < 2 AND CurrentGradeLevelID Between 11 AND 12 And bscd.MMCSCDate Between '2019-11-01' AND'2020-03-31') 
-				 --OR (tcrcte.TotalCRContacts < 1 AND CurrentGradeLevelID Between 6 AND 10 And bscd.MMCSCDate Between '2019-11-01' AND'2020-03-31') 
+				 OR (tcrcte.TotalCRContacts < 2 AND CurrentGradeLevelID Between 11 AND 12 And bscd.MMCSCDate Between '2019-11-01' AND'2020-03-31') --Scenario 3
+				 OR (tcrcte.TotalCRContacts < 1 AND CurrentGradeLevelID Between 6 AND 10 And bscd.MMCSCDate Between '2019-11-01' AND'2020-03-31') --Scenario 4 
 				 
 			    )
 				--AND ss.OfficeID = 17
