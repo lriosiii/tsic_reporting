@@ -46,7 +46,7 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 				    when d.IsTransfer = 0 and d.ContractSignedDate < dbo.Sep16() then d.TstartDates
 					when d.IsTransfer = 0 and d.ContractSignedDate >= dbo.Sep16() and d.FirstSession is null and Convert (date, DATEADD(Day,30,d.ContractSignedDate)) >= d.EndDate then null
 					when d.IsTransfer = 0 and d.ContractSignedDate >= dbo.Sep16() and d.FirstSession is null and Convert (date, DATEADD(Day,30,d.ContractSignedDate)) < d.EndDate then Convert (date, DATEADD(Day,30,d.ContractSignedDate))
-					when d.IsTransfer = 0 and d.ContractSignedDate >= dbo.Sep16() and d.FirstSession < '2019-10-15' then Convert (date,dbo.Oct15())
+					when d.IsTransfer = 0 and d.ContractSignedDate >= dbo.Sep16() and d.FirstSession < dbo.Oct15() then Convert (date,dbo.Oct15())
 					--when ss.ContractSignedDate >= '2017-09-16' and fmsd.FirstSessionDate > '2017-10-15' then Convert (date,fmsd.FirstSessionDate) took out and split into 2 categories below -DR
 					when d.IsTransfer = 0 and d.ContractSignedDate >= dbo.Sep16() and d.FirstSession > Convert (date, DATEADD(Day,30,d.ContractSignedDate)) then Convert (date, DATEADD(Day,30,d.ContractSignedDate))
 					when d.IsTransfer = 0 and d.ContractSignedDate >= dbo.Sep16() and d.FirstSession <= Convert (date, DATEADD(Day,30,d.ContractSignedDate)) then Convert (date,d.FirstSession)
@@ -82,15 +82,15 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 	),
 
 	-- CTE for mentor/student assigned date
-	MentorAssignedDate (AssignedDate, DTU, StudentID, OfficeID) As
+	MentorAssignedDate (AssignedDate, StudentID, OfficeID) As
 	(
 		Select MIN(sms.AssignedDate) As AssignedDate,
-			Case when Convert (date, GETDATE()) > '2020-06-01'
-		Then '2020-06-01'
-		Else
-		CONVERT(date, GetDate())
-		End As DateTU
-			,ss.StudentID,
+		--Case when Convert (date, GETDATE()) > '2020-06-01'
+		--Then '2020-06-01'
+		----Else
+		--CONVERT(date, GetDate())
+		--End As DateTU
+			ss.StudentID,
 			ss.OfficeID
 		From Students.StudentMentors sms
 			Join Students.Students ss
