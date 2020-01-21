@@ -73,4 +73,4 @@ LEFT JOIN  Students.FAFSA sf ON s.StudentID = sf.StudentID
 --Lookups.Colleges AS SelCol ON SelCol.CollegeID = ci.CollegeID LEFT OUTER JOIN     --new college tab allows multiple entries on colleges in College Tracking Tile
 --Lookups.Colleges AS cols ON ci.CollegeID = cols.CollegeID 		  -- and this report should show only the last college entered.  JL 12/3/2014
 LEFT JOIN Lookups.BrightFutures bf ON s.BrightFutureID = bf.BrightFutureID
-WHERE Year(s.HighSchoolDiplomaDate) ='2019' and (s.StudentStatusID Between 11 and 15) 
+WHERE Year(s.HighSchoolDiplomaDate) = dbo.YearStartYYYY() and (s.StudentStatusID Between 11 and 15) 
