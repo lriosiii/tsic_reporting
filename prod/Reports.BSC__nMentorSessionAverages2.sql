@@ -1,38 +1,40 @@
 WITH -- Common CTE for total active students for the time period (for mentor match rates, etc)
-	 totalMentorSessionsCte (TotalMentorSessions, StudentID,IsTransfer) As
+	totalMentorSessionsCte (TotalMentorSessions, StudentID, IsTransfer, FirstSessionDate, LastSessionDate) As
 	(
 		select t.Totalsessions
 			,s.studentid
 			,t.IsTransfer
+			,t.Firstsession
+			,t.Lastsession
 			from students.students s
 			left join reports.BSC_Dates2 t on t.Studentid = s.StudentID
 			where s.StudentStatusID in (1,3,4,5)
 	),
 
-	-- CTE for last mentor/student session date
-	LastMentorSessionDate (LastSessionDate, StudentID) As
-	(
-		select t.Lastsession
-			,s.studentid
-			from students.students s
-			left join Reports.BSC_Dates2 t on t.Studentid = s.StudentID
-			where s.StudentStatusID in (1,3,4,5)
-	),
-
 	---- CTE for last mentor/student session date
-	FirstMentorSessionDate (FirstSessionDate, StudentID) As
-	(
-		Select t.Firstsession
-			,s.studentid
-			from students.students s
-			left join Reports.BSC_Dates2 t on t.Studentid = s.StudentID
-			where s.StudentStatusID in (1,3,4,5)
+	--LastMentorSessionDate (LastSessionDate, StudentID) As
+	--(
+	--	select t.Lastsession
+	--		,s.studentid
+	--		from students.students s
+	--		left join Reports.BSC_Dates2 t on t.Studentid = s.StudentID
+	--		where s.StudentStatusID in (1,3,4,5)
+	--),
 
-	),
+	------ CTE for last mentor/student session date
+	--FirstMentorSessionDate (FirstSessionDate, StudentID) As
+	--(
+	--	Select t.Firstsession
+	--		,s.studentid
+	--		from students.students s
+	--		left join Reports.BSC_Dates2 t on t.Studentid = s.StudentID
+	--		where s.StudentStatusID in (1,3,4,5)
+			
+	--),
 
 	Dates (StartDate, EndDate, StudentID) as
 	(
-	/*Started with Tranfsers First and then regualr students */
+	/*Started with Tranfsers First and then regular students */
 
 
 		Select case when d.IsTransfer = 1 and d.Firstsession is null and d.TstartDates > d.EndDate then Null
@@ -139,8 +141,8 @@ From(Select distinct ST2.StudentID,
 			--,d.EndDate
 			--,bd.tdate as TransferDate
 			,tmscte.TotalMentorSessions
-			,fmsdcte.FirstSessionDate
-			,lmsdcte.LastSessionDate
+			,tmscte.FirstSessionDate
+			,tmscte.LastSessionDate
 			,tmcte.TotalMonths
 			,case when convert(date, getdate()) < '2019-10-16' then null
 					else floor(tmscte.TotalMentorSessions/tmcte.TotalMonths)
