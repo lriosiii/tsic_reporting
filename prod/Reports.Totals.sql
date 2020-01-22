@@ -56,22 +56,22 @@ Select s.FirstName
 	
 	,(Select Count(mss.SessionDate) as #Sessions
 		From students.MentoringSessions mss
-		where (mss.StudentID = s.StudentID) and (mss.IsDeleted = 0)	and (mss.SessionDate between '2018-07-01' and '2019-06-30')
+		where (mss.StudentID = s.StudentID) and (mss.IsDeleted = 0)	and (mss.SessionDate between dbo.July1() and dbo.Jun30())
 		) as TotalMentorSessions
 		 
 	,(Select Sum(mss.SessionDuration) as #Mins
 			From students.MentoringSessions mss
-			where (mss.StudentID = s.StudentID) and (mss.IsDeleted = 0)	and (mss.SessionDate between '2018-07-01' and '2019-06-30')
+			where (mss.StudentID = s.StudentID) and (mss.IsDeleted = 0)	and (mss.SessionDate between dbo.July1() and dbo.Jun30())
 			) as TotalMentorMinutes
 
 	,(Select cast(Round((Sum(mss.SessionDuration))/60.0,1) as float) --as #Hours
 		From students.MentoringSessions mss
-		where (mss.StudentID = s.StudentID) and (mss.IsDeleted = 0)	and (mss.SessionDate between '2018-07-01' and '2019-06-30')
+		where (mss.StudentID = s.StudentID) and (mss.IsDeleted = 0)	and (mss.SessionDate between dbo.July1() and dbo.Jun30())
 		) as TotalMentorHours
 
 	,(Select Count(scs.NoteDate) as #visits
 		From Students.Communications scs
-		where (scs.StudentID = s.StudentID) and (scs.StudentCommunicationTypeID = 1) and (scs.IsDeleted = 0) and (scs.NoteDate between '2018-07-01' and '2019-06-30')	
+		where (scs.StudentID = s.StudentID) and (scs.StudentCommunicationTypeID = 1) and (scs.IsDeleted = 0) and (scs.NoteDate between dbo.July1() and dbo.Jun30())	
 		) as TotalCRVisits
 
 
