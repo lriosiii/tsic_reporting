@@ -49,8 +49,7 @@ SELECT
 
   where s.IsDeleted = 0
   and s.StudentStatusID in (1,3,4,5,11,12,13,14,15,28)
-	--TODO dyanmic gradyear 'last 5 years'
-  and s.graduationyear BETWEEN 2015 AND 2019
+  and s.graduationyear BETWEEN (dbo.YearStartYYYYint()-4) AND dbo.YearStartYYYYint()
   AND (
 		lastCollege.CollegeName IN
 			('Broward College',
@@ -92,4 +91,4 @@ SELECT
 			 'University of Florida',
 			 'University of North Florida',
 			 'University of South Florida',
-			 'University of West Florida') OR s.graduationyear = 2019)
+			 'University of West Florida') OR s.graduationyear = dbo.YearStartYYYYint())
