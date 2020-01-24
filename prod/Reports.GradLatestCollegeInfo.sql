@@ -62,6 +62,12 @@ SELECT  o.OfficeName
 			ORDER BY ci.LastEnrolledDate DESC
 	  ) As ColLastTermAttnd
 	  ,(
+		SELECT TOP(1) ci.LastEnrolledDate
+		FROM Students.CollegeInformation ci
+		Where ci.StudentID = s.StudentID
+		ORDER BY ci.LastEnrolledDate DESC
+	) As LastEnrolledDate
+	  ,(
 			SELECT TOP(1) ci.EntryDate
 			FROM Students.CollegeInformation ci
 			Where ci.StudentID = s.StudentID
