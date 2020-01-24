@@ -13,6 +13,7 @@ SELECT  o.OfficeName
 	  ,dt.DegreeTypeName
 	  ,ci.CollegeEmail
 	  ,col.CollegeName
+	  ,ci.LastEnrolledDate
 	  ,DATEPART(yyyy, ci.LastEnrolledDate) AS ColLastYearAttnd
 	  ,CASE DATEPART(qq, ci.LastEnrolledDate)
 			WHEN 1 THEN 'Spring'
