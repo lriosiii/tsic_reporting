@@ -3,6 +3,7 @@ SELECT  o.OfficeName
       ,s.LastName
 	  ,s.firstName
 	  ,s.LastName + ', ' + s.FirstName AS FullName
+      ,s.BirthDate
 	  ,s.StudentReferenceID
 	  ,ss.StudentStatusName
 	  ,ssc.SchoolName as HighSchool
