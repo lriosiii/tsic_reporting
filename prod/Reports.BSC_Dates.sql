@@ -7,7 +7,7 @@ AS
 			Where t.StudentID = s.StudentID
 			and s.IsDeleted = 0  and t.IsDeleted = 0
 			and s.OfficeID <> t.OfficeID
-			and t.TransferDate between '2019-07-01' and '2020-06-30'
+			and t.TransferDate between dbo.July1() and dbo.Jun30() 
 			ORDER BY TransferDate desc
 	   )  as tdate,
 (	SELECT TOP (1) t.TransferDate
@@ -37,7 +37,7 @@ AS
 			 when t.tdate is null then (Select Count(sms.StudentID)
 				From Students.MentoringSessions sms
 				--left join reports.BSC_Dates bscd on bscd.StudentID = sms.StudentID
-				 where  sms.StudentID = s.StudentID and sms.SessionDate Between '2019-07-01' and '2020-06-30'
+				 where  sms.StudentID = s.StudentID and sms.SessionDate Between dbo.July1() and dbo.Jun30() 
 				And sms.IsDeleted = 0
 				And sms.SessionDuration > 0)
 			end as TotalSessions
@@ -57,7 +57,7 @@ AS
 			 when t.tdate is null then (Select max(sms.SessionDate)
 				From Students.MentoringSessions sms
 				--left join reports.BSC_Dates bscd on bscd.StudentID = sms.StudentID
-				 where  sms.StudentID = s.StudentID and sms.SessionDate Between '2019-07-01' and '2020-06-30'
+				 where  sms.StudentID = s.StudentID and sms.SessionDate Between dbo.July1() and dbo.Jun30() 
 				And sms.IsDeleted = 0
 				And sms.SessionDuration > 0)
 			end as LastSessionDate
@@ -77,7 +77,7 @@ FirstSession (Firstsession, studentid) as
 			 when t.tdate is null then (Select min(sms.SessionDate)
 				From Students.MentoringSessions sms
 				--left join reports.BSC_Dates bscd on bscd.StudentID = sms.StudentID
-				 where  sms.StudentID = s.StudentID and sms.SessionDate Between '2019-07-01' and '2020-06-30'
+				 where  sms.StudentID = s.StudentID and sms.SessionDate Between dbo.July1() and dbo.Jun30() 
 				And sms.IsDeleted = 0
 				And sms.SessionDuration > 0)
 			end as FirstSessionDate
@@ -93,7 +93,7 @@ FirstSession (Firstsession, studentid) as
 	,t.tdate
     ,t.xtdate
 	,case when t.tdate is not Null then Convert (date, DATEADD(Day,30,t.tdate))
-		when s.ContractSignedDate < '2019-09-16' then Convert (date, '2019-10-15')
+		when s.ContractSignedDate < dbo.Sep16()  then Convert (date, dbo.Oct15())
 		end as TstartDates
 	,case when t.tdate is not null then 1
 		else 0
@@ -105,7 +105,7 @@ FirstSession (Firstsession, studentid) as
 		when t.tdate is null then s.ContractSignedDate
 		end as MMCSCDate
 
-	,Case when Convert (date, GETDATE()) > '2020-06-01' Then '2020-06-01'
+	,Case when Convert (date, GETDATE()) > dbo.Jun1() THEN dbo.Jun1()
 	Else 
 	CONVERT(date, GetDate())
 	End As EndDate
