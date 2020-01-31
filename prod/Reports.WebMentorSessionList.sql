@@ -20,8 +20,8 @@ SELECT   Sal.SalutationName
 		, SES.SessionDate
 		, SES.SessionDuration
 		, SES.SessionNote
-		, SES.InsertedDate
-		, SES.DBUser
+		--, SES.InsertedDate  	  --TODO: re-apply field when they become availble in new mentoringsessions table
+		--, SES.DBUser		  --TODO: re-apply field when they become availble in new mentoringsessions table
 		, M.OfficeID
 		, M.MentorStatusID
 		, c.CountyName
@@ -37,8 +37,8 @@ FROM Mentors.Mentors M
 	INNER JOIN Students.Students S ON SES.StudentID = S.StudentID
 	INNER JOIN Schools.Schools Sch ON S.SchoolID = Sch.SchoolID
 	LEFT OUTER JOIN Lookups.Counties C ON C.CountyID = m.CountyID
-Where SES.IsDeleted = 0
-And S.IsDeleted = 0
-And M.IsDeleted = 0
-AND ses.isdeleted = 0
+Where 1=1
+	AND ses.IsDeleted = 0
+	And S.IsDeleted = 0
+	And M.IsDeleted = 0
 
