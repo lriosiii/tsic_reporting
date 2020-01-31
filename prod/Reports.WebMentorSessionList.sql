@@ -40,4 +40,5 @@ FROM Mentors.Mentors M
 Where SES.IsDeleted = 0
 And S.IsDeleted = 0
 And M.IsDeleted = 0
+AND ses.isdeleted = 0
 
