@@ -236,7 +236,8 @@ SELECT
 				from students.Applications sax
 				where sax.IsDeleted = 0 and sax.StudentID = s.StudentID
 				) ApplicationCompletionDate
-
+		,s.CurrentGradeLevelID
+		,sc.SchoolName
 FROM         Students.Students AS S LEFT OUTER JOIN
 					  Lookups.Counties AS CNT ON S.CountyID = CNT.CountyID LEFT OUTER JOIN
                       Schools.Schools AS SC ON S.SchoolID = SC.SchoolID LEFT OUTER JOIN
