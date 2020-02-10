@@ -1,7 +1,8 @@
 WITH AllEvents AS
 	(
 		SELECT S.StudentID,
-		E.StateEventID, eventname
+		E.StateEventID,
+		eventname
 		FROM Students.Students S, State.Events E
 		WHERE E.isdeleted = 0
 	)
@@ -29,14 +30,8 @@ WITH AllEvents AS
 		COALESCE(SM1.MentorName, 'Unassigned') as MentorName,
 		AE.StateEventID,
 		AE.eventname,
-		CASE WHEN SE.Attended IS NULL THEN 'N'
-			WHEN SE.Attended = 1 THEN 'Y'
-			WHEN SE.Attended = 0 THEN 'N'
-			END AS Attended,
-		CASE WHEN SE.InvitationSent IS NULL THEN 'N'
-			WHEN SE.InvitationSent = 1 THEN 'Y'
-			WHEN SE.InvitationSent = 0 THEN 'N'
-			END AS Invited
+		SE.Attended,
+		SE.InvitationSent AS Invited
 	FROM Students.Students S
 		INNER JOIN Lookups.StudentStatuses SS ON S.StudentStatusID = SS.StudentStatusID		
 		INNER JOIN Lookups.StatusGroups SG ON SS.StatusGroupID = SG.StatusGroupID
