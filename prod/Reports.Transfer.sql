@@ -63,41 +63,41 @@ With Trn_CTE (tdate, Studentid, OfficeID, toffice, SemesterUnweightedGPA, GpaTyp
 	)
 
 SELECT DISTINCT
-		o.OfficeName AS CurrentOffice
-		,LastName + ', ' + FirstName AS StudentName
-		,CASE 
-			WHEN s.CurrentGradeLevelID > 12 THEN ''
-			ELSE s.CurrentGradeLevelID
-			END CurrentGrade
-		,tc.toffice AS OriginalOffice
-		,tc.tdate AS TransferDate
-		,ls.StudentStatusName
-		,(SELECT top (1) l.ProbationLevelName +', '+ r.ProbationReasonName 
-			FROM students.StatusHistory sh
-			LEFT JOIN Lookups.ProbationLevels l ON sh.ProbationLevelID = l.ProbationLevelID
-			LEFT JOIN lookups.ProbationReasons r ON sh.ProbationReasonID = r.ProbationReasonID
-			WHERE 1=1
-				AND sh.StudentID = s.StudentID 
-				AND s.StudentStatusID in (1,3,4,5) 
-				AND sh.IsDeleted = 0
-			ORDER BY sh.StatusChangeDate DESC
-			) AS LevelReason
-		,s.ContractSignedDate
-		,c.ContractTypeName AS ContractType
-		,tc.SemesterUnweightedGPA AS LatestUnweightedGPA
-		,	CASE
-			WHEN tc.GpaType = 1.0 THEN 'Cumulative'
-			WHEN tc.GpaType = 2.0 THEN 'Semester'
-			ELSE''
-			END AS GPAType
-		,tc.GpaDate
-		,s.Affiliation
-		,s.OfficeID
-		,s.CountyID
-		,schol.scholarshipowner
-		,schol.donor
-		,schol.hoursavail
-		,schol.plantype
+	o.OfficeName AS CurrentOffice
+	,LastName + ', ' + FirstName AS StudentName
+	,CASE 
+		WHEN s.CurrentGradeLevelID > 12 THEN ''
+		ELSE s.CurrentGradeLevelID
+		END CurrentGrade
+	,tc.toffice AS OriginalOffice
+	,tc.tdate AS TransferDate
+	,ls.StudentStatusName
+	,(SELECT top (1) l.ProbationLevelName +', '+ r.ProbationReasonName 
+		FROM students.StatusHistory sh
+		LEFT JOIN Lookups.ProbationLevels l ON sh.ProbationLevelID = l.ProbationLevelID
+		LEFT JOIN lookups.ProbationReasons r ON sh.ProbationReasonID = r.ProbationReasonID
+		WHERE 1=1
+			AND sh.StudentID = s.StudentID 
+			AND s.StudentStatusID in (1,3,4,5) 
+			AND sh.IsDeleted = 0
+		ORDER BY sh.StatusChangeDate DESC
+		) AS LevelReason
+	,s.ContractSignedDate
+	,c.ContractTypeName AS ContractType
+	,tc.SemesterUnweightedGPA AS LatestUnweightedGPA
+	,	CASE
+		WHEN tc.GpaType = 1.0 THEN 'Cumulative'
+		WHEN tc.GpaType = 2.0 THEN 'Semester'
+		ELSE''
+		END AS GPAType
+	,tc.GpaDate
+	,s.Affiliation
+	,s.OfficeID
+	,s.CountyID
+	,schol.scholarshipowner
+	,schol.donor
+	,schol.hoursavail
+	,schol.plantype
   FROM [TSIC_Prod].[Students].[Students] s
   LEFT JOIN Offices.Offices o ON s.OfficeID = o.OfficeID
   LEFT JOIN lookups.ContractTypes c ON s.ContractTypeID =c.ContractTypeID
