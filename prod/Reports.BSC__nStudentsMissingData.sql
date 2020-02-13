@@ -75,7 +75,8 @@ LEFT JOIN [Lookups].[Races] r on s.RaceID = r.raceid
 LEFT JOIN offices.Staff os on os.StaffID = s.AdvocateID
 LEFT JOIN Schools.Schools sch on sch.SchoolID = s.SchoolID
 LEFT JOIN lookups.ContractTypes ctt on ctt.ContractTypeID = s.ContractTypeID
-LEFT JOIN Lookups.Colleges AS coll ON coll.CollegeID = s.finalcollegeid
+LEFT JOIN Students.CollegePreparation collprep ON s.studentid=collprep.studentid
+LEFT JOIN Lookups.Colleges AS coll ON coll.CollegeID = collprep.collegeid
 LEFT JOIN (SELECT DISTINCT studentid FROM  Students.studentmentors WHERE isdeleted = 0) initialmentor ON s.studentid=initialmentor.studentid
 WHERE
 	s.StudentStatusID In (1, 3, 4, 5) -- All active except "On Hold"
