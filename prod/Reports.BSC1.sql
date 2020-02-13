@@ -7,7 +7,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 			Join Offices.Offices o
 				On ss.OfficeID = o.OfficeID
 		Where ss.StudentStatusID
-				In (1, 3, 4, 5) -- All active except "On Hold"
+				In (1, 3, 4, 5)
 			And ss.ContractSignedDate Between '2019-06-06' And '2020-06-03'
 			And ss.IsDeleted = 0
 			and o.OfficeID not in (18,19,20)
@@ -15,7 +15,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 	),
 
 	Data1totalRecruitedStudentsCTE (TotalRecruitedStudents, OfficeName, OfficeID) AS
-	/* Secial Case table for Datapoint 1 Denominator */
+	/* Special Case table for Datapoint 1 Denominator */
 	(
 		SELECT
 			Count(ss.countyid) As totalrecruitedstudents,
@@ -24,7 +24,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 		FROM students.students ss
 		INNER JOIN offices.offices o ON ss.officeid = o.officeid
 		WHERE 1=1
-			AND ss.studentstatusid IN (1, 3, 4, 5) -- All active except "On Hold"
+			AND ss.studentstatusid IN (1, 3, 4, 5)
 			AND ss.contractsigneddate BETWEEN '2019-06-06' And '2020-06-03'
 			AND ss.isdeleted = 0
 			AND NOT ( (ss.enrollmentvariance = 1) OR (ss.wfieligible = 1) AND ss.EntryGradeLevelID IN (10,11) )
@@ -43,7 +43,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 			Join Offices.Offices o
 				On ss.OfficeID = o.OfficeID
 		Where ss.StudentStatusID
-				In (1, 3, 4, 5) -- All active except "On Hold"
+				In (1, 3, 4, 5)
 			And ss.ContractSignedDate < '2019-11-01'
 			And ss.IsDeleted = 0
 			and o.OfficeID not in (18,19,20)
@@ -60,7 +60,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 		From Students.Students ss
 		Join Offices.Offices o On ss.OfficeID = o.OfficeID
 		Where ss.StudentStatusID
-			In (1, 3, 4, 5) -- All active except "On Hold"
+			In (1, 3, 4, 5)
 			And ss.ContractSignedDate  Between '2019-06-06' And '2020-06-03'
 			and ss.EntryGradeLevelID in (6,7,8,9)
 			and o.OfficeID not in (18,19,20)
@@ -80,7 +80,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 				On ss.OfficeID = o.OfficeID
 				left join students.Applications sap on sap.StudentID = ss.StudentID
 		Where ss.StudentStatusID
-				In (1, 3, 4, 5) -- All active except "On Hold"
+				In (1, 3, 4, 5) 
 				And ss.ContractSignedDate Between '2019-06-06' And '2020-06-03'
 				and COALESCE(ss.PriorityType ,sap.PriorityType) = 2
 				and o.OfficeID not in (18,19,20)
@@ -101,7 +101,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 				On ss.OfficeID = o.OfficeID
 				left join students.Applications sap on sap.StudentID = ss.StudentID
 		Where ss.StudentStatusID
-				In (1, 3, 4, 5) -- All active except "On Hold"
+				In (1, 3, 4, 5)
 			And ss.ContractSignedDate
 				Between '2019-06-06' And '2020-06-03'
 				and COALESCE(ss.EntryGPA,sap.GPA) >= 2.0
@@ -144,7 +144,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 				Join Offices.Offices o
 				On ss.OfficeID = o.OfficeID
 		Where ss.StudentStatusID
-				In (1, 3, 4, 5) -- All active except "On Hold"
+				In (1, 3, 4, 5)
 			And ss.CurrentGradeLevelID  IS NOT NULL
 			And sg.SemesterEndDate Between '2019-12-01' And '2020-03-31'
 			And sg.SchoolTermTypeID in (17, 30, 0)
@@ -165,7 +165,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 			From Students.Communications sc
 				left join reports.BSC_Dates b on ss.StudentID = b.studentid
 		Where ss.StudentStatusID
-				In (1, 3, 4, 5) -- All active except "On Hold"
+				In (1, 3, 4, 5)
 			And  ((b.IsTransfer = 0 and  sc.NoteDate Between '2019-07-01' AND '2020-06-30') or (b.IsTransfer = 1 and  sc.NoteDate Between b.MMCSCDate AND '2020-06-30'))
 			and b.MMCSCDate <= '2019-10-31'
 			And sc.StudentCommunicationTypeID = 1
@@ -185,7 +185,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 				On ss.StudentID = sc.StudentID
 				left join reports.BSC_Dates bd on ss.StudentID = bd.studentid
 		Where ss.StudentStatusID
-				In (1, 3, 4, 5) -- All active except "On Hold"
+				In (1, 3, 4, 5)
 			--And ss.ContractSignedDate < '2018-11-01'
 			and ss.IsDeleted = 0
 			and bd.MMCSCDate <= '2019-10-31'
@@ -310,7 +310,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 
 	Select
 		1 As DataPointNumber,
-		'Percent of students recruited in grades 6-9' as 'Metric', -- DataPointDescription
+		'Percent of students recruited in grades 6-9' as 'Metric',
 		--acte.CountyID,
 		offic.OfficeName,
 		SUM(acte.TotalActiveStudents)  As KPI, --ValueMatch, -- Count of students that match
@@ -334,7 +334,7 @@ Union
 
 	Select
 		2 As DataPointNumber,
-		'Percent of students recruited as Type 2' as 'Metric', -- DataPointDescription
+		'Percent of students recruited as Type 2' as 'Metric',
 		--actt.CountyID,
 		office.OfficeName,
 		SUM(actt.TotalActiveStudents)  As KPI, --ValueMatch, -- Count of students that match
@@ -360,7 +360,7 @@ union
 
 Select
 		3 As DataPointNumber,
-		'Percent of students recruited with >2.0 GPA' as 'Metric', -- DataPointDescription
+		'Percent of students recruited with >2.0 GPA' as 'Metric',
 		--actg.CountyID,
 		offic.OfficeName,
 		SUM(actg.TotalActiveStudents)  As KPI, --ValueMatch, -- Count of students that match
@@ -383,7 +383,7 @@ union
 
 Select
 		4 As DataPointNumber,
-		'Meeting CR Workshop Requirement' as 'Metric', -- DataPointDescription
+		'Meeting CR Workshop Requirement' as 'Metric',
 		--te.CountyID,
 		te.OfficeName,
 		SUM(te.AllEvents)  As KPI, --ValueMatch
@@ -425,7 +425,7 @@ Union
 
 Select
 		5 As DataPointNumber,
-		'Percent of Students with Semester 1 GPA' as 'Metric', -- DataPointDescription
+		'Percent of Students with Semester 1 GPA' as 'Metric',
 		--tacm.CountyID,
 		tacm.OfficeName,
 		IsNull(sum(swg.TotalStudentsWithGPA), 0)  As KPI, --ValueMatch
@@ -446,7 +446,7 @@ Union
 
 Select
 		6 As DataPointNumber,
-		'Percent of students receiving college readiness contact' as 'Metric', -- DataPointDescription
+		'Percent of students receiving college readiness contact' as 'Metric',
 		--CVKPI.CountyID,
 		CVKPI.OfficeName,
 		CVKPI.KPI As KPI, --ValueMatch
@@ -470,7 +470,7 @@ Union
 
 Select
 		7 As DataPointNumber,
-		'Required Data' as 'Metric', -- DataPointDescription
+		'Required Data' as 'Metric',
 		--CVKPI.CountyID,
 		offic.OfficeName,
 		(dd.TotalDatapoints - e.total) As KPI, --ValueMatch
