@@ -211,44 +211,21 @@ Select
 				UNION
 
 
---Midyear Datapoint 9
-
 SELECT
-		9 AS DataPointNumber,
-		'New student timely matches' AS 'Metric',
-		office.officeName,
-		true_total	AS KPI,
-		all_total-null_total	AS TotalNew,
-		CONVERT(INT,ROUND(true_total * 100/CAST(NULLIF(all_total-null_total,0) AS DECIMAL),0)) AS Result,
-		CASE
-			WHEN CONVERT(INT,ROUND(true_total * 100/CAST(NULLIF(all_total-null_total,0) AS DECIMAL),0)) BETWEEN 98 AND 100 THEN 5
-			WHEN CONVERT(INT,ROUND(true_total * 100/CAST(NULLIF(all_total-null_total,0) AS DECIMAL),0)) BETWEEN 95 AND 97 THEN 3
-			WHEN CONVERT(INT,ROUND(true_total * 100/CAST(NULLIF(all_total-null_total,0) AS DECIMAL),0)) < 95 THEN 0
-			ELSE ''
-			END AS Score,
-		'' AS Comments,
-		office.officeid
+	9 AS DataPointNumber,
+	'New student timely matches' AS 'Metric',
+	office.officeName,
+	true_total  AS KPI,
+	all_total-dbo.To0ifSemester2(null_total)	AS TotalNew,
+	CONVERT(INT,ROUND(true_total * 100/CAST(NULLIF(all_total,0) AS DECIMAL),0)) AS Result,
+	CASE
+		WHEN CONVERT(INT,ROUND(true_total * 100/CAST(NULLIF(all_total-dbo.To0ifSemester2(null_total),0) AS DECIMAL),0)) BETWEEN 98 AND 100 THEN 5
+		WHEN CONVERT(INT,ROUND(true_total * 100/CAST(NULLIF(all_total-dbo.To0ifSemester2(null_total),0) AS DECIMAL),0)) BETWEEN 95 AND 97 THEN 3
+		WHEN CONVERT(INT,ROUND(true_total * 100/CAST(NULLIF(all_total-dbo.To0ifSemester2(null_total),0) AS DECIMAL),0)) < 95 THEN 0
+		ELSE ''
+		END AS Score,
+	'' AS Comments,
+	office.officeid
 	From offices.offices office
-	LEFT JOIN timelymatchesCTE ON office.officeid=timelymatchesCTE.officeid
-	WHERE office.officeid NOT IN (7,18,19,20,26,29,51)
-
---Full year Datapoint 9
-
---SELECT
---		9 AS DataPointNumber,
---		'New student timely matches' AS 'Metric',
---		office.officeName,
---		true_total  AS KPI,
---		all_total	AS TotalNew,
---		true_total * 100/all_total AS Result,
---		CASE
---			WHEN true_total * 100/all_total BETWEEN 98 AND 100 THEN 5
---			WHEN true_total * 100/all_total BETWEEN 95 AND 97 THEN 3
---			WHEN true_total * 100/all_total < 95 THEN 0
---			ELSE ''
---			END AS Score,
---		'' AS Comments,
---		office.officeid
---	From offices.offices office
---  LEFT JOIN timelymatchesCTE ON office.officeid=timelymatchesCTE.officeid
---  WHERE office.officeid NOT IN (7,18,19,20,26,29,51)
+  LEFT JOIN timelymatchesCTE ON office.officeid=timelymatchesCTE.officeid
+  WHERE office.officeid NOT IN (7,18,19,20,26,29,51)
