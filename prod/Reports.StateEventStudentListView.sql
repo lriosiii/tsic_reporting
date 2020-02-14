@@ -17,6 +17,7 @@ WITH AllEvents AS
 		S.FirstName,
 		S.MiddleName,
 		S.LastName,
+		s.emailaddress,
 		S.AddressID,
 		S.BirthDate,
 		S.GraduationYear,
