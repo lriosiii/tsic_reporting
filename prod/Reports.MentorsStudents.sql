@@ -1,5 +1,5 @@
 
-SELECT      Sal.SalutationName, Mentors.Mentors.LastName, Mentors.Mentors.FirstName, Mentors.Mentors.MiddleName, Mentors.mentors.Gender as MentorGender, Lookups.MentorStatuses.MentorStatusName, Students.StudentMentors.IsPrimary as IsPrimary, CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedBirthDate)) AS BirthDate,
+SELECT      Sal.SalutationName, offices.officename, Mentors.Mentors.LastName, Mentors.Mentors.FirstName, Mentors.Mentors.MiddleName, Mentors.mentors.Gender as MentorGender, Lookups.MentorStatuses.MentorStatusName, Students.StudentMentors.IsPrimary as IsPrimary, CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedBirthDate)) AS BirthDate,
                       Mentors.Mentors.EmailAddress, Common.Addresses.Address1, Common.Addresses.Address2, Common.Addresses.City, Lookups.States.StateName, Common.Addresses.ZipCode,
                       Mentors.Mentors.HomePhoneNumber, Mentors.Mentors.MobilePhoneNumber, Mentors.Mentors.WorkPhoneNumber, Mentors.Mentors.PagerPhoneNumber,
                       Students.Students.LastName AS StudentLastName, Students.Students.FirstName AS StudentFirstName, Students.Students.MiddleName AS StudentMiddleNane,
@@ -20,6 +20,7 @@ FROM         Mentors.Mentors LEFT OUTER JOIN
 					  Lookups.States ON Common.Addresses.StateID = Lookups.States.StateID INNER JOIN
                       Lookups.StudentStatuses ON Students.Students.StudentStatusID = Lookups.StudentStatuses.StudentStatusID left outer JOIN
                       Lookups.Counties ON Mentors.Mentors.CountyID = Lookups.Counties.CountyID
+		      LEFT JOIN offices.offices offices ON mentors.mentors.officeid=offices.officeid
 WHERE     (Mentors.Mentors.MentorStatusID = 1) --AND (Students.Students.StudentStatusID = 1 OR
                       --Students.Students.StudentStatusID = 2 OR
                     --  Students.Students.StudentStatusID = 3 OR
