@@ -185,7 +185,21 @@ SAddress.Address2 AS StudentAddress2,
 	) As ApplicationPriorityType
 
 	,'' as Blank
-	,'' as Blank2						
+	,'' as Blank2
+     ,( 
+	SELECT SUM(sessionduration) 
+	FROM Students.MentoringSessions studms
+	WHERE S.StudentID = studms.StudentID
+	AND studms.isdeleted = 0
+	AND studms.sessiondate >= dbo.July1()								
+	) AS FiscalSessionMinutes
+	,( 
+	SELECT COUNT(*) 
+	FROM Students.MentoringSessions studms
+	WHERE S.StudentID = studms.StudentID
+	AND studms.isdeleted = 0
+	AND studms.sessiondate >= dbo.July1()								
+	) AS FiscalSessionOccurrences
 
 FROM         Students.Students AS S LEFT OUTER JOIN Offices.Offices o on s.OfficeID = o.OfficeID 
 --left outer join offices.Contacts oc on o.OfficeID = oc.OfficeID 
