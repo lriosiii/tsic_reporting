@@ -9,11 +9,11 @@ With totalStudentsWithGPACte (TotalStudentsWithGPA, StudentID, OfficeID) As
 		Where ss.StudentStatusID 
 				In (1, 3, 4, 5) -- All active except "On Hold" 
 			And ss.CurrentGradeLevelID  IS NOT NULL
-			And sg.SemesterEndDate Between '2019-11-01' And '2019-03-31'
+			And sg.SemesterEndDate Between dbo.Nov1() AND  dbo.Mar31()
 			And sg.SchoolTermTypeID in (17, 30, 0)  -- See term types above   JL - 05-31-2016
 			And (sg.SemesterUnweighted > 0 Or sg.CumulativeUnweighted > 0)
 			And sg.IsDeleted = 0
-			And ss.ContractSignedDate  < '2019-11-01'
+			And ss.ContractSignedDate  < dbo.Nov1()
 			
 		Group By sg.StudentID, ss.OfficeID
 		--Order By sg.StudentID --for testing
@@ -30,11 +30,11 @@ With totalStudentsWithGPACte (TotalStudentsWithGPA, StudentID, OfficeID) As
 		Where ss.StudentStatusID 
 				In (1, 3, 4, 5) -- All active except "On Hold" 
 			And ss.CurrentGradeLevelID  IS NOT NULL
-			And (sa.SemesterEndDate Between '2019-11-01' And '2019-03-31')
+			And (sa.SemesterEndDate Between dbo.Nov1() And dbo.Mar31())
 			And sa.SchoolTermTypeID in (17, 30, 0) -- 10 = quarter 3, 18 is semester 2, 17 is semester 1 - see notes above  5/18/2016
 			And sa.IsDeleted = 0
 			And ss.IsDeleted = 0
-			And ss.ContractSignedDate < '2019-11-01'
+			And ss.ContractSignedDate < dbo.Nov1()
 		Group By sa.StudentID, ss.OfficeID
 	)
 	
@@ -48,7 +48,7 @@ With totalStudentsWithGPACte (TotalStudentsWithGPA, StudentID, OfficeID) As
 		Where ss.StudentStatusID 
 				In (1, 3, 4, 5) -- All active except "On Hold" 
 				And ss.IsDeleted = 0
-				And ContractSignedDate < '2019-11-01'
+				And ContractSignedDate < dbo.Nov1()
 						
 		Group By ss.OfficeID
 	)
