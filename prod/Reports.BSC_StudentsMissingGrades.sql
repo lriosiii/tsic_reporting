@@ -1,35 +1,52 @@
-SELECT     S.FirstName, S.MiddleName, S.LastName, S.LastName + ', ' + S.FirstName AS StudentFullName, S.SSN, S.BirthDate, GL.GradeLevelName AS CurrentGradeLevel, 
-                      SC.SchoolName, S.ContractSignedDate,
-                          (SELECT     Max(G.SemesterEndDate) AS MaxSemesterEndDate
-                            FROM          Students.Students AS SS LEFT OUTER JOIN
-                                                   Students.GPA AS G ON SS.StudentID = G.StudentID 
-							WHERE G.IsDeleted = 0			
-                            GROUP BY SS.StudentID
-                            HAVING      (SS.StudentID = S.StudentID) ) AS LastGPADate,
-						  (SELECT     Top 1 (G.SemesterUnweighted) AS MaxSemesterUnweighted
-                            FROM          Students.Students AS SS LEFT OUTER JOIN
-                                                   Students.GPA AS G ON SS.StudentID = G.StudentID 
-							WHERE G.IsDeleted = 0			
-                            GROUP BY SS.StudentID, G.SemesterUnweighted, G.SemesterEndDate
-                            HAVING      (SS.StudentID = S.StudentID) 
-							ORDER By G.SemesterEndDate DESC) AS LastSemesterUnweighted,
-						  (SELECT     Top 1 (G.CumulativeUnweighted) AS MaxCumulativeUnweighted
-                            FROM          Students.Students AS SS LEFT OUTER JOIN
-                                                   Students.GPA AS G ON SS.StudentID = G.StudentID 
-							WHERE G.IsDeleted = 0			
-                            GROUP BY SS.StudentID, G.CumulativeUnweighted, G.SemesterEndDate
-                            HAVING      (SS.StudentID = S.StudentID) 
-							ORDER By G.SemesterEndDate DESC) AS LastCumulativeUnweighted,
-						  (SELECT     Top(1) SchoolTermTypeName AS TopTermType
-                            FROM       Students.GPA G INNER JOIN
-									   Lookups.SchoolTermTypes STT on G.SchoolTermTypeID = STT.SchoolTermTypeID
-							WHERE G.IsDeleted =  0
-							GROUP BY G.StudentID, G.SemesterEndDate, STT.SchoolTermTypeName, G.SchoolTermTypeID
-							
-                            HAVING      (G.StudentID = S.StudentID) --AND G.SchoolTermTypeID NOT IN (18,30,0)   -- Switch 17 to 18 to go from Sem 1 to Sem 2 JL 17Jun15
-							ORDER By G.SemesterEndDate DESC) AS LastTermType, 	 
-					  S.OfficeID, Lookups.StudentStatuses.StudentStatusName, S.StudentStatusID, 
-                      S.StudentReferenceID
+SELECT     
+	S.FirstName, 
+	S.MiddleName, 
+	S.LastName, 
+	S.LastName + ', ' + S.FirstName AS StudentFullName, 
+	S.SSN, 
+	S.BirthDate, 
+	GL.GradeLevelName AS CurrentGradeLevel, 
+	SC.SchoolName, 
+	S.ContractSignedDate,
+	(
+	    SELECT     Max(G.SemesterEndDate) AS MaxSemesterEndDate
+	    FROM	Students.Students AS SS 
+	    LEFT OUTER JOIN Students.GPA AS G ON SS.StudentID = G.StudentID 
+	    WHERE G.IsDeleted = 0			
+	    GROUP BY SS.StudentID
+	    HAVING      (SS.StudentID = S.StudentID) 
+         ) AS LastGPADate,
+	 (
+	 	SELECT	Top 1 (G.SemesterUnweighted) AS MaxSemesterUnweighted
+                FROM	Students.Students AS SS 
+		LEFT OUTER JOIN Students.GPA AS G ON SS.StudentID = G.StudentID 
+		WHERE G.IsDeleted = 0			
+                GROUP BY SS.StudentID, G.SemesterUnweighted, G.SemesterEndDate
+                HAVING      (SS.StudentID = S.StudentID) 
+		ORDER By G.SemesterEndDate DESC
+	 ) AS LastSemesterUnweighted,
+	 (
+	 	SELECT     Top 1 (G.CumulativeUnweighted) AS MaxCumulativeUnweighted
+		FROM          Students.Students AS SS 
+		LEFT OUTER JOIN Students.GPA AS G ON SS.StudentID = G.StudentID 
+		WHERE G.IsDeleted = 0			
+                GROUP BY SS.StudentID, G.CumulativeUnweighted, G.SemesterEndDate
+                HAVING      (SS.StudentID = S.StudentID) 
+		ORDER By G.SemesterEndDate DESC
+	) AS LastCumulativeUnweighted,
+	(
+		SELECT     Top(1) SchoolTermTypeName AS TopTermType
+                FROM       Students.GPA G 
+		INNER JOIN Lookups.SchoolTermTypes STT on G.SchoolTermTypeID = STT.SchoolTermTypeID
+		WHERE G.IsDeleted =  0
+		GROUP BY G.StudentID, G.SemesterEndDate, STT.SchoolTermTypeName, G.SchoolTermTypeID
+		HAVING      (G.StudentID = S.StudentID) --AND G.SchoolTermTypeID NOT IN (18,30,0)   -- Switch 17 to 18 to go from Sem 1 to Sem 2 JL 17Jun15
+		ORDER By G.SemesterEndDate DESC
+	) AS LastTermType, 	 
+	S.OfficeID, 
+	Lookups.StudentStatuses.StudentStatusName, 
+	S.StudentStatusID, 
+        S.StudentReferenceID
 FROM    Students.Students AS S 
 LEFT OUTER JOIN Lookups.StudentStatuses ON S.StudentStatusID = Lookups.StudentStatuses.StudentStatusID 
 LEFT OUTER JOIN Schools.Schools AS SC ON S.SchoolID = SC.SchoolID 
