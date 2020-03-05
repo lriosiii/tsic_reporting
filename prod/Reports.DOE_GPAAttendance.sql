@@ -1,3 +1,18 @@
+/*This query runs attendance& GPA Percentage by office. Report only used for DOE Reporting for State Office.
+Created by D.REED on 03/19/2018
+
+TIME OF YEAR UPDATES - Made Summer 2019
+BEFORE:And sg.SemesterEndDate Between '2018-12-01' And '2019-03-31'
+AFTER: And sg.SemesterEndDate Between '2019-05-01' And '2019-07-31'
+BEFORE: And (sa.SemesterEndDate Between '2018-12-01' And '2019-03-31') 
+AFTER: And (sa.SemesterEndDate Between '2019-05-01' And '2019-07-31') 
+BEFORE: ContractSignedDate < '2018-11-01'
+AFTER: ContractSignedDate < '2019-03-31'
+BEFORE: And sg.SchoolTermTypeID in (17, 30, 0)
+AFTER: And sg.SchoolTermTypeID in (18, 30, 0)
+*/
+
+
 With totalStudentsWithGPACte (TotalStudentsWithGPA, StudentID, OfficeID) As 
 	(
 		Select Count(sg.StudentID) As TotalStudentsWithGPA,
