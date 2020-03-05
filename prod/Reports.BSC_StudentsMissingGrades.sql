@@ -37,7 +37,7 @@ LEFT OUTER JOIN Lookups.GradeLevels AS GL ON S.CurrentGradeLevelID = GL.GradeLev
 WHERE     (S.StudentStatusID In (1,3,4,5))
 AND S.IsDeleted = 0
 --And (S.OfficeID = 3)  -- Redid date below again for new year JL 9/3/2015
-And (S.ContractSignedDate < '2019-11-01') -- I redid the bottom on 5/14/2014 JL - It was not showing the right data. Went from 2014-11-01 to 2015-04-01 for Sem 2 JL 17Jun15
+And (S.ContractSignedDate < dbo.Nov1()) -- I redid the bottom on 5/14/2014 JL - It was not showing the right data. Went from 2014-11-01 to 2015-04-01 for Sem 2 JL 17Jun15
 --And ((sg.SemesterUnweighted IS NOT NULL And sg.SemesterUnweighted > 0) OR (sg.CumulativeUnweighted IS NOT NULL And sg.CumulativeUnweighted > 0))
 AND ((S.StudentID NOT IN   --NOT EXISTS
        --                   (SELECT     sg.StudentID
@@ -51,7 +51,7 @@ AND ((S.StudentID NOT IN   --NOT EXISTS
                           (SELECT     TOP (1) StudentID
                             FROM          Students.GPA AS sg
                             WHERE      (S.StudentID = StudentID) 
-							AND (sg.SemesterEndDate Between '2019-11-01' AND '2019-03-31')
+							AND (sg.SemesterEndDate Between dbo.Nov1() AND dbo.Mar31())
 							AND (sg.SemesterUnweighted > 0 OR CumulativeUnweighted > 0)
 							And sg.isdeleted = 0 
 							And (sg.SchoolTermTypeID = 17 OR sg.SchoolTermTypeID = 30 OR sg.SchoolTermTypeID = 0))))
