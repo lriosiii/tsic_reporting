@@ -200,7 +200,18 @@ SAddress.Address2 AS StudentAddress2,
 	AND studms.isdeleted = 0
 	AND studms.sessiondate >= dbo.July1()								
 	) AS FiscalSessionOccurrences,
-	s.EnglishLanguageLearner
+	s.EnglishLanguageLearner,
+	( 
+		SELECT TOP(1) CASE WHEN riskdata.optionid = 3 THEN 'N/A'
+							WHEN riskdata.optionid = 2 THEN 'No'
+							WHEN riskdata.optionid = 1 THEN 'Yes'
+							ELSE '-' 
+					   END
+		FROM Students.Applications app
+		LEFT JOIN STUDENTS.ApplicationRiskFactors riskdata ON app.ApplicationID=riskdata.ApplicationID AND riskdata.riskfactorid = 6
+		WHERE S.StudentID = app.StudentID
+		ORDER BY app.ApplicationStartDate DESC
+	) As EnglishNotSpokenInHome
 
 FROM         Students.Students AS S LEFT OUTER JOIN Offices.Offices o on s.OfficeID = o.OfficeID 
 --left outer join offices.Contacts oc on o.OfficeID = oc.OfficeID 
