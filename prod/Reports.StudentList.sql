@@ -199,7 +199,8 @@ SAddress.Address2 AS StudentAddress2,
 	WHERE S.StudentID = studms.StudentID
 	AND studms.isdeleted = 0
 	AND studms.sessiondate >= dbo.July1()								
-	) AS FiscalSessionOccurrences
+	) AS FiscalSessionOccurrences,
+	s.EnglishLanguageLearner
 
 FROM         Students.Students AS S LEFT OUTER JOIN Offices.Offices o on s.OfficeID = o.OfficeID 
 --left outer join offices.Contacts oc on o.OfficeID = oc.OfficeID 
