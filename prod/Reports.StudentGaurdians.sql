@@ -44,4 +44,4 @@ INNER JOIN Lookups.StudentStatuses AS ss ON s.StudentStatusID = ss.StudentStatus
 LEFT JOIN Schools.Schools AS sch ON s.SchoolID = sch.SchoolID
 LEFT OUTER JOIN Common.Addresses AS Adr ON Gr.AddressID = Adr.AddressID
 
-where gr.IsDeleted = 0
+where (gr.isdeleted IS NULL OR gr.isdeleted = 0)
