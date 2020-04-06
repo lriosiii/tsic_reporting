@@ -8,7 +8,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 				On ss.OfficeID = o.OfficeID
 		Where ss.StudentStatusID
 				In (1, 3, 4, 5)
-			And ss.ContractSignedDate Between '2020-06-06' And '2021-06-03' --TODO Already updated in several places, curious why not 7-1 and 6-30 like most other reports?
+			And ss.ContractSignedDate Between '2019-06-06' And '2020-06-03'
 			And ss.IsDeleted = 0
 			and o.OfficeID not in (18,19,20)
 		Group By o.OfficeName, ss.OfficeID
@@ -25,7 +25,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 		INNER JOIN offices.offices o ON ss.officeid = o.officeid
 		WHERE 1=1
 			AND ss.studentstatusid IN (1, 3, 4, 5)
-			AND ss.contractsigneddate BETWEEN '2020-06-06' And '2021-06-03'
+			AND ss.contractsigneddate BETWEEN '2019-06-06' And '2020-06-03'
 			AND ss.isdeleted = 0
 			AND NOT ( (ss.enrollmentvariance = 1) OR (ss.wfieligible = 1) AND ss.EntryGradeLevelID IN (10,11) )
 			AND o.officeid NOT IN (18,19,20)
@@ -44,7 +44,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 				On ss.OfficeID = o.OfficeID
 		Where ss.StudentStatusID
 				In (1, 3, 4, 5)
-			And ss.ContractSignedDate < '2020-11-01'
+			And ss.ContractSignedDate < '2019-11-01'
 			And ss.IsDeleted = 0
 			and o.OfficeID not in (18,19,20)
 		Group By  o.OfficeName, ss.OfficeID
@@ -61,7 +61,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 		Join Offices.Offices o On ss.OfficeID = o.OfficeID
 		Where ss.StudentStatusID
 			In (1, 3, 4, 5)
-			And ss.ContractSignedDate  Between '2020-06-06' And '2021-06-03'
+			And ss.ContractSignedDate  Between '2019-06-06' And '2020-06-03'
 			and ss.EntryGradeLevelID in (6,7,8,9)
 			and o.OfficeID not in (18,19,20)
 		Group By ss.EntryGradeLevelID, o.OfficeName, ss.OfficeID
@@ -81,7 +81,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 				left join students.Applications sap on sap.StudentID = ss.StudentID
 		Where ss.StudentStatusID
 				In (1, 3, 4, 5) 
-				And ss.ContractSignedDate Between '2020-06-06' And '2021-06-03'
+				And ss.ContractSignedDate Between '2019-06-06' And '2020-06-03'
 				and COALESCE(ss.PriorityType ,sap.PriorityType) = 2
 				and o.OfficeID not in (18,19,20)
 		Group By sap.PriorityType, ss.PriorityType, o.OfficeName, ss.OfficeID
@@ -103,7 +103,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 		Where ss.StudentStatusID
 				In (1, 3, 4, 5)
 			And ss.ContractSignedDate
-				Between '2020-06-06' And '2021-06-03'
+				Between '2019-06-06' And '2020-06-03'
 				and COALESCE(ss.EntryGPA,sap.GPA) >= 2.0
 				and o.OfficeID not in (18,19,20)
 				AND sap.isdeleted = 0
@@ -115,7 +115,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 		Select
 			o.OfficeName,
 			ws.TotalCollegeReadiessWorkshops
-			,case when ws.[FAFSA/FinancialAidEvents] = 0 or ws.SeniorCollegePrepEvents = 0 or ws.NewStudentOrientationEvents = 0 or ws.CollegeReadinessEvents < 2 then 0
+			,case when ws.[FAFSA/FinancialAidEvents] = 0 or ws.SeniorCollegePrepEvents = 0 or ws.NewStudentOrientationEvents = 0 or ws.CollegeReadinessEvents < 2 then 0  --CLF updated CollegeReadinessEvents to < 2
 					else ws.TotalCollegeReadiessWorkshops
 					end AS total
 				,ws.[FAFSA/FinancialAidEvents]
@@ -146,11 +146,11 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 		Where ss.StudentStatusID
 				In (1, 3, 4, 5)
 			And ss.CurrentGradeLevelID  IS NOT NULL
-			And sg.SemesterEndDate Between '2019-12-01' And '2020-03-31' --TODO
+			And sg.SemesterEndDate Between '2019-12-01' And '2020-03-31'
 			And sg.SchoolTermTypeID in (17, 30, 0)
 			And (sg.SemesterUnweighted > 0 Or sg.CumulativeUnweighted > 0)
 			And sg.IsDeleted = 0
-			And ss.ContractSignedDate  < '2019-11-01' --TODO
+			And ss.ContractSignedDate  < '2019-11-01'
 			and o.OfficeID not in (18,19,20)
 
 		Group By o.OfficeName, ss.OfficeID
@@ -166,8 +166,8 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 				left join reports.BSC_Dates b on ss.StudentID = b.studentid
 		Where ss.StudentStatusID
 				In (1, 3, 4, 5)
-			And  ((b.IsTransfer = 0 and  sc.NoteDate Between '2020-07-01' AND '2021-06-30') or (b.IsTransfer = 1 and  sc.NoteDate Between b.MMCSCDate AND '2021-06-30'))
-			and b.MMCSCDate <= '2019-10-31'  --TODO
+			And  ((b.IsTransfer = 0 and  sc.NoteDate Between '2019-07-01' AND '2020-06-30') or (b.IsTransfer = 1 and  sc.NoteDate Between b.MMCSCDate AND '2020-06-30'))
+			and b.MMCSCDate <= '2019-10-31'
 			And sc.StudentCommunicationTypeID = 1
 			And sc.IsDeleted = 0
 			and ss.StudentID = sc.StudentID
@@ -186,9 +186,9 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 				left join reports.BSC_Dates bd on ss.StudentID = bd.studentid
 		Where ss.StudentStatusID
 				In (1, 3, 4, 5)
-			--And ss. < '2018-11-01'
+			--And ss.ContractSignedDate < '2018-11-01'
 			and ss.IsDeleted = 0
-			and bd.MMCSCDate <= '2019-10-31' --TODO
+			and bd.MMCSCDate <= '2019-10-31'
 			and o.IsDeleted = 0
 			and o.OfficeID not in (18,19,20)
 		Group By ss.StudentID, ss.StudentStatusID, o.officename, CurrentGradeLevelID, ss.OfficeID
@@ -205,8 +205,8 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 				 where (
                      (csce.Grade between 11 and 12 and csce.TotalVisit >=2 and bdi.MMCSCDate <= '2019-10-31')
                         or	(csce.Grade between 5 and 10 and csce.TotalVisit >=1 and bdi.mmcscdate <= '2019-10-31')
---                        or	(csce.grade between 11 and 12 and csce.TotalVisit >=2 and bdi.MMCSCDate between '2019-11-01' and '2020-03-31') TODO
---                        or	(csce.Grade between 5 and 10 and csce.TotalVisit >=1 and bdi.mmcscdate between '2019-11-01' and '2020-03-31') TODO
+--                        or	(csce.grade between 11 and 12 and csce.TotalVisit >=2 and bdi.MMCSCDate between '2019-11-01' and '2020-03-31')
+--                        or	(csce.Grade between 5 and 10 and csce.TotalVisit >=1 and bdi.mmcscdate between '2019-11-01' and '2020-03-31')
 					)
 				 and csce.OfficeID = ss.OfficeID
 				 )as KPI
@@ -214,7 +214,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 			,(Select Cast(count(csc.StudentID) as int)
 				from Students.Students csc
 				left join reports.BSC_Dates bdi on bdi.StudentID = csc.StudentID
-			where csc.OfficeID = ss.OfficeID and  bdi.MMCSCDate <= '2019-10-31' and csc.StudentStatusID in (1,3,4,5) and csc.IsDeleted = 0 --TODO
+			where csc.OfficeID = ss.OfficeID and  bdi.MMCSCDate <= '2019-10-31' and csc.StudentStatusID in (1,3,4,5) and csc.IsDeleted = 0
 			) TotalVisit
 			,ss.OfficeID
 
@@ -250,7 +250,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 	SELECT DISTINCT studentid, officeid
 	FROM Reports.BSC__nTimelyMentorMatch
 	WHERE timelymatch = 'False'
-	OR timelymatch IS NULL
+	-- OR timelymatch IS NULL     --comment for midyear, uncomment for endofyear
 	)
 
 	, AllStudentsMissingData (stotal, officeid) AS (
@@ -291,7 +291,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 					from students.students ss
 					left join offices.offices oo on oo.OfficeID = ss.OfficeID
 					where  ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID and
-								((ss.StudentStatusID in (1,3,4,5) and ss.CurrentGradeLevelID between 5 and 12) OR (ss.StudentStatusID in (11,12,13,14,15,28) and ss.GraduationYear = 2020))
+								((ss.StudentStatusID in (1,3,4,5) and ss.CurrentGradeLevelID between 5 and 12) OR (ss.StudentStatusID in (11,12,13,14,15,28) and ss.GraduationYear = 2019))
 					)
 						+
 					(
@@ -311,10 +311,11 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 	Select
 		1 As DataPointNumber,
 		'Percent of students recruited in grades 6-9' as 'Metric',
+		--acte.CountyID,
 		offic.OfficeName,
 		SUM(acte.TotalActiveStudents)  As KPI, --ValueMatch, -- Count of students that match
 		tr.TotalRecruitedStudents As Total, -- Total recruited students for same period
-		CONVERT(Int, ROUND(ROUND((IsNull(SUM(acte.totalactivestudents), 0) / CAST(tr.TotalRecruitedStudents As Decimal)) * 100,1),0)) As Result,
+		CONVERT(Int, ROUND(ROUND((IsNull(SUM(acte.totalactivestudents), 0) / CAST(tr.TotalRecruitedStudents As Decimal)) * 100,1),0)) As Result, -- percent
 		CASE
             when ROUND(ROUND((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,1),0) between 95 and 100 then 10
             when ROUND(ROUND((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,1),0) between 85 and 94 then 8
@@ -334,10 +335,11 @@ Union
 	Select
 		2 As DataPointNumber,
 		'Percent of students recruited as Type 2' as 'Metric',
+		--actt.CountyID,
 		office.OfficeName,
 		SUM(actt.TotalActiveStudents)  As KPI, --ValueMatch, -- Count of students that match
 		tr.TotalRecruitedStudents As Total, -- Total recruitedCollegeSuccessCoachVisits students for same period
-		Convert(Int, ROUND((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) As Result,
+		Convert(Int, ROUND((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) As Result, -- percent
 		CASE
 			when Convert(Int, ROUND((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) between 75 and 85 then 10
 			when Convert(Int, ROUND((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) between 86 and 100 then 8
@@ -359,10 +361,11 @@ union
 Select
 		3 As DataPointNumber,
 		'Percent of students recruited with >2.0 GPA' as 'Metric',
+		--actg.CountyID,
 		offic.OfficeName,
 		SUM(actg.TotalActiveStudents)  As KPI, --ValueMatch, -- Count of students that match
 		tr.TotalRecruitedStudents As Total, -- Total recruited students for same period
-		Convert(Int, ROUND((IsNull(sum(actg.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) As Result,
+		Convert(Int, ROUND((IsNull(sum(actg.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) As Result, -- percent
 		CASE
 		when Convert(Int, ROUND((IsNull(sum(actg.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) = 100 then 5
 		when Convert(Int, ROUND((IsNull(sum(actg.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) < 100 then 0
@@ -381,14 +384,15 @@ union
 Select
 		4 As DataPointNumber,
 		'Meeting CR Workshop Requirement' as 'Metric',
+		--te.CountyID,
 		te.OfficeName,
 		SUM(te.AllEvents)  As KPI, --ValueMatch
 		5 As Total, -- Total
         case
             when te.FAFSA = 0 or te.NSO = 0 or te.SeniorCollegePrep = 0 or te.CRE = 0 then Convert(Int, ROUND((IsNull(sum(te.Totalevents), 0) / Cast(5 As Decimal)) * 100,0))
-		    when te.FAFSA > 0 and te.NSO >= 0 and te.SeniorCollegePrep > 0 and te.CRE > 0 then Convert(Int, ROUND((IsNull(sum(te.AllEvents), 0) / Cast(5 As Decimal)) * 100,0))
+		    when te.FAFSA > 0 and te.NSO > = 0 and te.SeniorCollegePrep > 0 and te.CRE > 0 then Convert(Int, ROUND((IsNull(sum(te.AllEvents), 0) / Cast(5 As Decimal)) * 100,0))
 		    else''
-		    end As Result,
+		    end As Result, -- percent
 		CASE when sum(te.Totalevents) >=6 then 5
 			when sum(te.Totalevents) =5 then 3
 			when sum(te.Totalevents) <5 then 0
@@ -422,10 +426,11 @@ Union
 Select
 		5 As DataPointNumber,
 		'Percent of Students with Semester 1 GPA' as 'Metric',
+		--tacm.CountyID,
 		tacm.OfficeName,
 		IsNull(sum(swg.TotalStudentsWithGPA), 0)  As KPI, --ValueMatch
 		tacm.TotalActiveStudents As Total, -- Total
-		Convert(Int, Ceiling((IsNull(sum(swg.TotalStudentsWithGPA), 0) / Cast(tacm.TotalActiveStudents As Decimal)) * 100)) As Result,
+		Convert(Int, Ceiling((IsNull(sum(swg.TotalStudentsWithGPA), 0) / Cast(tacm.TotalActiveStudents As Decimal)) * 100)) As Result, -- percent
 		CASE when Convert(Int, Ceiling((IsNull(sum(swg.TotalStudentsWithGPA), 0) / Cast(tacm.TotalActiveStudents As Decimal)) * 100)) between 95 and 100 then 5
 		when Convert(Int, Ceiling((IsNull(sum(swg.TotalStudentsWithGPA), 0) / Cast(tacm.TotalActiveStudents As Decimal)) * 100)) between 85 and 94 then 3
 		when Convert(Int, Ceiling((IsNull(sum(swg.TotalStudentsWithGPA), 0) / Cast(tacm.TotalActiveStudents As Decimal)) * 100)) < 85 then 0
@@ -442,10 +447,11 @@ Union
 Select
 		6 As DataPointNumber,
 		'Percent of students receiving college readiness contact' as 'Metric',
+		--CVKPI.CountyID,
 		CVKPI.OfficeName,
 		CVKPI.KPI As KPI, --ValueMatch
 		CVKPI.TotalSVisit As Total -- Total
-		,CONVERT(INT, ROUND(ROUND((IsNull((cvkpi.kpi), 0) / CAST(cvkpi.totalSvisit As Decimal)) * 100, 1),0)) As Result,
+		,CONVERT(INT, ROUND(ROUND((IsNull((cvkpi.kpi), 0) / CAST(cvkpi.totalSvisit As Decimal)) * 100, 1),0)) As Result, -- percent
 		CASE
 			WHEN CONVERT(INT, ROUND(ROUND((IsNull((cvkpi.kpi), 0) / CAST(cvkpi.totalSvisit As Decimal)) * 100, 1),0)) BETWEEN 95 AND 100 THEN 15
 			WHEN CONVERT(INT, ROUND(ROUND((IsNull((cvkpi.kpi), 0) / CAST(cvkpi.totalSvisit As Decimal)) * 100, 1),0)) between 85 and 94 then 12
@@ -465,10 +471,11 @@ Union
 Select
 		7 As DataPointNumber,
 		'Required Data' as 'Metric',
+		--CVKPI.CountyID,
 		offic.OfficeName,
 		(dd.TotalDatapoints - e.total) As KPI, --ValueMatch
 		dd.TotalDatapoints As Total -- Total
-		,Convert(Int, floor((((dd.TotalDatapoints - e.total)) / Cast(dd.TotalDatapoints As Decimal)) * 100)) As Result,
+		,Convert(Int, floor((((dd.TotalDatapoints - e.total)) / Cast(dd.TotalDatapoints As Decimal)) * 100)) As Result, -- percent
 		CASE when Convert(Int, floor((((dd.TotalDatapoints - e.total)) / Cast(dd.TotalDatapoints As Decimal)) * 100)) >=95 then 12.5
 		when Convert(Int, floor((((dd.TotalDatapoints - e.total)) / Cast(dd.TotalDatapoints As Decimal)) * 100)) between 90 and 94 then 7
 		when Convert(Int, floor((((dd.TotalDatapoints - e.total)) / Cast(dd.TotalDatapoints As Decimal)) * 100))  < 90 then 0
