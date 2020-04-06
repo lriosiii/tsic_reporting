@@ -250,7 +250,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 	SELECT DISTINCT studentid, officeid
 	FROM Reports.BSC__nTimelyMentorMatch
 	WHERE timelymatch = 'False'
-	-- OR timelymatch IS NULL     --comment for midyear, uncomment for endofyear
+	OR timelymatch IS NULL
 	)
 
 	, AllStudentsMissingData (stotal, officeid) AS (
