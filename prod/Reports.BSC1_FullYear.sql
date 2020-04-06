@@ -115,7 +115,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 		Select
 			o.OfficeName,
 			ws.TotalCollegeReadiessWorkshops
-			,case when ws.[FAFSA/FinancialAidEvents] = 0 or ws.SeniorCollegePrepEvents = 0 or ws.NewStudentOrientationEvents = 0 or ws.CollegeReadinessEvents < 2 then 0  --CLF updated CollegeReadinessEvents to < 2
+			,case when ws.[FAFSA/FinancialAidEvents] = 0 or ws.SeniorCollegePrepEvents = 0 or ws.NewStudentOrientationEvents = 0 or ws.CollegeReadinessEvents < 2 then 0
 					else ws.TotalCollegeReadiessWorkshops
 					end AS total
 				,ws.[FAFSA/FinancialAidEvents]
@@ -311,11 +311,10 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 	Select
 		1 As DataPointNumber,
 		'Percent of students recruited in grades 6-9' as 'Metric',
-		--acte.CountyID,
 		offic.OfficeName,
 		SUM(acte.TotalActiveStudents)  As KPI, --ValueMatch, -- Count of students that match
 		tr.TotalRecruitedStudents As Total, -- Total recruited students for same period
-		CONVERT(Int, ROUND(ROUND((IsNull(SUM(acte.totalactivestudents), 0) / CAST(tr.TotalRecruitedStudents As Decimal)) * 100,1),0)) As Result, -- percent
+		CONVERT(Int, ROUND(ROUND((IsNull(SUM(acte.totalactivestudents), 0) / CAST(tr.TotalRecruitedStudents As Decimal)) * 100,1),0)) As Result,
 		CASE
             when ROUND(ROUND((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,1),0) between 95 and 100 then 10
             when ROUND(ROUND((IsNull(sum(acte.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,1),0) between 85 and 94 then 8
@@ -335,11 +334,10 @@ Union
 	Select
 		2 As DataPointNumber,
 		'Percent of students recruited as Type 2' as 'Metric',
-		--actt.CountyID,
 		office.OfficeName,
 		SUM(actt.TotalActiveStudents)  As KPI, --ValueMatch, -- Count of students that match
 		tr.TotalRecruitedStudents As Total, -- Total recruitedCollegeSuccessCoachVisits students for same period
-		Convert(Int, ROUND((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) As Result, -- percent
+		Convert(Int, ROUND((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) As Result,
 		CASE
 			when Convert(Int, ROUND((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) between 75 and 85 then 10
 			when Convert(Int, ROUND((IsNull(sum(actt.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) between 86 and 100 then 8
@@ -361,11 +359,10 @@ union
 Select
 		3 As DataPointNumber,
 		'Percent of students recruited with >2.0 GPA' as 'Metric',
-		--actg.CountyID,
 		offic.OfficeName,
 		SUM(actg.TotalActiveStudents)  As KPI, --ValueMatch, -- Count of students that match
 		tr.TotalRecruitedStudents As Total, -- Total recruited students for same period
-		Convert(Int, ROUND((IsNull(sum(actg.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) As Result, -- percent
+		Convert(Int, ROUND((IsNull(sum(actg.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) As Result,
 		CASE
 		when Convert(Int, ROUND((IsNull(sum(actg.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) = 100 then 5
 		when Convert(Int, ROUND((IsNull(sum(actg.totalactivestudents), 0) / Cast(tr.TotalRecruitedStudents As Decimal)) * 100,0)) < 100 then 0
@@ -384,15 +381,14 @@ union
 Select
 		4 As DataPointNumber,
 		'Meeting CR Workshop Requirement' as 'Metric',
-		--te.CountyID,
 		te.OfficeName,
 		SUM(te.AllEvents)  As KPI, --ValueMatch
 		5 As Total, -- Total
         case
             when te.FAFSA = 0 or te.NSO = 0 or te.SeniorCollegePrep = 0 or te.CRE = 0 then Convert(Int, ROUND((IsNull(sum(te.Totalevents), 0) / Cast(5 As Decimal)) * 100,0))
-		    when te.FAFSA > 0 and te.NSO > = 0 and te.SeniorCollegePrep > 0 and te.CRE > 0 then Convert(Int, ROUND((IsNull(sum(te.AllEvents), 0) / Cast(5 As Decimal)) * 100,0))
+		    when te.FAFSA > 0 and te.NSO >= 0 and te.SeniorCollegePrep > 0 and te.CRE > 0 then Convert(Int, ROUND((IsNull(sum(te.AllEvents), 0) / Cast(5 As Decimal)) * 100,0))
 		    else''
-		    end As Result, -- percent
+		    end As Result,
 		CASE when sum(te.Totalevents) >=6 then 5
 			when sum(te.Totalevents) =5 then 3
 			when sum(te.Totalevents) <5 then 0
@@ -426,11 +422,10 @@ Union
 Select
 		5 As DataPointNumber,
 		'Percent of Students with Semester 1 GPA' as 'Metric',
-		--tacm.CountyID,
 		tacm.OfficeName,
 		IsNull(sum(swg.TotalStudentsWithGPA), 0)  As KPI, --ValueMatch
 		tacm.TotalActiveStudents As Total, -- Total
-		Convert(Int, Ceiling((IsNull(sum(swg.TotalStudentsWithGPA), 0) / Cast(tacm.TotalActiveStudents As Decimal)) * 100)) As Result, -- percent
+		Convert(Int, Ceiling((IsNull(sum(swg.TotalStudentsWithGPA), 0) / Cast(tacm.TotalActiveStudents As Decimal)) * 100)) As Result,
 		CASE when Convert(Int, Ceiling((IsNull(sum(swg.TotalStudentsWithGPA), 0) / Cast(tacm.TotalActiveStudents As Decimal)) * 100)) between 95 and 100 then 5
 		when Convert(Int, Ceiling((IsNull(sum(swg.TotalStudentsWithGPA), 0) / Cast(tacm.TotalActiveStudents As Decimal)) * 100)) between 85 and 94 then 3
 		when Convert(Int, Ceiling((IsNull(sum(swg.TotalStudentsWithGPA), 0) / Cast(tacm.TotalActiveStudents As Decimal)) * 100)) < 85 then 0
@@ -447,11 +442,10 @@ Union
 Select
 		6 As DataPointNumber,
 		'Percent of students receiving college readiness contact' as 'Metric',
-		--CVKPI.CountyID,
 		CVKPI.OfficeName,
 		CVKPI.KPI As KPI, --ValueMatch
 		CVKPI.TotalSVisit As Total -- Total
-		,CONVERT(INT, ROUND(ROUND((IsNull((cvkpi.kpi), 0) / CAST(cvkpi.totalSvisit As Decimal)) * 100, 1),0)) As Result, -- percent
+		,CONVERT(INT, ROUND(ROUND((IsNull((cvkpi.kpi), 0) / CAST(cvkpi.totalSvisit As Decimal)) * 100, 1),0)) As Result,
 		CASE
 			WHEN CONVERT(INT, ROUND(ROUND((IsNull((cvkpi.kpi), 0) / CAST(cvkpi.totalSvisit As Decimal)) * 100, 1),0)) BETWEEN 95 AND 100 THEN 15
 			WHEN CONVERT(INT, ROUND(ROUND((IsNull((cvkpi.kpi), 0) / CAST(cvkpi.totalSvisit As Decimal)) * 100, 1),0)) between 85 and 94 then 12
@@ -471,11 +465,10 @@ Union
 Select
 		7 As DataPointNumber,
 		'Required Data' as 'Metric',
-		--CVKPI.CountyID,
 		offic.OfficeName,
 		(dd.TotalDatapoints - e.total) As KPI, --ValueMatch
 		dd.TotalDatapoints As Total -- Total
-		,Convert(Int, floor((((dd.TotalDatapoints - e.total)) / Cast(dd.TotalDatapoints As Decimal)) * 100)) As Result, -- percent
+		,Convert(Int, floor((((dd.TotalDatapoints - e.total)) / Cast(dd.TotalDatapoints As Decimal)) * 100)) As Result,
 		CASE when Convert(Int, floor((((dd.TotalDatapoints - e.total)) / Cast(dd.TotalDatapoints As Decimal)) * 100)) >=95 then 12.5
 		when Convert(Int, floor((((dd.TotalDatapoints - e.total)) / Cast(dd.TotalDatapoints As Decimal)) * 100)) between 90 and 94 then 7
 		when Convert(Int, floor((((dd.TotalDatapoints - e.total)) / Cast(dd.TotalDatapoints As Decimal)) * 100))  < 90 then 0
