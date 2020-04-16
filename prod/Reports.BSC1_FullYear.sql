@@ -21,7 +21,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 		SELECT
 			Count(ss.countyid) As totalrecruitedstudents,
 			o.officename,
-			ss.officeid
+			ss.officeidZZ
 		FROM students.students ss
 		INNER JOIN offices.offices o ON ss.officeid = o.officeid
 		WHERE 1=1
