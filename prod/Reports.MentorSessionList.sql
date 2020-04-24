@@ -44,7 +44,8 @@ SELECT   Sal.SalutationName
 				From Offices.Scholarships os
 				Where os.StudentID = S.StudentID
 		  ) As Donor
-
+		,s.ContractSignedDate
+		,o.officename AS 'MentorOffice'
 
 FROM Mentors.Mentors M
 	LEFT OUTER JOIN Lookups.Salutations Sal On M.SalutationID = Sal.SalutationID
@@ -56,6 +57,7 @@ FROM Mentors.Mentors M
 	INNER JOIN Schools.Schools Sch ON S.SchoolID = Sch.SchoolID
 	LEFT OUTER JOIN Lookups.Counties C ON C.CountyID = m.CountyID
 	LEFT OUTER JOIN Lookups.Races R on m.RaceID = r.RaceID
+	INNER JOIN offices.offices o ON o.officeid=m.officeid
 WHERE M.IsDeleted = 0
 AND S.IsDeleted = 0 and ses.IsDeleted = 0
 
