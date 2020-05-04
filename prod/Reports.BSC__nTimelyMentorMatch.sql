@@ -115,7 +115,7 @@ SELECT
 			FROM Students.StudentMentors sm4
 			left join reports.BSC_Dates d on sm4.StudentID = d.StudentID
 			WHERE s.StudentID = sm4.StudentID
-			ORDER BY sm4.AssignedDate ASC)
+			ORDER BY sm4.AssignedDate ASC, sm4.IsPrimary DESC )
 	) As CurrentMentor,
 	(
 		SELECT TOP(1) 
