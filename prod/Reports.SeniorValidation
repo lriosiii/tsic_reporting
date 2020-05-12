@@ -26,9 +26,19 @@ LEFT OUTER JOIN Lookups.Races AS R ON S.RaceID = R.RaceID
 LEFT OUTER JOIN  Offices.Staff AS AD ON S.AdvocateID = AD.StaffID 
 LEFT OUTER JOIN  Lookups.Interests SI ON S.InterestID = SI.InterestID 
 LEFT OUTER JOIN Lookups.ProbationReasons PR ON S.ProbationReasonID = PR.ProbationReasonID
-WHERE       S.IsDeleted = 0 and s.CurrentGradeLevelID = 12 and (s.StudentStatusID in (1,2,3,4,5)
-or s.StudentID in
-(select ss.StudentID
-	from students.Students  ss
-	left join students.StatusHistory sh on ss.StudentID = sh.StudentID
-	where ss.StudentStatusID in (19,20,21,22,23,24) and sh.StatusChangeDate between '2019-07-01' and '2020-06-30' and ss.IsDeleted = 0))
+WHERE       
+S.IsDeleted = 0 
+and s.CurrentGradeLevelID = 12 
+and (
+            s.StudentStatusID in (1,2,3,4,5)
+            or s.StudentID in
+                (select ss.StudentID
+                from students.Students  ss
+                left join students.StatusHistory sh on ss.StudentID = sh.StudentID
+                where ss.StudentStatusID in (19,20,21,22,23,24) and sh.StatusChangeDate between '2019-07-01' and '2020-06-30' and ss.IsDeleted = 0)
+         or s.StudentID in
+				(select ss.StudentID
+				from students.Students  ss
+				left join students.StatusHistory sh on ss.StudentID = sh.StudentID
+				WHERE ss.StudentStatusID IN (11) AND sh.StatusChangeDate BETWEEN '2019-07-01' AND '2020-06-30' AND ss.IsDeleted = 0)
+		 )
