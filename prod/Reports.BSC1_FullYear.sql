@@ -47,6 +47,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 			And ss.ContractSignedDate < '2019-11-01'
 			And ss.IsDeleted = 0
 			and o.OfficeID not in (18,19,20)
+			AND SS.isdeleted = 0
 		Group By  o.OfficeName, ss.OfficeID
 
 	)
@@ -63,6 +64,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 			And ss.ContractSignedDate  Between '2019-06-06' And '2020-06-03'
 			and ss.EntryGradeLevelID in (6,7,8,9)
 			and o.OfficeID not in (18,19,20)
+			AND SS.isdeleted = 0
 		Group By ss.EntryGradeLevelID, o.OfficeName, ss.OfficeID
 
 	)
@@ -103,6 +105,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 				and COALESCE(ss.EntryGPA,sap.GPA) >= 2.0
 				and o.OfficeID not in (18,19,20)
 				AND sap.isdeleted = 0
+				AND SS.isdeleted = 0
 		Group By sap.GPA, ss.EntryGPA, o.OfficeName, ss.OfficeID
 
 ),
@@ -146,7 +149,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 			And sg.IsDeleted = 0
 			And ss.ContractSignedDate  < '2019-11-01'
 			and o.OfficeID not in (18,19,20)
-
+			AND SS.isdeleted = 0
 		Group By o.OfficeName, ss.OfficeID
 
 	),
@@ -217,7 +220,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 	From Students.Students ss
 	left join CollegeSuccessCoachVisits cscv on ss.StudentID = cscv.StudentID
 	left join Offices.Offices o on o.OfficeID = ss.OfficeID
- WHERE o.IsDeleted = 0 and cscv.OfficeID not in (18,19,20)
+ WHERE o.IsDeleted = 0 and cscv.OfficeID not in (18,19,20) AND SS.isdeleted = 0
 	group by  o.OfficeName, ss.OfficeID
 	)
 
