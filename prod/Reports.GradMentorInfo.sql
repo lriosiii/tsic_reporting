@@ -12,8 +12,8 @@ SELECT  o.OfficeName
 	  ,a.ZipCode As GradZipCode
 	  ,s.HighSchoolDiplomaDate
 	  ,s.GraduationYear
-	  ,s.SSN
-	  ,s.BirthDate As GradDOB
+	  ,CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedSSN)) AS SSN
+	  ,CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedBirthDate)) AS GradDOB
 	  ,s.HomePhoneNumber As GradHomePhone
 	  ,s.WorkPhoneNumber As GradWorkPhone
 	  ,s.MobilePhoneNumber As GradMobilePhone
