@@ -1,22 +1,22 @@
-SELECT     S.FirstName, S.MiddleName, S.LastName, S.LastName + ', ' + S.FirstName AS StudentFullName, S.SSN, S.BirthDate, SS.StudentStatusName,
-                      GR.GradeLevelName AS CurrentGradeLevel, S.Affiliation, S.HomePhoneNumber, S.MobilePhoneNumber, S.WorkPhoneNumber, S.EmailAddress,
-                      CASE WHEN S.Gender = 'M' THEN 'Male' ELSE 'Female' END AS Gender, CNT.CountyName, SAddress.Address1 AS StudentAddress1,
-                      SAddress.Address2 AS StudentAddress2, SAddress.City AS StudentCity, SAddress.StateID AS StudentState,
+SELECT     S.FirstName, S.MiddleName, S.LastName, S.LastName + ', ' + S.FirstName AS StudentFullName, CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedSSN)) AS SSN, CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedBirthDate)) AS BirthDate, SS.StudentStatusName,
+                      GR.GradeLevelName AS CurrentGradeLevel, S.Affiliation, S.HomePhoneNumber, S.MobilePhoneNumber, S.WorkPhoneNumber, S.EmailAddress, 
+                      CASE WHEN S.Gender = 'M' THEN 'Male' ELSE 'Female' END AS Gender, CNT.CountyName, SAddress.Address1 AS StudentAddress1, 
+                      SAddress.Address2 AS StudentAddress2, SAddress.City AS StudentCity, SAddress.StateID AS StudentState, 
 					  SAddress.ZipCode AS StudentZipCode,
                           (SELECT     TOP (1) ContactName
                             FROM          Students.Contacts AS PG
                             WHERE      (StudentID = S.StudentID)) AS PrimaryGuardianName,
                           (SELECT     TOP (1) ContactName
                             FROM          Students.Contacts AS SG
-                            WHERE      (StudentID = S.StudentID) AND (IsSecondaryGuardian = 1)) AS SecondaryGuardianName, SC.SchoolName,
+                            WHERE      (StudentID = S.StudentID) AND (IsSecondaryGuardian = 1)) AS SecondaryGuardianName, SC.SchoolName, 
                       DATEDIFF(YY, S.BirthDate, GETDATE()) AS StudentAge,
 					  (
-						SELECT CASE
+						SELECT CASE 
 							WHEN S.IsHispanic = 1 THEN 'Hispanic'
 							ELSE
 								 R.RaceName
 							END
-					  ) As EthnicRaceName,
+					  ) As EthnicRaceName,  
                        S.OfficeID, S.ContractSignedDate, s.StudentReferenceID, S.HighSchoolDiplomaDate, FS.FamilySituationName,
 					  --SARF.RiskFactorWeight, RF.RiskFactorName,
 					  (SELECT CASE
@@ -100,7 +100,7 @@ SELECT     S.FirstName, S.MiddleName, S.LastName, S.LastName + ', ' + S.FirstNam
 						THEN 1
 						ELSE 0
 						END) AS AbsentParent
-
+						
 FROM         Students.Students AS S LEFT OUTER JOIN
 					  Lookups.Counties AS CNT ON S.CountyID = CNT.CountyID LEFT OUTER JOIN
                       Schools.Schools AS SC ON S.SchoolID = SC.SchoolID LEFT OUTER JOIN
@@ -114,12 +114,12 @@ FROM         Students.Students AS S LEFT OUTER JOIN
 					  --Lookups.RiskFactors RF ON SARF.RiskFactorID = RF.RiskFactorID
 WHERE       S.IsDeleted = 0
 AND			S.WfiEligible = 0
-AND			(S.StudentStatusID IN (1,3,4,5)
-				OR (S.HighSchoolDiplomaDate Between '2019-01-01' AND '2019-06-30'
+AND			(S.StudentStatusID IN (1,3,4,5) 
+				OR (S.HighSchoolDiplomaDate Between '2019-01-01' AND '2019-06-30' 
 						AND S.StudentStatusID IN (11,12,13,14,15,25,28)
 				)
 			)
 AND			S.ContractSignedDate Between '2018-07-01' AND '2019-06-30'
 --AND			(SARF.RiskFactorID IN (1,4,5,8,12,14,19,20,21))
 --ORDER BY	S.HighSchoolDiplomaDate
---SA.ApplicationID Is NULL OR
+--SA.ApplicationID Is NULL OR 
