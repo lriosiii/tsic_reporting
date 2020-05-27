@@ -7,8 +7,8 @@ SELECT     o.OfficeID, counties.countyname ,o.OfficeName, sch.SchoolName, ss.Stu
 					  s.IsNationalMeritScholar,
                       s.HighSchoolDiplomaDate, s.FPPSeniorPacket, ci.IsEnrolled, bf.BrightFutureName, ci.RemedialCollegeRequired, s.GraduationYear, ci.ExpectedGraduationDate,
 					  ci.ActualGraduationDate, ci.Notes As CollegeNotes, ci.EntryDate, ci.PartTimeWork, et.EmploymentTypeName As EmploymentType, ci.TranscriptReceivedDate,
-					  ci.DegreeAuditReceivedDate, ci.LastEnrolledDate As LastCollegeEnrollmentDate, ci.Graduate, ci.LastEnrolledDate, s.AlumniAlliance, s.BirthDate AS DOB, cm.CollegeMajorName, cl.CollegeLevelName, dg.DegreeTypeName,
-					  'XXX - XX - ' + RIGHT(s.SSN, 4) AS SocialSec#   , s.HousingScholarship, s.HomePhoneNumber,  s.MobilePhoneNumber,
+					  ci.DegreeAuditReceivedDate, ci.LastEnrolledDate As LastCollegeEnrollmentDate, ci.Graduate, ci.LastEnrolledDate, s.AlumniAlliance, CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedBirthDate)) AS DOB, cm.CollegeMajorName, cl.CollegeLevelName, dg.DegreeTypeName,
+					  'XXX - XX - ' + RIGHT(CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, s.EncryptedSSN)), 4) AS SocialSec#, s.HousingScholarship, s.HomePhoneNumber,  s.MobilePhoneNumber,
 	(
 		Select Top(1) Score as ACT From students.TestScores
 		Where students.TestScores.StudentID = s.StudentID and TestTypeID = 1 and IsDeleted = 0
