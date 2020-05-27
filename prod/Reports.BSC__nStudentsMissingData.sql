@@ -1,21 +1,21 @@
-SELECT
+SELECT      
 	s.studentid,
-	'XXX-XX-'+right( s.SSN,4) as SSN,
-	s.LastName,
-	s.FirstName,
-	s.BirthDate,
-	cty.CountyName,
-	s.Gender,
-	s.AddressID,
+	'XXX-XX-'+right(CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedSSN)),4) as SSN,
+	s.LastName, 
+	s.FirstName, 
+	s.BirthDate, 
+	cty.CountyName,  
+	s.Gender,  
+	s.AddressID, 
 	s.HomePhoneNumber,
 	s.WorkPhoneNumber,
-	s.MobilePhoneNumber,
-	s.EmailAddress,
-	sch.SchoolName,
-	s.CurrentGradeLevelID,
+	s.MobilePhoneNumber, 
+	s.EmailAddress, 
+	sch.SchoolName, 
+	s.CurrentGradeLevelID, 
 	s.EntryGradeLevelID
 	,	case when sa.ApplicationCompletionDate is null then 'Not Required'
-		Else convert(varchar,sa.IncomeEligibilityDocumentsSubmited)
+		Else convert(varchar,sa.IncomeEligibilityDocumentsSubmited) 
 	end as IncomeEligibilityDocumentsSubmited
 	,	case when sa.ApplicationCompletionDate is null then 'Not Required'
 		Else convert(varchar,sa.FinalReportCardSubmited)
@@ -31,59 +31,59 @@ SELECT
 		end as FinanciallyQualified
 	,case when sa.ApplicationCompletionDate is null then 'Not Required'
 		Else convert(varchar,sa.ReferenceFormSubmitted)
-		end as ReferenceFormSubmitted
-	,case when sa.GPA is null then s.EntryGPA
+		end as ReferenceFormSubmitted			
+	,case when sa.GPA is null then s.EntryGPA 
 		  when sa.GPA = 0 then s.EntryGPA
-		  else sa.GPA
+		  else sa.GPA 
 	 end as EntryGPA
 	,case when sa.ApplicationCompletionDate is null then 'Not Required'
 		Else convert(varchar,sa.RiskFactorScore)
 	end as RiskFactorScore
-	, case when sa.PriorityType is null then s.PriorityType else sa.PriorityType end as StudentType,
+	, case when sa.PriorityType is null then s.PriorityType else sa.PriorityType end as StudentType, 
 	ctt.ContractTypeName as ContractType,
-	r.RaceName as Race,
-	s.IsHispanic,
-	os.FirstName+' '+os.LastName as  AdvocateName,
-	s.ContractSignedDate,
-	fs.FamilySituationName as FamilySituation,
+	r.RaceName as Race, 
+	s.IsHispanic, 
+	os.FirstName+' '+os.LastName as  AdvocateName, 
+	s.ContractSignedDate, 
+	fs.FamilySituationName as FamilySituation, 
 	s.FirstGenerationCollegeStudent,
-	CASE
+	CASE 
 		WHEN s.CurrentGradeLevelID = 12 THEN coll.collegename
-		ELSE 'Not Required'
+		ELSE 'Not Required' 
 	END AS CollegePrepCollegeChoice,
-	CASE
+	CASE 
 		WHEN initialmentor.studentid IS NOT NULL THEN 'True'
 		ELSE ''
 	END AS InitialMentorMatch,
     (SELECT TOP(1) sc.ContactName FROM Students.Contacts AS sc			WHERE (sc.StudentID = s.StudentID) and sc.IsDeleted = 0) AS Guardian,
 	(SELECT TOP(1) sc.EmailAddress FROM  Students.Contacts AS sc		WHERE (sc.StudentID = s.StudentID) and sc.IsDeleted = 0)	AS GuardianEmail,
-	(SELECT TOP(1) case
+	(SELECT TOP(1) case 
 						when sc.ContactCellPhone is null or sc.ContactCellPhone = '' then sc.ContactHomePhone
 						when  sc.ContactHomePhone is null or sc.ContactHomePhone = '' then sc.ContactWorkPhone
 						else sc.ContactCellPhone
 					end as Phone
 				FROM	Students.Contacts AS sc
 				WHERE   (sc.StudentID = s.StudentID) and sc.IsDeleted = 0) AS GuardianPhone,
-	(SELECT     TOP (1) sc.AddressID FROM Students.Contacts AS sc WHERE      (sc.StudentID = s.StudentID) and sc.IsDeleted = 0) AS GuardianAddress,
-	s.OfficeID
-FROM	Students.Students AS s
-LEFT OUTER JOIN Lookups.StudentStatuses ON s.StudentStatusID = Lookups.StudentStatuses.StudentStatusID
-LEFT OUTER JOIN Students.Applications AS sa ON s.StudentID = sa.StudentID
+	(SELECT     TOP (1) sc.AddressID FROM Students.Contacts AS sc WHERE      (sc.StudentID = s.StudentID) and sc.IsDeleted = 0) AS GuardianAddress,				
+	s.OfficeID						 
+FROM	Students.Students AS s 
+LEFT OUTER JOIN Lookups.StudentStatuses ON s.StudentStatusID = Lookups.StudentStatuses.StudentStatusID 
+LEFT OUTER JOIN Students.Applications AS sa ON s.StudentID = sa.StudentID 
 INNER JOIN Lookups.Counties AS cty ON cty.CountyID = s.CountyID
 LEFT JOIN lookups.FamilySituations fs on fs.FamilySituationID = s.FamilySituationID
 LEFT JOIN [Lookups].[Races] r on s.RaceID = r.raceid
 LEFT JOIN offices.Staff os on os.StaffID = s.AdvocateID
 LEFT JOIN Schools.Schools sch on sch.SchoolID = s.SchoolID
 LEFT JOIN lookups.ContractTypes ctt on ctt.ContractTypeID = s.ContractTypeID
-LEFT JOIN Students.CollegePreparation collprep ON s.studentid=collprep.studentid
-LEFT JOIN Lookups.Colleges AS coll ON coll.CollegeID = collprep.collegeid
+LEFT JOIN Lookups.Colleges AS coll ON coll.CollegeID = s.finalcollegeid
 LEFT JOIN (SELECT DISTINCT studentid FROM  Students.studentmentors WHERE isdeleted = 0) initialmentor ON s.studentid=initialmentor.studentid
-WHERE
-	s.StudentStatusID In (1, 3, 4, 5) -- All active except "On Hold"
+WHERE			
+	s.StudentStatusID In (1, 3, 4, 5) -- All active except "On Hold" 
 	AND s.IsDeleted = 0
 	And (
 		s.CurrentGradeLevelID = 12 AND coll.CollegeName IS NULL
 		OR s.SSN Is Null
+        OR CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedSSN)) IS NULL
 		or s.FirstName is null
 		or s.LastName is null
 		Or s.BirthDate Is Null
@@ -91,10 +91,10 @@ WHERE
 		or s.Gender is null
 		or s.AddressID is null
 		Or (
-			s.HomePhoneNumber Is Null
-			AND s.WorkPhoneNumber Is Null
+			s.HomePhoneNumber Is Null 
+			AND s.WorkPhoneNumber Is Null 
 			AND s.MobilePhoneNumber Is Null
-		)
+		) 
 		or s.EmailAddress is null
 		or s.SchoolID  is null
 		or s.CurrentGradeLevelID is null
@@ -115,20 +115,20 @@ WHERE
 		Or s.ContractSignedDate Is Null
 		or s.FamilySituationID is null
 		or s.FirstGenerationCollegeStudent is null
-		OR (s.currentgradelevelid = 12 AND coll.collegename IS NULL)     --comment for midyear, uncomment for end of year
-		OR (initialmentor.studentid IS NULL AND datediff(day,s.contractsigneddate, getdate()) > 30 )
+		--OR (s.currentgradelevelid = 12 AND coll.collegename IS NULL)     --comment for midyear, uncomment for end of year
+		OR (initialmentor.studentid IS NULL AND datediff(day,s.contractsigneddate, getdate()) > 30 ) 
 		or  Not Exists (
-			Select Top 1
+			Select Top 1 
 				ContactID
 			From Students.Contacts sc
 			Where s.StudentID = StudentID and sc.IsDeleted = 0)
 		Or Not Exists (
-			Select Top 1
+			Select Top 1 
 				EmailAddress
 			From Students.Contacts sc
 			Where s.StudentID = StudentID and sc.IsDeleted = 0)
 		Or  Exists (
-			Select Top 1
+			Select Top 1 
 				ContactID
 			From Students.Contacts sc
 			Where s.StudentID = StudentID and  (sc.ContactCellPhone is null and sc.ContactHomePhone is null and sc.ContactWorkPhone is null) and sc.IsDeleted = 0)
