@@ -28,8 +28,8 @@ SELECT  o.OfficeName
 	  ,gcc.CommunicationMethodName
 	  ,s.HighSchoolDiplomaDate
 	  ,s.GraduationYear
-	  ,s.SSN
-	  ,s.BirthDate
+	  ,CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedSSN)) AS SSN
+	  ,CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedBirthDate)) AS BirthDate
 	  ,s.HomePhoneNumber
 	  ,s.WorkPhoneNumber
 	  ,s.MobilePhoneNumber
