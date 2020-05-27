@@ -18,7 +18,7 @@ SELECT   Sal.SalutationName
 		, S.LastName as StudentLastName
 		, S.FirstName + ' ' + S.LastName as StudentFullName
 		,lss.StudentStatusName
-		, S.BirthDate as StudentDOB
+		,CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, s.EncryptedBirthDate)) as StudentDOB
 		, (
 				SELECT Top 1 sm.AssignedDate
 				From Students.StudentMentors sm
