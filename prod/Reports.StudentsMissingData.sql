@@ -1,4 +1,4 @@
-SELECT     s.LastName + ', ' + s.FirstName AS StudentName, s.MiddleName, s.SchoolID, s.OfficeID, s.Gender, s.SSN, s.BirthDate, s.HomePhoneNumber, s.ContractSignedDate, 
+SELECT     s.LastName + ', ' + s.FirstName AS StudentName, s.MiddleName, s.SchoolID, s.OfficeID, s.Gender, CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedSSN)) AS SSN, CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedBirthDate)) AS BirthDate, s.HomePhoneNumber, s.ContractSignedDate,
                       s.EthnicityID, s.RaceID, s.EntryGPA AS EntryGPAOnFile, s.AddressID, s.EmailAddress, s.EntryGradeLevelID, sa.CurrentGradeLevelID, s.StudentTypeID, 
                       Lookups.StudentStatuses.StudentStatusName, sa.PriorityType, sa.ApplicationNotes, sa.FinanciallyQualified, sa.InterviewsConducted, sa.IsUSCitizen, 
                       sa.AdultsInHousehold, sa.EmailAddress AS ApplicantEmailAddr, sa.ApplicationStartDate, s.ExpectedGraduationDate, s.StudentStatusID, s.StudentReferenceID, 
@@ -38,7 +38,7 @@ WHERE
 
 				And (
 						   s.SSN Is Null
-						OR s.BirthDate Is Null
+						OR CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedBirthDate)) Is Null
 						OR NOT EXISTS (SELECT TOP (1) sm.mentorid AS InitialMentorMatch
 										FROM    Students.studentmentors AS sm
 										WHERE   (sm.StudentID = s.StudentID))
