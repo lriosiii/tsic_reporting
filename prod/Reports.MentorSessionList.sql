@@ -46,6 +46,12 @@ SELECT   Sal.SalutationName
 		  ) As Donor
 		,s.ContractSignedDate
 		,o.officename AS 'MentorOffice'
+   	, CASE
+        WHEN sessionsourceid = 0 THEN 'STAR'
+        WHEN sessionsourceid = 1 THEN 'MobileApp'
+        WHEN sessionsourceid = 2 THEN 'MentorWebPortal'
+        ELSE ''
+      END AS SessionSource
 
 FROM Mentors.Mentors M
 	LEFT OUTER JOIN Lookups.Salutations Sal On M.SalutationID = Sal.SalutationID
