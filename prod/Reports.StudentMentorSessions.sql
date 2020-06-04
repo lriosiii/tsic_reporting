@@ -25,6 +25,12 @@ SELECT
       --( Select Top (1) Donor
       --  From Offices.Scholarships
       --  Where Offices.Scholarships.StudentID = s.StudentID and Offices.Scholarships.isdeleted = 0) As DonorName
+  , CASE
+    WHEN sessionsourceid = 0 THEN 'STAR'
+    WHEN sessionsourceid = 1 THEN 'MobileApp'
+    WHEN sessionsourceid = 2 THEN 'MentorWebPortal'
+    ELSE ''
+    END AS SessionSource
 FROM  Students.Students AS s
 INNER JOIN Lookups.StudentStatuses AS ss ON s.StudentStatusID = ss.StudentStatusID
 INNER JOIN Schools.Schools AS sch ON s.SchoolID = sch.SchoolID
