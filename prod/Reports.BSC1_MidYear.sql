@@ -417,8 +417,9 @@ Select
 	end
 	as Comments,
 		te.OfficeID
-	From
-		totalEventsCte te
+	From offices.offices o
+	LEFT JOIN totalEventsCte te ON o.officeid=te.officeid
+    	WHERE o.officeid NOT IN (18,19,20,7,26,29,51)
 	group by te.OfficeName, te.OfficeID, te.NSO, te.SeniorCollegePrep, te.FAFSA, te.CRE
 
 Union
