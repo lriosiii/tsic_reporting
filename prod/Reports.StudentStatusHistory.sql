@@ -15,6 +15,7 @@ SELECT S.StudentReferenceID
 	  , a.FirstName + ' ' + a.LastName as AdvocateName  
 	  , S.OfficeID 
 	  ,s.Affiliation
+	  ,o.officename
 	  --,s.CountyID
 	  
 	                       
@@ -28,6 +29,7 @@ FROM  Students.StatusHistory sh
 	LEFT OUTER  JOIN Lookups.StudentStatuses sts ON s.StudentStatusID = sts.StudentStatusID
 	Left Outer JOIN Offices.Staff a on S.AdvocateID = a.StaffID
 	left join schools.Schools sc on sc.SchoolID = s.SchoolID
+	INNER JOIN offices.offices o ON o.officeid=s.officeid
 --WHERE  G.SemesterEndDate > '2015-01-01'  -- These lines for tests and fixes.  JL
 WHERE s.IsDeleted = 0
 And sh.IsDeleted = 0
