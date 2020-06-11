@@ -5,7 +5,7 @@ SELECT   Sal.SalutationName
 		, M.FirstName + ' ' + M.LastName as MentorFullName
 		, CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, m.EncryptedSSN)) AS SSN
 		, MS.MentorStatusName
-		, CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedBirthDate)) as MentorDOB
+		, CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, m.EncryptedBirthDate)) as MentorDOB
 		, M.HomePhoneNumber
 		, M.MobilePhoneNumber
 		, M.WorkPhoneNumber
