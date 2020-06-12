@@ -3,7 +3,7 @@ SELECT
 	'XXX-XX-'+right(CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedSSN)),4) as SSN,
 	s.LastName, 
 	s.FirstName, 
-	s.BirthDate, 
+	CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedBirthdate)) AS BirthDate, 
 	cty.CountyName,  
 	s.Gender,  
 	s.AddressID, 
@@ -82,11 +82,10 @@ WHERE
 	AND s.IsDeleted = 0
 	And (
 		s.CurrentGradeLevelID = 12 AND coll.CollegeName IS NULL
-		OR s.SSN Is Null
         OR CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedSSN)) IS NULL
 		or s.FirstName is null
 		or s.LastName is null
-		Or s.BirthDate Is Null
+		OR  CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedBirthdate)) IS NULL
 		or s.CountyID is null
 		or s.Gender is null
 		or s.AddressID is null
