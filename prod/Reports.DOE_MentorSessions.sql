@@ -1,5 +1,6 @@
 SELECT  
-	DISTINCT  sms.SessionDate,  
+	DISTINCT  
+	sms.SessionDate,  
 	sms.SessionDuration, 
 	s.StudentID, 
 	m.MentorID, 
@@ -7,17 +8,14 @@ SELECT
 	s.MiddleName, 
 	m.LastName + ', ' + m.FirstName As MentorName, 
 	s.StudentStatusID, 
-	s.OfficeID, 
 	s.CurrentGradeLevelID, 
 	s.ContractSignedDate, 
 	ss.StudentStatusName,
-    sch.SchoolName,
+    	sch.SchoolName,
 	c.CountyName,
 	o.OfficeName,
 	sm.AssignedDate,
 	--LEFT(sms.SessionNote, 1) As Note,
-	s.i3ControlGroup,
-	i3StudyGroupMember,
 	MentorStatusName
 FROM
 	Students.Students AS s
@@ -39,7 +37,4 @@ And s.IsDeleted = 0
 And m.IsDeleted = 0
 And sm.IsDeleted = 0
 And sms.IsDeleted = 0
--- For Testing Building a way to get dups out.
-And SessionDate Between '2018-07-01' And '2018-12-31'
-and sm.AssignedDate < '2018-07-01'
 And (sms.SessionNote IS NOT NULL OR sms.SessionNote <> '')
