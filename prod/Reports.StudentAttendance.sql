@@ -19,11 +19,12 @@ SELECT S.FirstName
       , STT.SchoolTermTypeName
 	  , sch.SchoolName
       , S.OfficeID
+      ,o.officename
 FROM Students.Attendance A
 	INNER JOIN Students.Students S ON A.StudentID = S.StudentID
 	INNER JOIN Lookups.StudentStatuses SS ON S.StudentStatusID = SS.StudentStatusID
 	INNER JOIN Schools.Schools sch ON s.SchoolID = sch.SchoolID
 	LEFT OUTER JOIN Lookups.GradeLevels GL ON S.CurrentGradeLevelID = GL.GradeLevelID
 	LEFT OUTER JOIN Lookups.SchoolTermTypes STT ON A.SchoolTermTypeID = STT.SchoolTermTypeID
-
+	INNER JOIN offices.offices o ON s.officeid=o.officeid
 WHERE a.IsDeleted = 0
