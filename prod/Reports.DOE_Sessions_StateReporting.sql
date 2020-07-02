@@ -9,7 +9,7 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 				On ss.StudentID = sms.StudentID
 		Where ss.StudentStatusID
             In (1, 3, 4, 5) 
-			And sms.SessionDate > DateAdd(yy, -2, GetDate())
+			And sms.SessionDate > dbo.July1()
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
 			And sms.MentorID IN
@@ -35,7 +35,7 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 				In (1, 3, 4, 5)
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
-			And sms.SessionDate > DateAdd(yy, -2, GetDate())
+			And sms.SessionDate > dbo.July1()
 			And sms.MentorID IN
 			(Select MentorID
 			 FROM Students.StudentMentors
@@ -58,7 +58,7 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 				In (1, 3, 4, 5)
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
-			And sms.SessionDate > DateAdd(yy, -2, GetDate())
+			And sms.SessionDate > dbo.July1()
 			And sms.MentorID IN
 			(Select MentorID
 			 FROM Students.StudentMentors
