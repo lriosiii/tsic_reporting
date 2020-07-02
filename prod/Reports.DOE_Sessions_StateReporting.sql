@@ -111,18 +111,74 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 
 
 			(Select ST1.EmailAddress + '  ' AS [text()]
-		   --st1.EmailAddress AS [text()]
-            From Mentors.Mentors ST1
-				Left Outer Join Students.StudentMentors SMS ON ST1.MentorID = SMS.MentorID
-            Where SMS.StudentID = ST2.StudentID
-				--AND (SMS.UnassignedDate > '2013-08-01' OR SMS.UnassignedDate IS NULL)
-				AND SMS.AssignedDate >= '2019-07-01'
-				AND (SMS.UnassignedDate IS NULL)
-				AND (SMS.MentorAssignmentTypeID = 1)
-            For XML PATH ('')
+                From Mentors.Mentors ST1
+                Left Outer Join Students.StudentMentors SMS ON ST1.MentorID = SMS.MentorID
+                Where SMS.StudentID = ST2.StudentID
+                    --AND (SMS.UnassignedDate > '2013-08-01' OR SMS.UnassignedDate IS NULL)
+                    AND SMS.AssignedDate >= '2019-07-01'
+                    AND (SMS.UnassignedDate IS NULL)
+                    AND (SMS.MentorAssignmentTypeID = 1)
+                For XML PATH ('')
 			) [Mentorsemails]
      From Students.Students ST2) [Main]
-	)
+	),
+      Dates (StartDate, EndDate, StudentID) as
+         (
+             /*Started with Tranfsers and then regular students */
+             Select case
+                        WHEN d.IsTransfer = 1 and d.Firstsession is null and d.TstartDates > d.EndDate then Null
+                        WHEN d.IsTransfer = 1 and d.Firstsession is null and d.TstartDates < d.EndDate
+                            then d.TstartDates
+                        WHEN d.istransfer = 1 and d.tdate < '2019-09-16' THEN '2019-10-15'
+                        WHEN d.istransfer = 1 and d.tdate > '2019-09-15' AND
+                             Convert(date, DATEADD(Day, 30, d.tdate)) <= d.firstsession
+                            THEN Convert(date, DATEADD(Day, 30, d.tdate))
+                        WHEN d.istransfer = 1 and d.tdate > '2019-09-15' AND
+                             Convert(date, DATEADD(Day, 30, d.tdate)) > d.firstsession AND
+                             d.firstsession <= '2019-10-15' THEN '2019-10-15'
+                        WHEN d.istransfer = 1 and d.tdate > '2019-09-15' AND
+                             Convert(date, DATEADD(Day, 30, d.tdate)) > d.firstsession THEN d.firstsession
+                 --when ss.ContractSignedDate < '2017-09-16' then Convert (date, '2017-10-15')
+                        when d.IsTransfer = 0 and d.ContractSignedDate < '2019-09-16' then d.TstartDates
+                        when d.IsTransfer = 0 and d.ContractSignedDate >= '2019-09-16' and d.FirstSession is null and
+                             Convert(date, DATEADD(Day, 30, d.ContractSignedDate)) >= d.EndDate then null
+                        when d.IsTransfer = 0 and d.ContractSignedDate >= '2019-09-16' and d.FirstSession is null and
+                             Convert(date, DATEADD(Day, 30, d.ContractSignedDate)) < d.EndDate
+                            then Convert(date, DATEADD(Day, 30, d.ContractSignedDate))
+                        when d.IsTransfer = 0 and d.ContractSignedDate >= '2019-09-16' and d.FirstSession < '2019-10-15'
+                            then Convert(date, '2019-10-15')
+                 --when ss.ContractSignedDate >= '2017-09-16' and fmsd.FirstSessionDate > '2017-10-15' then Convert (date,fmsd.FirstSessionDate) took out and split into 2 categories below -DR
+                        when d.IsTransfer = 0 and d.ContractSignedDate >= '2019-09-16' and
+                             d.FirstSession > Convert(date, DATEADD(Day, 30, d.ContractSignedDate))
+                            then Convert(date, DATEADD(Day, 30, d.ContractSignedDate))
+                        when d.IsTransfer = 0 and d.ContractSignedDate >= '2019-09-16' and
+                             d.FirstSession <= Convert(date, DATEADD(Day, 30, d.ContractSignedDate))
+                            then Convert(date, d.FirstSession)
+                        else ''
+                 end as StartDate
+                  , d.EndDate
+                  , d.StudentID
+             from reports.BSC_Dates2 d--students.Students ss
+             --left join FirstMentorSessionDate fmsd on d.StudentID = fmsd.StudentID
+             --Where ss.StudentStatusID
+             --		In (1, 3, 4, 5)
+             --and ss.IsDeleted = 0
+         )
+     , TotalMonths (TotalMonths, StudentID, OfficeID) as
+         (
+             Select
+                    CASE
+                    WHEN DATEDIFF(DAY, d.StartDate, d.EndDate) <= 0 THEN NULL
+                    WHEN Round((DATEDIFF(DAY, d.StartDate, d.EndDate)) / 30.0, 2) > 7.50 THEN 7.50
+                    ELSE Round((DATEDIFF(DAY, d.StartDate, d.EndDate)) / 30.0, 2)
+                 END AS TotalMonths
+                  , ss.StudentID
+                  , ss.OfficeID
+             FROM Students.Students ss
+             LEFT JOIN Dates d on ss.StudentID = d.StudentID
+             WHERE ss.StudentStatusID IN (1, 3, 4, 5)
+               AND ss.IsDeleted = 0
+         )
 
 SELECT  DISTINCT
     s.StudentID,
@@ -132,7 +188,7 @@ SELECT  DISTINCT
     s.LastName AS MenteeLastName,
     s.ContractSignedDate,
     mncte.Mentors AS MatchedMentors,
-    	sch.SchoolName,
+    sch.SchoolName,
     tmscte.TotalMentorSessions,
     lmsdcte.lastsessiondate,
     fmsdcte.firstsessiondate,
@@ -142,70 +198,11 @@ SELECT  DISTINCT
   	ss.StudentStatusName,
 	c.CountyName,
     madcte.AssignedDate
-    , CASE
-            --When madcte.AssignedDate > '2016-07-01' and fmsdcte.FirstSessionDate IS NULL --or madcte.AssignedDate > '2015-07-0' and (DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.AssignedDate, '1900-01-01')) + 1) > 30 Then DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0
-			when madcte.AssignedDate between '2019-07-01' and '2019-09-14' and fmsdcte.FirstSessionDate is Null and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') >= madcte.DTU then 0
-			when madcte.AssignedDate between '2019-07-01' and '2019-09-14' and fmsdcte.FirstSessionDate is Null and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') < madcte.DTU and madcte.DTU > '2019-10-15' and Round((DateDiff(day,'2019-10-15', IsNull( madcte.DTU, '1900-01-01')))/30.0,3) <7.5 then Round((DateDiff(day,'2019-10-15', IsNull( madcte.DTU, '1900-01-01')))/30.0,3)
-			when madcte.AssignedDate between '2019-07-01' and '2019-09-14' and fmsdcte.FirstSessionDate is Null and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') < madcte.DTU and madcte.DTU > '2019-10-15' and Round((DateDiff(day,'2019-10-15', IsNull( madcte.DTU, '1900-01-01')))/30.0,3) >7.5 then 7.5
-			when madcte.AssignedDate between '2019-07-01' and '2019-09-14' and fmsdcte.FirstSessionDate is Null and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') < madcte.DTU and madcte.DTU < '2019-10-15' then 0
-			--*commented out for month cap*--when madcte.AssignedDate between '2016-07-01' and '2016-09-14' and fmsdcte.FirstSessionDate is not Null and fmsdcte.FirstSessionDate < '2016-10-15' then  Round((DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01')))/30.0,2)
-			when madcte.AssignedDate between '2019-07-01' and '2019-09-14' and fmsdcte.FirstSessionDate is not Null and fmsdcte.FirstSessionDate > '2019-10-15' and Round((DateDiff(day,'2019-10-15',  IsNull( madcte.DTU, '1900-01-01')))/30.0,2) < 7.5 then  Round((DateDiff(day,'2019-10-15',  IsNull( madcte.DTU, '1900-01-01')))/30.0,2)
-			when madcte.AssignedDate between '2019-07-01' and '2019-09-14' and fmsdcte.FirstSessionDate is not Null and fmsdcte.FirstSessionDate > '2019-10-15' and Round((DateDiff(day,'2019-10-15',  IsNull( madcte.DTU, '1900-01-01')))/30.0,2) > 7.5 then 7.5
-			when madcte.AssignedDate >= '2019-09-15' and fmsdcte.FirstSessionDate is Null and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') >= madcte.DTU then 0
-			when madcte.AssignedDate >= '2019-09-15' and fmsdcte.FirstSessionDate is Null and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') < madcte.DTU and Round(DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0,2) < 7.5 then Round(DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0,2)
-			when madcte.AssignedDate >= '2019-09-15' and fmsdcte.FirstSessionDate is Null and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') < madcte.DTU and Round(DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0,2) > 7.5 then 7.5
-			when madcte.AssignedDate >= '2019-09-15' and fmsdcte.FirstSessionDate > IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') and Round(DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0,2) < 7.5 then Round(DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0,2)
-			when madcte.AssignedDate >= '2019-09-15' and fmsdcte.FirstSessionDate > IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') and Round(DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0,2) > 7.5 then 7.5
-			when madcte.AssignedDate >= '2019-09-15' and fmsdcte.FirstSessionDate < IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') and Round((DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01')))/30.0,2) < 7.5 then Round((DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01')))/30.0,2)
-			when madcte.AssignedDate >= '2019-09-15' and fmsdcte.FirstSessionDate < IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') and Round((DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01')))/30.0,2) > 7.5 then 7.5
-			when madcte.AssignedDate < '2019-07-01' AND fmsdcte.FirstSessionDate is Null AND tmscte.TotalMentorSessions is Null and madcte.DTU > '2019-10-15' and Round(DateDiff(day,'2019-10-15', IsNull( madcte.DTU, '1900-01-01'))/30.0,2) <7.5 then Round(DateDiff(day,'2019-10-15', IsNull( madcte.DTU, '1900-01-01'))/30.0,2)
-			when madcte.AssignedDate < '2019-07-01' AND fmsdcte.FirstSessionDate is Null AND tmscte.TotalMentorSessions is Null and madcte.DTU > '2019-10-15' and Round(DateDiff(day,'2019-10-15', IsNull( madcte.DTU, '1900-01-01'))/30.0,2) >7.5 then 7.5
-			when madcte.AssignedDate < '2019-07-01' AND fmsdcte.FirstSessionDate is Null AND tmscte.TotalMentorSessions is Null and madcte.DTU < '2019-10-15' then 0
-			--when madcte.AssignedDate > '2016-07-01' and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') > IsNull( madcte.DTU, '1900-01-01') then 0
-			--when madcte.AssignedDate > '2016-07-01' and (DateDiff(DAY,IsNull(madcte.AssignedDate, '1900-02-01'),  IsNull(fmsdcte.FirstSessionDate, '1900-01-01')) + 1) > 30.0 then  DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0
-			when madcte.AssignedDate < '2019-07-01'  and fmsdcte.FirstSessionDate > '2019-10-15' and Round(DateDiff(day,'2019-10-15', IsNull( madcte.DTU, '1900-01-01'))/30.0,2) <7.5 then  Round(DateDiff(day,'2019-10-15', IsNull( madcte.DTU, '1900-01-01'))/30.0,2)
-			when madcte.AssignedDate < '2019-07-01'  and fmsdcte.FirstSessionDate > '2019-10-15' and Round(DateDiff(day,'2019-10-15', IsNull( madcte.DTU, '1900-01-01'))/30.0,2) >7.5 then 7.5
-			when madcte.AssignedDate > fmsdcte.FirstSessionDate and Round((DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01')))/30.0,2) <7.5 then Round((DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01')))/30.0,2)
-			when madcte.AssignedDate > fmsdcte.FirstSessionDate and Round((DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01')))/30.0,2) >7.5 then 7.5
-			when madcte.AssignedDate < '2019-07-01' and (DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01')))/30.0 > 7.50 then 7.5
-			when madcte.AssignedDate > '2019-07-01' and (DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01')))/30.0 > 7.50 then 7.5
-			Else Round( (DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01'))) /30.0, 2 )
-           END As NumberMonthsWithSessions
-        , CASE 	when madcte.AssignedDate between '2019-07-01' and '2019-09-14' and fmsdcte.FirstSessionDate is Null and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') >= madcte.DTU then Round(Convert(decimal,(tmscte.TotalMentorSessions /1.0)),0)
-            when madcte.AssignedDate between '2019-07-01' and '2019-09-14' and fmsdcte.FirstSessionDate is Null and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') < madcte.DTU and madcte.DTU > '2019-10-15' and Round((DateDiff(day,'2019-10-15',  IsNull( madcte.DTU, '1900-01-01'))/30.0),2) <7.5 then Round(Convert(decimal,(tmscte.TotalMentorSessions) / Round((DateDiff(day,'2019-10-15',  IsNull( madcte.DTU, '1900-01-01'))/30.0),2)),0)
-            when madcte.AssignedDate between '2019-07-01' and '2019-09-14' and fmsdcte.FirstSessionDate is Null and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') < madcte.DTU and madcte.DTU > '2019-10-15' and Round((DateDiff(day,'2019-10-15',  IsNull( madcte.DTU, '1900-01-01'))/30.0),2) >7.5 then Round(Convert(decimal,(tmscte.TotalMentorSessions) / 7.5),2)
-            when madcte.AssignedDate between '2019-07-01' and '2019-09-14' and fmsdcte.FirstSessionDate is Null and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') < madcte.DTU and madcte.DTU < '2019-10-15' then Round(Convert(decimal,(tmscte.TotalMentorSessions /1.0)),0)
-            when madcte.AssignedDate between '2019-07-01' and '2019-09-14' and fmsdcte.FirstSessionDate is not Null and fmsdcte.FirstSessionDate<>madcte.DTU and fmsdcte.FirstSessionDate < '2019-10-15' and Round((DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0),2) <7.5 then Round(Convert(decimal,(tmscte.TotalMentorSessions) / Round((DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0),2)),0)
-            when madcte.AssignedDate between '2019-07-01' and '2019-09-14' and fmsdcte.FirstSessionDate is not Null and fmsdcte.FirstSessionDate<>madcte.DTU and fmsdcte.FirstSessionDate < '2019-10-15' and Round((DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0),2) >7.5 then Round(Convert(decimal,(tmscte.TotalMentorSessions) / 7.5),2)
-            when madcte.AssignedDate between '2019-07-01' and '2019-09-14' and fmsdcte.FirstSessionDate is not Null and madcte.DTU<>'2019-10-15' and fmsdcte.FirstSessionDate > '2019-10-15' and Round((DateDiff(day,'2019-10-15',  IsNull( madcte.DTU, '1900-01-01'))/30.0),2) <7.5 then Round(Convert(decimal,(tmscte.TotalMentorSessions) / Round((DateDiff(day,'2019-10-15',  IsNull( madcte.DTU, '1900-01-01'))/30.0),2)),0)
-            when madcte.AssignedDate between '2019-07-01' and '2019-09-14' and fmsdcte.FirstSessionDate is not Null and madcte.DTU<>'2019-10-15' and fmsdcte.FirstSessionDate > '2019-10-15' and Round((DateDiff(day,'2019-10-15',  IsNull( madcte.DTU, '1900-01-01'))/30.0),2) >7.5 then Round(Convert(decimal,(tmscte.TotalMentorSessions) / 7.5),2)
-            when fmsdcte.FirstSessionDate = madcte.DTU then Null
-            when madcte.AssignedDate > '2019-09-14' and fmsdcte.FirstSessionDate is null and (DATEADD(month,1,madcte.AssignedDate)) = madcte.DTU then Null
-            when madcte.AssignedDate > '2019-09-14' and fmsdcte.FirstSessionDate is Null and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') > madcte.DTU then Round(Convert(decimal,(tmscte.TotalMentorSessions /1.0)),0)
-            when madcte.AssignedDate > '2019-09-14' and fmsdcte.FirstSessionDate is Null and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') <> madcte.DTU and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') < madcte.DTU and Round((DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0),2) <7.5 then Round(Convert(decimal,(tmscte.TotalMentorSessions) / Round((DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0),2)),0)
-            when madcte.AssignedDate > '2019-09-14' and fmsdcte.FirstSessionDate is Null and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') <> madcte.DTU and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') < madcte.DTU and Round((DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0),2) >7.5 then Round(Convert(decimal,(tmscte.TotalMentorSessions) / 7.5),2)
-            when madcte.AssignedDate > '2019-09-14' and fmsdcte.FirstSessionDate > IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') <> madcte.DTU  and Round((DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0),2) <7.5 then  Round(Convert(decimal,(tmscte.TotalMentorSessions) / Round((DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0),2)),0)
-            when madcte.AssignedDate > '2019-09-14' and fmsdcte.FirstSessionDate > IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') and IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') <> madcte.DTU  and Round((DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0),2) >7.5 then  Round(Convert(decimal,(tmscte.TotalMentorSessions) / 7.5),2)
-            when madcte.AssignedDate > '2019-09-14' and fmsdcte.FirstSessionDate < IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') and IsNull(fmsdcte.FirstSessionDate, '1900-02-01') <> madcte.DTU and  Round((DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0),2) <7.5 then Round(Convert(decimal,(tmscte.TotalMentorSessions) / Round((DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0),2)),0)
-            when madcte.AssignedDate > '2019-09-14' and fmsdcte.FirstSessionDate < IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') and IsNull(fmsdcte.FirstSessionDate, '1900-02-01') <> madcte.DTU and  Round((DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0),2) >7.5 then Round(Convert(decimal,(tmscte.TotalMentorSessions) / 7.5),2)
-            When madcte.AssignedDate > '2019-07-01' and fmsdcte.FirstSessionDate IS NULL and (DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0) <7.5 then  Round(Convert(decimal,(tmscte.TotalMentorSessions) / (DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0)),0)
-            When madcte.AssignedDate > '2019-07-01' and fmsdcte.FirstSessionDate IS NULL and (DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0) >7.5 then  Round(Convert(decimal,(tmscte.TotalMentorSessions) / 7.5),2)
-            ----when madcte.AssignedDate > '2016-07-01' and (DateDiff(DAY,IsNull(madcte.AssignedDate, '1900-02-01'),  IsNull(fmsdcte.FirstSessionDate, '1900-01-01')) + 1) > 30.0 then  Round(Convert(decimal,(tmscte.TotalMentorSessions) / (DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0)),0)
-            When madcte.AssignedDate < '2019-07-01' and fmsdcte.FirstSessionDate > '2019-10-15' and madcte.DTU <>'2019-10-15' and Round((DateDiff(day,'2019-10-15',  IsNull( madcte.DTU, '1900-01-01'))/30.0),2) <7.5 then Floor(Convert(int,(tmscte.TotalMentorSessions) / Round((DateDiff(day,'2019-10-15',  IsNull( madcte.DTU, '1900-01-01'))/30.0),2)))
-            When madcte.AssignedDate < '2019-07-01' and fmsdcte.FirstSessionDate > '2019-10-15' and madcte.DTU <>'2019-10-15' and Round((DateDiff(day,'2019-10-15',  IsNull( madcte.DTU, '1900-01-01'))/30.0),2) >7.5 then Floor(Convert(int,(tmscte.TotalMentorSessions) / 7.5))
-            ----When (DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01')) + 1) <= 30.0 Then Floor(Convert(int,(tmscte.TotalMentorSessions /1.0)))
-            ---- when fmsdcte.FirstSessionDate is not null and  IsNull(fmsdcte.FirstSessionDate, '1900-02-01') = IsNull( madcte.DTU, '1900-01-01') then 1
-             ----when IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01') = IsNull( madcte.DTU, '1900-01-01') then 1
-            when madcte.AssignedDate > fmsdcte.FirstSessionDate and fmsdcte.FirstSessionDate<>madcte.DTU and Round((DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0),2) <7.5 then Round(Convert(decimal,(tmscte.TotalMentorSessions) / Round((DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0),2)),0)
-            when madcte.AssignedDate > fmsdcte.FirstSessionDate and fmsdcte.FirstSessionDate<>madcte.DTU and Round((DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0),2) >7.5 then Round(Convert(decimal,(tmscte.TotalMentorSessions)/7.5),2)
-            when (DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01')))/30.0 = 0.0 Then Round(Convert(decimal,(tmscte.TotalMentorSessions /1.0)),0)
-            ----when (DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01')))/30.0 = 0.0 Then Round(Convert(decimal,(tmscte.TotalMentorSessions /1.0)),0)
-            when (DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01')))/30.0 > 7.5 then Floor(Convert(int,(tmscte.TotalMentorSessions/7.5)))
-            ---when (DateDiff(DAY,IsNull(DATEADD(month,1,madcte.AssignedDate), '1900-01-01'),  IsNull( madcte.DTU, '1900-01-01')))/30.0 > 8.0 Then Round(Convert(decimal,(tmscte.TotalMentorSessions/8.0)),0)
-            when (DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01')))/30.0 = 0.0 then (Convert(int,(tmscte.TotalMentorSessions/1.0)))
-            ----floor(Convert(int,(tmscte.TotalMentorSessions) / (DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0)))
-            Else floor(Convert(int,(tmscte.TotalMentorSessions) / Round((DateDiff(DAY,IsNull(fmsdcte.FirstSessionDate, '1900-02-01'),  IsNull( madcte.DTU, '1900-01-01'))/30.0),2)))
-         End As AvgSessionsMonth
+    ,tmcte.totalmonths As NumberMonthsWithSessions
+    ,   CASE
+        WHEN convert(date, getdate()) < '2019-10-16' THEN NULL
+        ELSE floor(tmscte.TotalMentorSessions / tmcte.TotalMonths)
+     END AS AvgSessionsMonth
 
 FROM         Students.Students AS s
 INNER JOIN Lookups.StudentStatuses AS ss ON s.StudentStatusID = ss.StudentStatusID
@@ -217,12 +214,6 @@ LEFT JOIN totalMentorSessionsCte tmscte ON s.studentID=tmscte.studentID
 LEFT JOIN LastMentorSessionDate lmsdcte ON s.studentid=lmsdcte.studentID
 LEFT JOIN FirstMentorSessionDate fmsdcte ON s.studentid=fmsdcte.studentid
 LEFT JOIN MentorAssignedDate madcte ON s.studentid=madcte.studentid
---LEFT OUTER JOIN  Students.StudentMentors AS sm ON s.StudentID = sm.StudentID
-    --AND (sm.UnassignedDate < '2013-08-01' OR sm.UnassignedDate IS NULL)
-    --AND sm.MentorAssignmentTypeID = 1
---INNER JOIN Mentors.Mentors AS m ON sm.MentorID = m.MentorID
---LEFT OUTER JOIN Students.MentoringSessions AS sms ON s.StudentID = sms.StudentID And sms.SessionDuration > 0 And m.MentorID = sms.MentorID
---INNER JOIN Lookups.MentorStatuses ms ON m.MentorStatusID = ms.MentorStatusID
-
-Where s.StudentStatusID IN (1,3,4,5)
-	And s.IsDeleted = 0
+LEFT JOIN TotalMonths tmcte ON s.studentid=tmcte.StudentID
+WHERE s.StudentStatusID IN (1,3,4,5)
+	AND s.IsDeleted = 0
