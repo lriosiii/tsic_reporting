@@ -12,12 +12,12 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 			And sms.SessionDate > dbo.July1()
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
-			And sms.MentorID IN
-			(Select MentorID
-			 FROM Students.StudentMentors
-			 Where StudentID = ss.StudentID
-			 And (UnassignedDate IS NULL Or UnassignedDate = '')
-			 AND MentorAssignmentTypeID = 1)
+			--And sms.MentorID IN
+			--(Select MentorID
+			-- FROM Students.StudentMentors
+			--Where StudentID = ss.StudentID
+			-- And (UnassignedDate IS NULL Or UnassignedDate = '')
+			-- AND MentorAssignmentTypeID = 1)
 		Group By ss.StudentID, ss.OfficeID
 	),
 
@@ -36,12 +36,12 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
 			And sms.SessionDate > dbo.July1()
-			And sms.MentorID IN
-			(Select MentorID
-			 FROM Students.StudentMentors
-			 Where StudentID = ss.StudentID
-			 And (UnassignedDate IS NULL Or UnassignedDate = '')
-			 AND MentorAssignmentTypeID = 1)
+			--And sms.MentorID IN
+			--(Select MentorID
+			-- FROM Students.StudentMentors
+			-- Where StudentID = ss.StudentID
+			-- And (UnassignedDate IS NULL Or UnassignedDate = '')
+			-- AND MentorAssignmentTypeID = 1)
 		Group By ss.StudentID, ss.OfficeID
 	),
 
@@ -59,12 +59,12 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
 			And sms.SessionDate > dbo.July1()
-			And sms.MentorID IN
-			(Select MentorID
-			 FROM Students.StudentMentors
-			 Where StudentID = ss.StudentID
-			 And (UnassignedDate IS NULL Or UnassignedDate = '')
-			 AND MentorAssignmentTypeID = 1)
+			--And sms.MentorID IN
+			--(Select MentorID
+			-- FROM Students.StudentMentors
+			-- Where StudentID = ss.StudentID
+			-- And (UnassignedDate IS NULL Or UnassignedDate = '')
+			-- AND MentorAssignmentTypeID = 1)
 		Group By ss.StudentID, ss.OfficeID
 	),
 
