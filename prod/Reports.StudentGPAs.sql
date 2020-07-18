@@ -43,11 +43,6 @@ FROM  Students.GPA G
 	LEFT OUTER  JOIN Lookups.StudentStatuses SS ON S.StudentStatusID = SS.StudentStatusID
 	Left Outer JOIN Offices.Staff a on S.AdvocateID = a.StaffID
 	LEFT JOIN offices.offices o ON s.officeid=o.officeid
---WHERE  G.SemesterEndDate > '2015-01-01'  -- These lines for tests and fixes.  JL
 WHERE G.IsDeleted = 0
 And S.IsDeleted = 0
---And G.SchoolTermTypeID IN (17, 0) 
---AND
--- S.OfficeID = 39
--- ORDER BY G.SemesterEndDate DESC
---
+
