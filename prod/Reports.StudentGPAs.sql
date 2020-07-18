@@ -33,6 +33,7 @@ SELECT S.StudentReferenceID
 	  , (SELECT TOP(1) Students.Applications.GPA
 		 FROM Students.Applications
 		 WHERE Students.Applications.StudentID = S.StudentID) As EntryGPAInApplication
+	 ,o.OfficeName
 	                       
 FROM  Students.GPA G
 	LEFT OUTER JOIN Students.Students S ON S.StudentID = G.StudentID
@@ -41,6 +42,7 @@ FROM  Students.GPA G
 	LEFT OUTER  JOIN Schools.Schools SC ON S.SchoolID = SC.SchoolID
 	LEFT OUTER  JOIN Lookups.StudentStatuses SS ON S.StudentStatusID = SS.StudentStatusID
 	Left Outer JOIN Offices.Staff a on S.AdvocateID = a.StaffID
+	LEFT JOIN offices.offices o ON s.officeid=o.officeid
 --WHERE  G.SemesterEndDate > '2015-01-01'  -- These lines for tests and fixes.  JL
 WHERE G.IsDeleted = 0
 And S.IsDeleted = 0
