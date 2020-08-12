@@ -45,9 +45,9 @@ SELECT
 	S.EntryGradeLevelID,
 	(	SELECT TOP (1) SSM.AssignedDate
 		FROM	Students.StudentMentors SSM 
-		WHERE   SSM.STudentID = S.StudentID AND SSM.AssignedDate Between '2019-06-06' AND '2020-06-30'
+		WHERE   SSM.STudentID = S.StudentID AND SSM.AssignedDate Between dbo.LastAcadYearJun6() AND dbo.NextAcadYearJun30()
 		ORDER BY   SSM.AssignedDate
-	) AS MentorMatchDate, -- Added order by above to pick the first match for 90 day compliance.  JL 05/12/2014
+	) AS MentorMatchDate,
     S.CurrentGradeLevelID, 
 	S.HighSchoolDiplomaDate,    
 	S.PriorityType, 
@@ -72,5 +72,4 @@ FROM
 	LEFT OUTER JOIN Offices.Staff AS AD ON S.AdvocateID = AD.StaffID  
 	LEFT OUTER JOIN Offices.Offices OO ON OO.OfficeID = S.OfficeID
 WHERE     (S.StudentStatusID IN (1,3,4,5)) AND
-		  (S.ContractSignedDate BETWEEN '2019-06-06' AND '2020-06-06')
-		--- And S.CountyID = 13 -- Miami-Dade
+		  (S.ContractSignedDate BETWEEN dbo.LastAcadYearJun6() AND dbo.NextAcadYearJun6())
