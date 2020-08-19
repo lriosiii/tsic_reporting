@@ -41,34 +41,34 @@ SELECT
 		WHERE s.StudentID = sm2.StudentID
 		ORDER BY sm2.AssignedDate ASC
 	) As NumberOfDaysToMatch,
-		CASE WHEN (
-		SELECT TOP(1) 
+CASE WHEN (
+		SELECT TOP(1)
 			CASE
-			WHEN d.istransfer = 0 AND s.ContractSignedDate BETWEEN '2019-06-06' AND '2020-06-03' AND sm2.AssignedDate <= DATEADD(day,30,s.ContractSignedDate) THEN 'True'
+			WHEN d.istransfer = 0 AND s.ContractSignedDate BETWEEN dbo.LastAcadYearJun6() And dbo.Jun3() AND sm2.AssignedDate <= DATEADD(day,30,s.ContractSignedDate) THEN 'True'
 			WHEN d.istransfer = 1  AND (SELECT TOP(1)smm.assigneddate
 										FROM students.studentmentors smm
 										LEFT JOIN reports.BSC_Dates d ON d.studentid = smm.studentid
 										WHERE smm.studentid = s.studentid and smm.assigneddate>= d.tdate
 										ORDER BY smm.AssignedDate ASC)<= DATEADD(day,30,d.tdate) THEN 'True'
 			--when s.ContractSignedDate < '2016-04-01' then ' '
-		ELSE 'False'			 
+		ELSE 'False'
 		END
 		FROM students.studentmentors sm2
 		LEFT JOIN reports.bsc_dates d ON sm2.studentid = d.studentid
 		WHERE s.studentid = sm2.studentid
 		order by sm2.assigneddate asc
-		) IS NULL AND (SELECT TOP (1) assigneddate FROM students.studentmentors sm3 WHERE s.studentid=sm3.studentid ORDER BY sm3.assigneddate ASC ) IS NULL AND datediff(day,s.contractsigneddate, getdate()) > 30 THEN 'False'
+		) IS NULL AND (SELECT TOP (1) assigneddate FROM students.studentmentors sm3 WHERE s.studentid=sm3.studentid ORDER BY sm3.assigneddate ASC ) IS NULL AND (datediff(day,s.contractsigneddate, getdate()) > 30 OR datediff(day,dbo.Jun3(),getdate()) < 30 ) THEN 'False'
 			ELSE (
-				SELECT TOP(1) 
+				SELECT TOP(1)
 				CASE
-				WHEN d.istransfer = 0 AND s.ContractSignedDate BETWEEN '2019-06-06' AND '2020-06-03' AND sm2.AssignedDate <= DATEADD(day,30,s.ContractSignedDate) THEN 'True'
+				WHEN d.istransfer = 0 AND s.ContractSignedDate BETWEEN dbo.LastAcadYearJun6() And dbo.Jun3() AND sm2.AssignedDate <= DATEADD(day,30,s.ContractSignedDate) THEN 'True'
 				WHEN d.istransfer = 1  AND (SELECT TOP(1)smm.assigneddate
 											FROM students.studentmentors smm
 											LEFT JOIN reports.BSC_Dates d ON d.studentid = smm.studentid
 											WHERE smm.studentid = s.studentid and smm.assigneddate>= d.tdate
 											ORDER BY smm.AssignedDate ASC)<= DATEADD(day,30,d.tdate) THEN 'True'
 				--when s.ContractSignedDate < '2016-04-01' then ' '
-				ELSE 'False'			 
+				ELSE 'False'
 				END
 				FROM students.studentmentors sm2
 				LEFT JOIN reports.bsc_dates d ON sm2.studentid = d.studentid
@@ -78,11 +78,11 @@ SELECT
 			END
 					--and Exists (
 				--Select Top 1 ssm.AssignedDate
-				--		From Students.StudentMentors ssm 
-				--		Where s.StudentID = ssm.StudentID 
-				--			And (s.ContractSignedDate Between '2016-08-01' And '2017-03-31' 
+				--		From Students.StudentMentors ssm
+				--		Where s.StudentID = ssm.StudentID
+				--			And (s.ContractSignedDate Between '2016-08-01' And '2017-03-31'
 				--			And DateDiff(day, s.ContractSignedDate, IsNull(ssm.AssignedDate, '1900-01-01')) <= 60)
-				--			OR (s.ContractSignedDate Between '2016-04-01' And '2016-07-31' 
+				--			OR (s.ContractSignedDate Between '2016-04-01' And '2016-07-31'
 				--			And ssm.AssignedDate <= '2016-09-30')
 					--Order By ssm.AssignedDate Asc) adding to include mentor before, if matched one than once but swapped with an ordered by clause. -DR
 
@@ -144,7 +144,7 @@ LEFT JOIN Reports.BSC_Dates d on d.StudentID = s.StudentID
 WHERE 1=1
 	AND (s.StudentStatusID In (1,3,4,5))
 --	and s.OfficeID =33
-	And s.ContractSignedDate Between '2019-06-06' And '2020-06-03'
+	And s.ContractSignedDate Between dbo.LastAcadYearJun6() And dbo.Jun3()
 	and d.IsTransfer = 0
 			
 
