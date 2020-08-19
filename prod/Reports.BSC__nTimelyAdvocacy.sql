@@ -9,13 +9,12 @@
 			left join reports.BSC_Dates b on ss.StudentID = b.studentid
 		Where 1=1
 			AND ss.StudentStatusID In (1, 3, 4, 5) -- All active except "On Hold" 
-			And  ((b.IsTransfer = 0 and  sc.NoteDate Between '2019-07-01' AND '2020-06-30') or (b.IsTransfer = 1 and  sc.NoteDate Between b.MMCSCDate AND '2020-06-30'))
+			And  ((b.IsTransfer = 0 and  sc.NoteDate Between dbo.July1() AND dbo.Jun30()) or (b.IsTransfer = 1 and  sc.NoteDate Between b.MMCSCDate AND dbo.Jun30()))
 					and ss.IsDeleted = 0
 			And sc.StudentCommunicationTypeID = 1
 			And sc.IsDeleted = 0
-			And b.MMCSCDate <= '2020-03-31'     --- web Change back to 10-31 for mid year JL 1/27/2016, Change to 03-31 for end of year; -DR
+			And b.MMCSCDate <= '2021-10-31'     ---  Change to 10-31 for mid year, Change to 03-31 for end of year
 		Group By ss.StudentID,  ss.OfficeID
-		--Order By ss.StudentID --for testing
 	)
 	
 SELECT    ss.FirstName, ss.LastName, ss.CurrentGradeLevelID, ss.ContractSignedDate, sch.SchoolName, isnull(tcrcte.TotalCRContacts, 0) As TotalCRContacts,
@@ -39,7 +38,7 @@ Left Outer Join reports.BSC_Dates bscd on bscd.StudentID = ss.StudentID
 WHERE		ss.StudentStatusID IN (1, 3, 4, 5)
 			and SS.IsDeleted = 0
 			--AND ss.CurrentGradeLevelID IS NOT NULL   -- This line creates a problem with execution time  JL 5/5/2015
-			AND bscd.MMCSCDate <= '2020-03-31'  --- Change back to 10-31 for mid year JL 1/27/2016, Change to 03-31 for end of year; -DR
+			AND bscd.MMCSCDate <= '2020-03-31'  --- Change to 10-31 for mid year, Change to 03-31 for end of year
 			AND (
 				 (tcrcte.TotalCRContacts IS NULL) 
 
@@ -47,12 +46,11 @@ WHERE		ss.StudentStatusID IN (1, 3, 4, 5)
 		--------------------------------------------------------------------------------------------------------------------------
 				 -- For full year, scenario 1 and 2 should be 4 and 2
 				 -- UnCommented out 2 lines above this per Ele 1/27/2011 - to be commented for mid-year BSC     JL
-				 OR (tcrcte.TotalCRContacts < 4 AND CurrentGradeLevelID Between 11 AND 12 And bscd.MMCSCDate <= '2019-10-31') --Scenario 1
-				 OR (tcrcte.TotalCRContacts < 2 AND CurrentGradeLevelID Between 5 AND 10 And bscd.MMCSCDate <= '2019-10-31') --Scenario 2
+				 OR (tcrcte.TotalCRContacts < 4 AND CurrentGradeLevelID Between 11 AND 12 And bscd.MMCSCDate <= '2020-10-31') --Scenario 1
+				 OR (tcrcte.TotalCRContacts < 2 AND CurrentGradeLevelID Between 5 AND 10 And bscd.MMCSCDate <= '2020-10-31') --Scenario 2
 
-				 OR (tcrcte.TotalCRContacts < 2 AND CurrentGradeLevelID Between 11 AND 12 And bscd.MMCSCDate Between '2019-11-01' AND'2020-03-31') --Scenario 3
-				 OR (tcrcte.TotalCRContacts < 1 AND CurrentGradeLevelID Between 6 AND 10 And bscd.MMCSCDate Between '2019-11-01' AND'2020-03-31') --Scenario 4 
+				 OR (tcrcte.TotalCRContacts < 2 AND CurrentGradeLevelID Between 11 AND 12 And bscd.MMCSCDate Between '2020-11-01' AND'2021-03-31') --Scenario 3
+				 OR (tcrcte.TotalCRContacts < 1 AND CurrentGradeLevelID Between 6 AND 10 And bscd.MMCSCDate Between '2020-11-01' AND'2021-03-31') --Scenario 4 
 				 
 			    )
-				--AND ss.OfficeID = 17
-				--ORDER BY ContractSignedDate
+
