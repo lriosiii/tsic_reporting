@@ -81,8 +81,7 @@ WHERE
 	s.StudentStatusID In (1, 3, 4, 5) -- All active except "On Hold" 
 	AND s.IsDeleted = 0
 	And (
-		s.CurrentGradeLevelID = 12 AND coll.CollegeName IS NULL
-        OR CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedSSN)) IS NULL
+		CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedSSN)) IS NULL
 		or s.FirstName is null
 		or s.LastName is null
 		OR  CONVERT(varchar, DecryptByKeyAutoCert(cert_ID('Certificate1'), NULL, EncryptedBirthdate)) IS NULL
