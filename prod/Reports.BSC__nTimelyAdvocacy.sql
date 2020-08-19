@@ -38,7 +38,7 @@ Left Outer Join reports.BSC_Dates bscd on bscd.StudentID = ss.StudentID
 WHERE		ss.StudentStatusID IN (1, 3, 4, 5)
 			and SS.IsDeleted = 0
 			--AND ss.CurrentGradeLevelID IS NOT NULL   -- This line creates a problem with execution time  JL 5/5/2015
-			AND bscd.MMCSCDate <= '2020-03-31'  --- Change to 10-31 for mid year, Change to 03-31 for end of year
+			AND bscd.MMCSCDate <= '2020-10-31'  --- Change to 10-31 for mid year, Change to 03-31 for end of year
 			AND (
 				 (tcrcte.TotalCRContacts IS NULL) 
 
