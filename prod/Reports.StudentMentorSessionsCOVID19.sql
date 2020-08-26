@@ -1,5 +1,5 @@
     /* COVID19 template meant to include sessions for unmatched mentee/mentor pairs  */
-
+    
 WITH -- Common CTE for total active students for the time period (for mentor match rates, etc)
 	 totalMentorSessionsCte (TotalMentorSessions, StudentID, OfficeID) As
 	(
@@ -11,6 +11,8 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 				On ss.StudentID = sms.StudentID
 		Where ss.StudentStatusID
 				In (1, 3, 4, 5) -- All active except "On Hold"
+			--And ss.ContractSignedDate
+			--	< '2014-06-30'
 			And sms.SessionDate Between '2019-07-01' AND '2020-06-30'
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
@@ -35,8 +37,6 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 				On ss.StudentID = sms.StudentID
 		Where ss.StudentStatusID
 				In (1, 3, 4, 5) -- All active except "On Hold"
-			--And ss.ContractSignedDate
-			--	< '2014-06-30'
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
 			And sms.SessionDate Between '2019-07-01' AND '2020-06-30'
