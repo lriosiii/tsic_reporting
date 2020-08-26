@@ -14,7 +14,7 @@
             AND ss.IsDeleted = 0
 			And sc.StudentCommunicationTypeID = 1
 			And sc.IsDeleted = 0
-			And b.MMCSCDate <= '2021-10-31'     -- Change back to 10-31 for mid year, Change to 03-31 for end of year
+			And b.MMCSCDate <= '2020-10-31'     -- Change back to 10-31 for mid year, Change to 03-31 for end of year
 		Group By ss.StudentID,  ss.OfficeID
 	)
 
@@ -40,7 +40,7 @@ LEFT OUTER JOIN Schools.Schools AS sch ON ss.SchoolID = sch.SchoolID
 
 WHERE		ss.StudentStatusID IN (1, 3, 4, 5)
 			and SS.IsDeleted = 0
-			AND bscd.MMCSCDate <= '2021-10-31'  --- Change to 10-31 for mid year, Change to 03-31 for end of year
+			AND bscd.MMCSCDate <= '2020-10-31'  --- Change to 10-31 for mid year, Change to 03-31 for end of year
 			AND ( (tcrcte.TotalCRContacts IS NULL)
 
 
