@@ -23,6 +23,7 @@ SELECT
        ss.FirstName,
        ss.LastName,
        ss.CurrentGradeLevelID,
+       sch.schoolname,
        isnull(tcrcte.TotalCRContacts, 0) As TotalCRContacts,
         AV.LastName + ', ' + AV.FirstName AS CollegeSuccessCoachName ,
        ss.OfficeID,
@@ -35,6 +36,7 @@ Left Outer Join totalCollegeReadinessContactCte tcrcte ON ss.StudentID = tcrcte.
 LEFT OUTER JOIN Offices.Offices oo ON oo.OfficeID = ss.OfficeID
 LEFT OUTER JOIN Offices.Staff AS AV ON AV.StaffID = ss.AdvocateID
 Left Outer Join reports.BSC_Dates bscd on bscd.StudentID = ss.StudentID
+LEFT OUTER JOIN Schools.Schools AS sch ON ss.SchoolID = sch.SchoolID 
 
 WHERE		ss.StudentStatusID IN (1, 3, 4, 5)
 			and SS.IsDeleted = 0
