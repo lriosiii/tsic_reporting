@@ -47,7 +47,6 @@ WHERE		ss.StudentStatusID IN (1, 3, 4, 5)
 --                      For full year, uncomment scenarios 3 and 4 scenario 1 and 2 should be 4 and 2
 -- 		--------------------------------------------------------------------------------------------------------------------------
 --
--- 				 -- UnCommented out 2 lines above this per Ele 1/27/2011 - to be commented for mid-year BSC     JL
 
              OR (tcrcte.TotalCRContacts  < 2 AND CurrentGradeLevelID Between 11 AND 12 And bscd.MMCSCDate <= '2020-10-31') --Scenario 1
              OR (tcrcte.TotalCRContacts < 1 AND CurrentGradeLevelID Between 5 AND 10 And bscd.MMCSCDate <= '2020-10-31') --Scenario 2
