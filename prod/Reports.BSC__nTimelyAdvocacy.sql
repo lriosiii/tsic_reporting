@@ -27,8 +27,7 @@ SELECT
         AV.LastName + ', ' + AV.FirstName AS CollegeSuccessCoachName ,
        ss.OfficeID,
        bscd.IsTransfer,
-       bscd.tdate as TrasnferDate,
-       tcrcte.TotalCRContacts,
+       bscd.tdate as TransferDate,
        MMCSCDate
 
 FROM		Students.Students ss
