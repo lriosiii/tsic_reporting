@@ -49,8 +49,8 @@ WHERE		ss.StudentStatusID IN (1, 3, 4, 5)
 --
 -- 				 -- UnCommented out 2 lines above this per Ele 1/27/2011 - to be commented for mid-year BSC     JL
 
-             OR (tcrcte.TotalCRContacts  < 2 AND CurrentGradeLevelID Between 11 AND 12 And bscd.MMCSCDate <= '2019-10-31') --Scenario 1
-             OR (tcrcte.TotalCRContacts < 1 AND CurrentGradeLevelID Between 5 AND 10 And bscd.MMCSCDate <= '2019-10-31') --Scenario 2
+             OR (tcrcte.TotalCRContacts  < 2 AND CurrentGradeLevelID Between 11 AND 12 And bscd.MMCSCDate <= '2020-10-31') --Scenario 1
+             OR (tcrcte.TotalCRContacts < 1 AND CurrentGradeLevelID Between 5 AND 10 And bscd.MMCSCDate <= '2020-10-31') --Scenario 2
 --
 --              OR (tcrcte.TotalCRContacts < 2 AND CurrentGradeLevelID Between 11 AND 12 And bscd.MMCSCDate Between '2019-11-01' AND'2020-03-31') --Scenario 3
 --              OR (tcrcte.TotalCRContacts < 1 AND CurrentGradeLevelID Between 6 AND 10 And bscd.MMCSCDate Between '2019-11-01' AND'2020-03-31') --Scenario 4
