@@ -15,7 +15,6 @@
 			And sc.StudentCommunicationTypeID = 1
 			And sc.IsDeleted = 0
 			And b.MMCSCDate <= '2021-10-31'     -- Change back to 10-31 for mid year, Change to 03-31 for end of year
-        and ss.officeid = 6
 		Group By ss.StudentID,  ss.OfficeID
 	)
 
