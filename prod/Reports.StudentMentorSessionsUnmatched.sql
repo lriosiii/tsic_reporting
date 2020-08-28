@@ -258,4 +258,5 @@ WHERE 1 = 1
   AND s.IsDeleted = 0
   AND m.IsDeleted = 0
   AND sms.IsDeleted = 0
+  AND SessionDuration > 0
 
