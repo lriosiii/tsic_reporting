@@ -17,7 +17,7 @@ With totalActiveStudentsCte (TotalActiveStudents, OfficeID) As
 		LEFT JOIN Students.MentoringSessions sms On ss.StudentID = sms.StudentID
 		WHERE 1=1
 			AND sms.SessionDuration > 0
-			AND sms.SessionDate BETWEEN '2019-07-01' AND '2020-06-30'
+			AND sms.SessionDate BETWEEN dbo.July1() AND dbo.Jun30()
 			AND ss.isdeleted = 0
 			AND sms.IsDeleted = 0
 		GROUP BY 
@@ -33,7 +33,7 @@ With totalActiveStudentsCte (TotalActiveStudents, OfficeID) As
 					FROM Students.StatusHistory ssh
 					WHERE ssh.StudentID = ss.StudentID
 						AND ssh.StudentStatusID BETWEEN 19 AND 24
-						AND ssh.StatusChangeDate BETWEEN '2019-07-01'AND '2020-06-30'
+						AND ssh.StatusChangeDate BETWEEN dbo.July1() AND dbo.Jun30()
 						AND ssh.IsDeleted = 0
 						AND ss.IsDeleted = 0
 				)
@@ -46,7 +46,7 @@ With totalActiveStudentsCte (TotalActiveStudents, OfficeID) As
 		SELECT ss.officeid, COUNT(ss.officeid) As EnrolledCount
 		FROM Students.Students ss
 		WHERE 1=1
-			AND ss.ContractSignedDate BETWEEN '2019-07-01' AND '2020-06-30'
+			AND ss.ContractSignedDate BETWEEN dbo.July1() AND dbo.Jun30()
 			AND ss.isdeleted = 0
 			AND ss.StudentStatusID IN (1,3,4,5)
 		GROUP BY ss.Officeid
