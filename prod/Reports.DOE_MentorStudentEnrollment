@@ -1,0 +1,146 @@
+With totalActiveStudentsCte (TotalActiveStudents, OfficeID) As
+	(
+		SELECT COUNT(ss.officeid) As TotalActiveStudents, ss.OfficeID
+		FROM Students.Students ss
+			JOIN Lookups.Counties lc On ss.CountyID = lc.CountyID
+			JOIN Offices.Counties oc On ss.CountyID = oc.CountyID AND ss.OfficeID = oc.OfficeID-- this JOIN excludes any "rogue" students with mismatched county AND office ID's		
+		WHERE 1=1
+			AND ss.StudentStatusID IN (1, 3, 4, 5) -- All active except "On Hold" 
+			AND ss.isdeleted = 0
+			AND oc.IsDeleted = 0
+		GROUP BY ss.officeid
+	)	
+	, mentorSessionsCte (OfficeID, MentorSessionCount) 
+	As (
+		SELECT ss.officeid, COUNT(sms.MentoringSessionID) As MentorSessionCount
+		FROM Students.Students ss
+		LEFT JOIN Students.MentoringSessions sms On ss.StudentID = sms.StudentID
+		WHERE 1=1
+			AND sms.SessionDuration > 0
+			AND sms.SessionDate BETWEEN '2019-07-01' AND '2020-06-30'
+			AND ss.isdeleted = 0
+			AND sms.IsDeleted = 0
+		GROUP BY 
+			ss.officeid
+	) 
+	, studentsTerminatedCte (Officeid, TerminatedCount)
+	As (
+			SELECT ss.officeid, Count (ss.officeid) as TerminatedCount
+			FROM Students.Students ss
+			WHERE EXISTS
+				(
+					SELECT Top (1) ssh.StatusHistoryID
+					FROM Students.StatusHistory ssh
+					WHERE ssh.StudentID = ss.StudentID
+						AND ssh.StudentStatusID BETWEEN 19 AND 24
+						AND ssh.StatusChangeDate BETWEEN '2019-07-01'AND '2020-06-30'
+						AND ssh.IsDeleted = 0
+						AND ss.IsDeleted = 0
+				)
+				AND ss.IsDeleted = 0
+			GROUP BY
+				ss.officeid
+		)
+	, studentsEnrolledCte (OfficeID, EnrolledCount)
+	As (
+		SELECT ss.officeid, COUNT(ss.officeid) As EnrolledCount
+		FROM Students.Students ss
+		WHERE 1=1
+			AND ss.ContractSignedDate BETWEEN '2019-07-01' AND '2020-06-30'
+			AND ss.isdeleted = 0
+			AND ss.StudentStatusID IN (1,3,4,5)
+		GROUP BY ss.Officeid
+		)
+	-- Mentor Matches = Count of students who have a mentor (distinct)
+	, mentorMatchesCte (Officeid, MentorMatches)
+	As (
+		SELECT ss.officeid, COUNT(ss.StudentID) As MentorMatches
+		FROM Students.Students ss 
+		WHERE 1=1
+			AND ss.StudentStatusID IN (1, 3, 4, 5) -- All active except "On Hold" 
+			AND Exists (
+				SELECT Top 1 StudentID
+				FROM Students.StudentMentors ssm 
+				WHERE ss.StudentID = ssm.StudentID 
+					AND (ssm.MentorAssignmentTypeID = 1) -- Primary or Secondary Mentor   ---Removed MentorAssignmentType = 2 from here   JL 12/11/2014
+				AND SSM.IsDeleted = 0
+			)
+			AND ss.IsDeleted = 0
+			GROUP BY ss.officeid
+	)	
+	, totalMentorsCte (Officeid, TotalMentors)
+	As 
+	(
+		SELECT mm.officeid, COUNT(mm.MentorID) AS TotalMentors
+		FROM Mentors.Mentors mm 
+		WHERE 1=1
+			AND mm.MentorStatusID IN (1, 2, 6)
+			AND mm.IsDeleted = 0
+		GROUP BY mm.officeid
+	)
+	, unmatchedstudentsCTE (TotalUnmatched, OfficeID) AS
+	(
+		SELECT COUNT(s.studentid), s.officeid FROM students.students s
+		LEFT JOIN students.studenTmentors m ON s.studentid=m.studentid
+		WHERE 1=1
+			AND m.studentid IS NULL
+			AND S.StudentStatusID in (1,3,4,5)
+		GROUP BY s.officeid
+	)
+
+
+ 	SELECT 
+		offices.officename,
+		tasCte.TotalActiveStudents,
+		IsNull(stCte.TerminatedCount, 0) AS TerminatedCount,
+		IsNull(seCte.EnrolledCount, 0)	 AS EnrolledCount,
+		tmCte.TotalMentors,
+		IsNull(mmCte.MentorMatches, 0)	 AS MentorMatches,
+		CASE 
+			WHEN tasCte.TotalActiveStudents - IsNull(mmCte.MentorMatches, 0) < 0 THEN 0 
+			ELSE tasCte.TotalActiveStudents - IsNull(mmCte.MentorMatches, 0) 
+		END AS UnmatchedCount,
+		CASE
+			WHEN ( IsNull(mmCte.MentorMatches, 0) / CAST(tasCte.TotalActiveStudents AS Decimal) * 100 ) > 100 THEN 100
+			ELSE ROUND(( IsNull(mmCte.MentorMatches, 0) / CAST(tasCte.TotalActiveStudents AS Decimal) * 100 ), 2) 
+		END AS MentorMatchRate,
+		IsNull(msCte.MentorSessionCount, 0)		AS MentorSessions,
+		ISNULL(unmatchedCTE.totalUnmatched, 0 ) AS ActiveUnmatchedStudents,
+		ISNULL(tasCte.TotalActiveStudents,0) - ISNULL(unmatchedCTE.totalUnmatched,0) AS ActiveOnceMatched
+
+	FROM totalActiveStudentsCte tasCte
+		LEFT JOIN mentorSessionsCte msCte			ON tasCte.OfficeID = msCte.OfficeID
+		LEFT JOIN studentsTerminatedCte stCte		ON tasCte.OfficeID = stCte.Officeid
+		LEFT JOIN studentsEnrolledCte seCte			ON tasCte.OfficeID = seCte.OfficeID
+		LEFT JOIN mentorMatchesCte mmCte			ON tasCte.OfficeID = mmCte.Officeid
+		LEFT JOIN totalMentorsCte tmCte				ON tasCte.officeid = tmCte.Officeid
+		LEFT JOIN offices.offices offices			ON tasCTE.officeid=offices.officeid
+		LEFT JOIN unmatchedstudentsCTE unmatchedCTE ON tasCTE.officeid=unmatchedCTE.officeid
+
+	Union All
+
+	SELECT 
+		'Overall Totals'					  As OfficeName,
+		Sum(tasCte.TotalActiveStudents)		  As ActiveStudents,
+		Sum(IsNull(stCte.TerminatedCount, 0)) As TerminatedCount,
+		Sum(IsNull(seCte.EnrolledCount, 0))	  As EnrolledCount,
+		Sum(tmCte.TotalMentors)				  AS TotalMentors,
+		Sum(IsNull(mmCte.MentorMatches, 0))   As MentorMatches,
+		Case 
+			When Sum(tasCte.TotalActiveStudents) - Sum(IsNull(mmCte.MentorMatches, 0)) < 0 Then 0 
+			Else Sum(tasCte.TotalActiveStudents) - Sum(IsNull(mmCte.MentorMatches, 0))
+		End As UnmatchedCount,
+		Case
+			When ( Sum(IsNull(mmCte.MentorMatches, 0)) / Cast(Sum(tasCte.TotalActiveStudents) as Decimal) * 100 ) > 100 Then 100
+			Else ROUND(( Sum(IsNull(mmCte.MentorMatches, 0)) / Cast(Sum(tasCte.TotalActiveStudents) as Decimal) * 100 ),2) 
+		End As MentorMatchRate,
+		Sum(IsNull(msCte.MentorSessionCount, 0)) As MentorSessions,
+		SUM(ISNULL(unmatchedCTE.totalUnmatched, 0 )) AS ActiveUnmatchedStudents,
+		Sum(tasCte.TotalActiveStudents)- SUM(ISNULL(unmatchedCTE.totalUnmatched, 0 )) AS ActiveOnceMatched
+	FROM totalActiveStudentsCte tasCte
+		LEFT JOIN mentorSessionsCte msCte			On tasCte.officeid = msCte.officeid
+		LEFT JOIN studentsTerminatedCte stCte		On tasCte.officeid = stCte.officeid
+		LEFT JOIN studentsEnrolledCte seCte			On tasCte.officeid = seCte.officeid
+		LEFT JOIN mentorMatchesCte mmCte			On tasCte.officeid = mmCte.officeid
+		LEFT JOIN totalMentorsCte tmCte				On tasCte.officeid = tmCte.officeid
+		LEFT JOIN unmatchedstudentsCTE unmatchedCTE ON tasCTE.officeid=unmatchedCTE.officeid
