@@ -74,7 +74,7 @@ With totalActiveStudentsCte (TotalActiveStudents, OfficeID) As
 		SELECT mm.officeid, COUNT(mm.MentorID) AS TotalMentors
 		FROM Mentors.Mentors mm 
 		WHERE 1=1
-			AND mm.MentorStatusID IN (1, 2, 6)
+			AND mm.MentorStatusID IN (1, 2, 6, 11)
 			AND mm.IsDeleted = 0
 		GROUP BY mm.officeid
 	)
