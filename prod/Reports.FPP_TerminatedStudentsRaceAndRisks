@@ -103,7 +103,7 @@ SELECT     S.FirstName, S.MiddleName, S.LastName, S.LastName + ', ' + S.FirstNam
 						(
 							Select Top(1) sh2.StatusChangeDate 
 							From Students.StatusHistory sh2 
-							Where (sh2.StudentID = S.StudentID)  and (sh2.StudentStatusID in (19,20,21,22,23,24) and sh2.StatusChangeDate Between '2018-07-01' AND '2019-06-30')
+							Where (sh2.StudentID = S.StudentID)  and (sh2.StudentStatusID in (19,20,21,22,23,24) and sh2.StatusChangeDate Between dbo.July1() AND dbo.Jun30())
 							Order By sh2.StatusChangeDate DESC) As TerminatedDate	
 
 FROM         Students.Students AS S LEFT OUTER JOIN
@@ -126,7 +126,7 @@ AND			(S.StudentStatusID IN (19,20,21,22,23,24)
 				(
 					SELECT sh.StudentID
 					FROM Students.StatusHistory sh
-					Where (sh.StatusChangeDate Between '2018-07-01' AND '2019-06-30') and (sh.StudentStatusID in(19,20,21,22,23,24))
+					Where (sh.StatusChangeDate Between dbo.July1() AND dbo.Jun30()) and (sh.StudentStatusID in(19,20,21,22,23,24))
 				)
 			)
 --AND			(SA.ApplicationID Is NULL OR SARF.RiskFactorID IN (1,4,5,8,12,14,19,20,21))
