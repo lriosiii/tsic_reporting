@@ -61,7 +61,7 @@ SELECT
 	ISNULL(S.EnrollmentVarianceNote, '') AS EnrollmentVarianceNote
 FROM 
 	Students.Students AS S 
-	LEFT OUTER JOIN Students.Applications AS APP ON APP.StudentID = S.StudentID 
+	LEFT OUTER JOIN Students.Applications AS APP ON APP.StudentID = S.StudentID AND app.IsDeleted = 0
 	LEFT OUTER JOIN Lookups.Counties AS CNT ON S.CountyID = CNT.CountyID 
 	LEFT OUTER JOIN Schools.Schools AS SC ON S.SchoolID = SC.SchoolID 
 	LEFT OUTER JOIN Lookups.StudentStatuses AS SS ON S.StudentStatusID = SS.StudentStatusID 
