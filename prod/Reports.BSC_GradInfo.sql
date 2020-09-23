@@ -13,7 +13,7 @@ SELECT
 	s.APCredits, 
 	sf.DateCompleted AS FAFSACompletionDate, 
 	s.IsNationalMeritScholar, 
-	s.GraduationYear, 
+	s.GraduationYear,
 	s.IBEnrolled, 
 	s.WfiEligible,
 	s.HighSchoolDiplomaDate, 
@@ -65,7 +65,7 @@ SELECT
 					   
 FROM Students.Students AS s 
 INNER JOIN Lookups.StudentStatuses ss ON s.StudentStatusID = ss.StudentStatusID 
-INNER JOIN Schools.Schools sch ON sch.SchoolID = s.SchoolID 
+LEFT JOIN Schools.Schools sch ON sch.SchoolID = s.SchoolID 
 INNER JOIN  Offices.Offices o ON o.OfficeID = s.OfficeID 
 LEFT JOIN  Students.FAFSA sf ON s.StudentID = sf.StudentID
 --LEFT OUTER JOIN Students.CollegeApplications AS ca ON s.StudentID = ca.StudentID LEFT OUTER JOIN
