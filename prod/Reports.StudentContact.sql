@@ -40,3 +40,4 @@ FROM         Students.Students AS S LEFT OUTER JOIN
                       Lookups.Races AS R ON S.RaceID = R.RaceID
 					  LEFT OUTER JOIN Students.CollegeInformation AS ci ON ci.StudentID = s.StudentID
 					  LEFT OUTER JOIN Lookups.Colleges AS SelCol ON SelCol.CollegeID = ci.CollegeID
+WHERE s.isdeleted=0
