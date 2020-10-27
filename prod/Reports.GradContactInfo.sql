@@ -13,8 +13,8 @@ AS
 				,ci.EntryDate
 				,Case
 					when (ci.ActualGraduationDate is not null)
-					or (s.StudentStatusID IN (11,12))
-					or (sh.StudentStatusID IN (11,12))
+					or (s.StudentStatusID IN (12, 28))
+                    			or (sh.StudentStatusID IN (12, 28))
 					or (CollegeDegreeTypeID > 0) then 1
 					else 0
 					End as DegreeAttained
