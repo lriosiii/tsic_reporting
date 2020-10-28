@@ -5,7 +5,7 @@ AS
 			  Case 
 				When (ci.ActualGraduationDate is not null) 
 				or (CollegeDegreeTypeID > 0)
-				or (s.StudentStatusID IN (11,12))
+				or (s.StudentStatusID IN (12, 13, 28))
 				or (ci.EntryDate is not null) then 1
 				Else  0
 				End as AttendedCollege
