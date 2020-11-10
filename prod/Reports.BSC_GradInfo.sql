@@ -25,6 +25,13 @@ SELECT
 		LEFT OUTER JOIN Lookups.Colleges col ON colinfo.CollegeID = col.CollegeID
 		WHERE colinfo.StudentID = s.StudentID
 		ORDER BY colinfo.EntryDate Desc
+	  ) As LatestCollege,
+       	  (
+		Select TOP(1) col.CollegeName
+		From Students.CollegePreparation colprep
+		LEFT OUTER JOIN Lookups.Colleges col ON colprep.CollegeID = col.CollegeID
+		WHERE colprep.StudentID = s.StudentID
+		ORDER BY colprep.EntryDate Desc
 	  ) As SelectedCollege,
 	  (
 		Select TOP(1) Colinfo.IsEnrolled
