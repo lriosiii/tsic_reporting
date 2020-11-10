@@ -424,25 +424,28 @@ Select
 
 Union
 
-Select
-		5 As DataPointNumber,
-		'Percent of Students with Semester 1 GPA' as 'Metric',
-		tacm.OfficeName,
-		IsNull(sum(swg.TotalStudentsWithGPA), 0)  As KPI, --ValueMatch
-		tacm.TotalActiveStudents As Total, -- Total
-		Convert(Int, Ceiling((IsNull(sum(swg.TotalStudentsWithGPA), 0) / Cast(tacm.TotalActiveStudents As Decimal)) * 100)) As Result,
-		CASE when Convert(Int, Ceiling((IsNull(sum(swg.TotalStudentsWithGPA), 0) / Cast(tacm.TotalActiveStudents As Decimal)) * 100)) between 95 and 100 then 5
-		when Convert(Int, Ceiling((IsNull(sum(swg.TotalStudentsWithGPA), 0) / Cast(tacm.TotalActiveStudents As Decimal)) * 100)) between 85 and 94 then 3
-		when Convert(Int, Ceiling((IsNull(sum(swg.TotalStudentsWithGPA), 0) / Cast(tacm.TotalActiveStudents As Decimal)) * 100)) < 85 then 0
-		else ''
-		end as Points,
-		'' as Comments,
-		tacm.OfficeID
-	From totalActiveStudentsformeasuresCte tacm
-		left join totalStudentsWithGPACte swg  on swg.OfficeID = tacm.OfficeID
-	group by  tacm.OfficeName, tacm.OfficeID, tacm.TotalActiveStudents
+-- This is a year-end metric. Hidden for mid-year.
 
-Union
+-- Select
+-- 		5 As DataPointNumber,
+-- 		'Percent of Students with Semester 1 GPA' as 'Metric',
+-- 		--tacm.CountyID,
+-- 		tacm.OfficeName,
+-- 		IsNull(sum(swg.TotalStudentsWithGPA), 0)  As KPI, --ValueMatch
+-- 		tacm.TotalActiveStudents As Total, -- Total
+-- 		Convert(Int, Ceiling((IsNull(sum(swg.TotalStudentsWithGPA), 0) / Cast(tacm.TotalActiveStudents As Decimal)) * 100)) As Result, -- percent
+-- 		CASE when Convert(Int, Ceiling((IsNull(sum(swg.TotalStudentsWithGPA), 0) / Cast(tacm.TotalActiveStudents As Decimal)) * 100)) between 95 and 100 then 5
+-- 		when Convert(Int, Ceiling((IsNull(sum(swg.TotalStudentsWithGPA), 0) / Cast(tacm.TotalActiveStudents As Decimal)) * 100)) between 85 and 94 then 3
+-- 		when Convert(Int, Ceiling((IsNull(sum(swg.TotalStudentsWithGPA), 0) / Cast(tacm.TotalActiveStudents As Decimal)) * 100)) < 85 then 0
+-- 		else ''
+-- 		end as Points,
+-- 		'' as Comments,
+-- 		tacm.OfficeID
+-- 	From totalActiveStudentsformeasuresCte tacm
+-- 		left join totalStudentsWithGPACte swg  on swg.OfficeID = tacm.OfficeID
+-- 	group by  tacm.OfficeName, tacm.OfficeID, tacm.TotalActiveStudents
+--
+-- Union
 
 Select
 		6 As DataPointNumber,
