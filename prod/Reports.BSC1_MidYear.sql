@@ -248,7 +248,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 	, GradsMissingData (studentid, officeid) AS (
 	SELECT DISTINCT studid, officeid
 	FROM Reports.BSC_GradInfo
-	WHERE Dualenrollmentcredits IS NULL OR BrightFutureName IS NULL OR APCredits IS NULL
+	WHERE Dualenrollmentcredits IS NULL OR BrightFutureName IS NULL OR APCredits IS NULL OR SelectedCollege IS NULL
 	)
 
 	, K12StudentsMissingTimelyMatch (studentid, officeid ) AS (
