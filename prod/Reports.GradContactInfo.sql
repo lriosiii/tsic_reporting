@@ -220,6 +220,8 @@ SELECT  o.OfficeName
 		FROM  Coll_CTE
 		where Coll_CTE.StudentID = s.StudentID
 	group by StudentID,DegreeAttained) as DegreeAttained
+,con.EmailAddress as PrimaryGuardianEmail
+,con.IsPrimaryGuardian
 
 
 
@@ -232,6 +234,7 @@ SELECT  o.OfficeName
  -- left outer join students.CollegeInformation sci on sci.StudentID = s.StudentID
   LEFT OUTER JOIN Lookups.StudentStatuses ss ON s.StudentStatusID = ss.StudentStatusID
   LEFT OUTER JOIN Lookups.Races r ON s.RaceID = r.RaceID
+ LEFT JOIN students.contacts con ON s.StudentID=con.StudentID and con.IsPrimaryGuardian = 1 and con.isdeleted = 0
 
 
   Where s.StudentStatusID IN (11,12,13,14,15,25,28)
