@@ -14,12 +14,12 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 			And sms.SessionDate Between dbo.July1() AND dbo.Jun30()
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
-			And sms.MentorID IN
-			(Select MentorID
-			 FROM Students.StudentMentors
-			 Where StudentID = ss.StudentID
-			 And (UnassignedDate IS NULL Or UnassignedDate = '')
-			 AND MentorAssignmentTypeID = 1)
+-- 			And sms.MentorID IN
+-- 			(Select MentorID
+-- 			 FROM Students.StudentMentors
+-- 			 Where StudentID = ss.StudentID
+-- 			 And (UnassignedDate IS NULL Or UnassignedDate = '')
+-- 			 AND MentorAssignmentTypeID = 1)
 		Group By ss.StudentID, ss.OfficeID
 		--Order By ss.StudentID --for testing
 	),
@@ -40,12 +40,12 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
 			And sms.SessionDate Between dbo.July1() AND dbo.Jun30()
-			And sms.MentorID IN
-			(Select MentorID
-			 FROM Students.StudentMentors
-			 Where StudentID = ss.StudentID
-			 And (UnassignedDate IS NULL Or UnassignedDate = '')
-			 AND MentorAssignmentTypeID = 1)
+-- 			And sms.MentorID IN
+-- 			(Select MentorID
+-- 			 FROM Students.StudentMentors
+-- 			 Where StudentID = ss.StudentID
+-- 			 And (UnassignedDate IS NULL Or UnassignedDate = '')
+-- 			 AND MentorAssignmentTypeID = 1)
 		Group By ss.StudentID, ss.OfficeID
 		--Order By ss.StudentID --for testing
 	),
@@ -66,12 +66,12 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 			And sms.IsDeleted = 0
 			And sms.SessionDuration > 0
 			And sms.SessionDate Between dbo.July1() AND dbo.Jun30()
-			And sms.MentorID IN
-			(Select MentorID
-			 FROM Students.StudentMentors
-			 Where StudentID = ss.StudentID
-			 And (UnassignedDate IS NULL Or UnassignedDate = '')
-			 AND MentorAssignmentTypeID = 1)
+-- 			And sms.MentorID IN
+-- 			(Select MentorID
+-- 			 FROM Students.StudentMentors
+-- 			 Where StudentID = ss.StudentID
+-- 			 And (UnassignedDate IS NULL Or UnassignedDate = '')
+-- 			 AND MentorAssignmentTypeID = 1)
 		Group By ss.StudentID, ss.OfficeID
 		--Order By ss.StudentID --for testing
 	),
@@ -93,7 +93,7 @@ WITH -- Common CTE for total active students for the time period (for mentor mat
 			And (SMS.UnassignedDate IS NULL)
 			AND SMS.MentorAssignmentTypeID = 1
 			--AND SMS.IsPrimary = 1
-						And SMS.IsDeleted = 0
+            And SMS.IsDeleted = 0
 		Group By ss.StudentID, ss.OfficeID
 		--Order By ss.StudentID --for testing
 	),
@@ -166,5 +166,3 @@ Where S.StudentStatusID IN (1, 3, 4, 5) --AND (SSM.UnassignedDate > '2013-08-01'
 --And S.OfficeID = 1
 And AssignedDate Between dbo.July1() And dbo.Jun30()
 AND S.IsDeleted = 0
---And lmsdcte.LastSessionDate > fmsdcte.FirstSessionDate
---Order By AvgSessionsMonth, StudentLastName, StudentFirstName
