@@ -164,5 +164,5 @@ FROM Students.Students S
 Where S.StudentStatusID IN (1, 3, 4, 5) --AND (SSM.UnassignedDate > '2013-08-01' OR SSM.UnassignedDate IS NULL)
 --ORDER BY S.CountyID
 --And S.OfficeID = 1
-And AssignedDate Between dbo.July1() And dbo.Dec31()
+--And AssignedDate Between dbo.July1() And dbo.Dec31()
 AND S.IsDeleted = 0
