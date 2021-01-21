@@ -30,7 +30,8 @@ SELECT
     WHEN sessionsourceid = 1 THEN 'MobileApp'
     WHEN sessionsourceid = 2 THEN 'MentorWebPortal'
     ELSE ''
-    END AS SessionSource
+    END AS SessionSource,
+    locs.mentorsessionlocationname
 FROM  Students.Students AS s
 INNER JOIN Lookups.StudentStatuses AS ss ON s.StudentStatusID = ss.StudentStatusID
 INNER JOIN Schools.Schools AS sch ON s.SchoolID = sch.SchoolID
@@ -42,6 +43,7 @@ INNER JOIN Mentors.Mentors AS m ON sm.MentorID = m.MentorID
 LEFT OUTER JOIN Students.MentoringSessions AS sms ON s.StudentID = sms.StudentID AND m.MentorID = sms.MentorID --And sms.SessionDuration > 0
 LEFT JOIN lookups.mentorsessiontypes ON sms.sessiontypeid=mentorsessiontypes.mentorsessiontypeid
 INNER JOIN Lookups.MentorStatuses ms ON m.MentorStatusID = ms.MentorStatusID
+LEFT JOIN lookups.MentorSessionLocations locs ON locs.mentorsessionlocationid=sms.sessionlocationid
 WHERE 1=1
     AND s.StudentStatusID IN (1,3,4,5)
     AND s.IsDeleted = 0
