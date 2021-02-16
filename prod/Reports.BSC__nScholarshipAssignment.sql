@@ -30,7 +30,7 @@ SELECT
 	  --,ss.IsDeleted
   FROM [TSIC_Prod].[Students].Students s
   join Offices.Offices o on s.OfficeID = o.OfficeID
-  left join Offices.Scholarships ss on ss.StudentID = s.StudentID
+  left join Offices.Scholarships ss on ss.StudentID = s.StudentID and ss.IsDeleted=0
   left join lookups.StudentStatuses sts on s.StudentStatusID = sts.StudentStatusID
   left join lookups.ContractTypes cnt on cnt.ContractTypeID = s.ContractTypeID
   left join lookups.Counties ct on ct.CountyID = s.CountyID
