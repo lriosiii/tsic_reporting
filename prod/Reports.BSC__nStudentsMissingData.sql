@@ -75,7 +75,8 @@ LEFT JOIN [Lookups].[Races] r on s.RaceID = r.raceid
 LEFT JOIN offices.Staff os on os.StaffID = s.AdvocateID
 LEFT JOIN Schools.Schools sch on sch.SchoolID = s.SchoolID
 LEFT JOIN lookups.ContractTypes ctt on ctt.ContractTypeID = s.ContractTypeID
-LEFT JOIN Lookups.Colleges AS coll ON coll.CollegeID = s.finalcollegeid
+LEFT JOIN students.CollegePreparation AS collprep ON collprep.StudentID = s.StudentID
+    LEFT JOIN lookups.colleges coll ON coll.collegeid=collprep.collegeid
 LEFT JOIN (SELECT DISTINCT studentid FROM  Students.studentmentors WHERE isdeleted = 0) initialmentor ON s.studentid=initialmentor.studentid
 WHERE			
 	s.StudentStatusID In (1, 3, 4, 5) -- All active except "On Hold" 
@@ -113,7 +114,7 @@ WHERE
 		Or s.ContractSignedDate Is Null
 		or s.FamilySituationID is null
 		or s.FirstGenerationCollegeStudent is null
-		OR (s.currentgradelevelid = 12 AND coll.collegename IS NULL)     --comment for midyear, uncomment for end of year
+		OR (s.currentgradelevelid = 12 AND collprep.collegeid IS NULL)     --comment for midyear, uncomment for end of year
 		OR (initialmentor.studentid IS NULL AND datediff(day,s.contractsigneddate, getdate()) > 30 ) 
 		or  Not Exists (
 			Select Top 1 
