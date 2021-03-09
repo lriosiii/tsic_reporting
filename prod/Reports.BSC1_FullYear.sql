@@ -9,7 +9,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 				On ss.OfficeID = o.OfficeID
 		WHERE ss.StudentStatusID
 				In (1, 3, 4, 5)
-			And ss.ContractSignedDate Between '2019-06-06' And '2020-06-03'
+			And ss.ContractSignedDate Between '2020-06-04' And '2021-06-03'
 			And ss.IsDeleted = 0
 			and o.OfficeID not in (18,19,20)
 		Group By o.OfficeName, ss.OfficeID
@@ -26,7 +26,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 		INNER JOIN offices.offices o ON ss.officeid = o.officeid
 		WHERE 1=1
 			AND ss.studentstatusid IN (1, 3, 4, 5)
-			AND ss.contractsigneddate BETWEEN '2019-06-06' And '2020-06-03'
+			AND ss.contractsigneddate BETWEEN '2020-06-04' And '2021-06-03'
 			AND ss.isdeleted = 0
 			AND NOT ( (ss.enrollmentvariance = 1) OR (ss.wfieligible = 1) AND ss.EntryGradeLevelID IN (10,11) )
 			AND o.officeid NOT IN (18,19,20)
@@ -44,7 +44,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
         Join Offices.Offices o On ss.OfficeID = o.OfficeID
 		WHERE
             ss.StudentStatusID In (1, 3, 4, 5)
-			And ss.ContractSignedDate < '2019-11-01'
+			And ss.ContractSignedDate < '2020-11-01'
 			And ss.IsDeleted = 0
 			and o.OfficeID not in (18,19,20)
 			AND SS.isdeleted = 0
@@ -61,7 +61,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 		From Students.Students ss
 		Join Offices.Offices o On ss.OfficeID = o.OfficeID
 		WHERE ss.StudentStatusID In (1, 3, 4, 5)
-			And ss.ContractSignedDate  Between '2019-06-06' And '2020-06-03'
+			And ss.ContractSignedDate  Between '2020-06-04' And '2021-06-03'
 			and ss.EntryGradeLevelID in (6,7,8,9)
 			and o.OfficeID not in (18,19,20)
 			AND SS.isdeleted = 0
@@ -80,7 +80,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
         Join Offices.Offices o On ss.OfficeID = o.OfficeID
         left join students.Applications sap on sap.StudentID = ss.StudentID
 		WHERE ss.StudentStatusID In (1, 3, 4, 5)
-				And ss.ContractSignedDate Between '2019-06-06' And '2020-06-03'
+				And ss.ContractSignedDate Between '2020-06-04' And '2021-06-03'
 				and COALESCE(ss.PriorityType ,sap.PriorityType) = 2
 				and o.OfficeID not in (18,19,20)
 		Group By sap.PriorityType, ss.PriorityType, o.OfficeName, ss.OfficeID
@@ -101,7 +101,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 				left join students.Applications sap on sap.StudentID = ss.StudentID
 		WHERE ss.StudentStatusID In (1, 3, 4, 5)
 			And ss.ContractSignedDate
-				Between '2019-06-06' And '2020-06-03'
+				Between '2020-06-04' And '2021-06-03'
 				and COALESCE(ss.EntryGPA,sap.GPA) >= 2.0
 				and o.OfficeID not in (18,19,20)
 				AND sap.isdeleted = 0
@@ -143,11 +143,11 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 		Where
           ss.StudentStatusID In (1, 3, 4, 5)
 			And ss.CurrentGradeLevelID  IS NOT NULL
-			And sg.SemesterEndDate Between '2019-12-01' And '2020-03-31'
+			And sg.SemesterEndDate Between '2020-12-01' And '2021-03-31'
 			And sg.SchoolTermTypeID in (17, 30, 0)
 			And (sg.SemesterUnweighted > 0 Or sg.CumulativeUnweighted > 0)
 			And sg.IsDeleted = 0
-			And ss.ContractSignedDate  < '2019-11-01'
+			And ss.ContractSignedDate  < '2020-11-01'
 			and o.OfficeID not in (18,19,20)
 			AND SS.isdeleted = 0
 		Group By o.OfficeName, ss.OfficeID
@@ -163,8 +163,8 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 			    From Students.Communications sc
 				left join reports.BSC_Dates b on ss.StudentID = b.studentid
 		        Where ss.StudentStatusID In (1, 3, 4, 5)
-                And  ((b.IsTransfer = 0 and  sc.NoteDate Between '2019-07-01' AND '2020-06-30') or (b.IsTransfer = 1 and  sc.NoteDate Between b.MMCSCDate AND '2020-06-30'))
-                and b.MMCSCDate <= '2020-03-31'
+                And  ((b.IsTransfer = 0 and  sc.NoteDate Between '2020-07-01' AND '2021-06-30') or (b.IsTransfer = 1 and  sc.NoteDate Between b.MMCSCDate AND '2021-06-30'))
+                and b.MMCSCDate <= '2021-03-31'
                 And sc.StudentCommunicationTypeID = 1
                 And sc.IsDeleted = 0
                 and ss.StudentID = sc.StudentID
@@ -182,7 +182,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 			In (1, 3, 4, 5)
 			--And ss.ContractSignedDate < '2018-11-01'
 			and ss.IsDeleted = 0
-			and bd.MMCSCDate <= '2020-03-31'
+			and bd.MMCSCDate <= '2021-03-31'
 			and o.IsDeleted = 0
 			and o.OfficeID not in (18,19,20)
 		Group By ss.StudentID, ss.StudentStatusID, o.officename, CurrentGradeLevelID, ss.OfficeID
@@ -197,10 +197,10 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 				from CollegeSuccessCoachVisits csce
 				left join reports.BSC_Dates bdi on bdi.studentid = csce.StudentID
 				 WHERE (
-                        (csce.Grade between 11 and 12 and csce.TotalVisit >=4 and bdi.MMCSCDate <= '2019-10-31')
-                       or (csce.Grade between 5 and 10 and csce.TotalVisit >=2 and bdi.mmcscdate <= '2019-10-31')
-                       or (csce.grade between 11 and 12 and csce.TotalVisit >=2 and bdi.MMCSCDate between '2019-11-01' and '2020-03-31')
-                       or (csce.Grade between 5 and 10 and csce.TotalVisit >=1 and bdi.mmcscdate between '2019-11-01' and '2020-03-31')
+                        (csce.Grade between 11 and 12 and csce.TotalVisit >=4 and bdi.MMCSCDate <= '2020-10-31')
+                       or (csce.Grade between 5 and 10 and csce.TotalVisit >=2 and bdi.mmcscdate <= '2020-10-31')
+                       or (csce.grade between 11 and 12 and csce.TotalVisit >=2 and bdi.MMCSCDate between '2020-11-01' and '2021-03-31')
+                       or (csce.Grade between 5 and 10 and csce.TotalVisit >=1 and bdi.mmcscdate between '2020-11-01' and '2021-03-31')
 					)
 				 and csce.OfficeID = ss.OfficeID
 			)as KPI
@@ -211,7 +211,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 				left join reports.BSC_Dates bdi on bdi.StudentID = csc.StudentID
                 WHERE 1=1
                   and csc.OfficeID = ss.OfficeID
-                  and bdi.MMCSCDate <= '2020-03-31'
+                  and bdi.MMCSCDate <= '2021-03-31'
                   and csc.StudentStatusID in (1,3,4,5)
                   and csc.IsDeleted = 0
 			) TotalVisit
@@ -290,7 +290,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 					from students.students ss
 					left join offices.offices oo on oo.OfficeID = ss.OfficeID
 					where  ss.IsDeleted = 0 and o.OfficeID = ss.OfficeID and
-								((ss.StudentStatusID in (1,3,4,5) and ss.CurrentGradeLevelID between 5 and 12) OR (ss.StudentStatusID in (11,12,13,14,15,28) and ss.GraduationYear = 2019))
+								((ss.StudentStatusID in (1,3,4,5) and ss.CurrentGradeLevelID between 5 and 12) OR (ss.StudentStatusID in (11,12,13,14,15,28) and ss.GraduationYear = 2020))
 					)
 						+
 					(
