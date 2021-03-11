@@ -150,7 +150,7 @@ With totalRecruitedStudentsCte (TotalRecruitedStudents, OfficeName, OfficeID) As
 		Where ss.StudentStatusID
 				In (1, 3, 4, 5)
 			And ss.CurrentGradeLevelID  IS NOT NULL
-			And sg.SemesterEndDate Between '2020-12-01' And '2021-03-31'
+			And sg.SemesterEndDate Between '2020-11-01' And '2021-03-31'
 			And sg.SchoolTermTypeID in (17, 30, 0)
 			And (sg.SemesterUnweighted > 0 Or sg.CumulativeUnweighted > 0)
 			And sg.IsDeleted = 0
